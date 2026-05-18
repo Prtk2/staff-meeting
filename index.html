@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FedEx Express — Weekly Staff Meeting</title>
+    <title>FedEx Express â€” Weekly Staff Meeting</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 
     <style>
         /* ============================================
-           CSS CUSTOM PROPERTIES — FedEx Theme
+           CSS CUSTOM PROPERTIES â€” FedEx Theme
            Edit these variables to re-theme the deck
            ============================================ */
         :root {
@@ -64,7 +64,7 @@
         }
 
         /* ============================================
-           VIEWPORT BASE CSS — FULL CONTENTS
+           VIEWPORT BASE CSS â€” FULL CONTENTS
            Source: viewport-base.css (mandatory)
            ============================================ */
         html, body { height: 100%; overflow-x: hidden; }
@@ -211,7 +211,7 @@
         }
 
         /* ============================================
-           SLIDE — SHARED STRUCTURE
+           SLIDE â€” SHARED STRUCTURE
            ============================================ */
 
         /* Geometric diagonal background shape */
@@ -242,7 +242,7 @@
 
         .slide-content { position: relative; z-index: 1; justify-content: flex-start; padding-top: clamp(1.5rem, 4vh, 3rem); }
 
-        /* FedEx brand mark — top right corner */
+        /* FedEx brand mark â€” top right corner */
         .brand-mark {
             position: absolute;
             top: clamp(0.75rem, 2vh, 1.4rem);
@@ -353,7 +353,7 @@
         }
 
         /* ============================================
-           SLIDE 1 — WEEKLY UPDATE
+           SLIDE 1 â€” WEEKLY UPDATE
            ============================================ */
         .update-grid {
             display: grid;
@@ -396,7 +396,7 @@
         }
 
         /* ============================================
-           SLIDE 2 — PRODUCTIVITY METRICS
+           SLIDE 2 â€” PRODUCTIVITY METRICS
            ============================================ */
         .metrics-grid {
             display: grid;
@@ -484,7 +484,7 @@
         }
 
         /* ============================================
-           SLIDE 3 — TRANSPORTATION SAFETY
+           SLIDE 3 â€” TRANSPORTATION SAFETY
            ============================================ */
         .safety-layout {
             display: grid;
@@ -582,7 +582,7 @@
         }
 
         /* ============================================
-           SLIDE 0 — TITLE SLIDE (full-bleed image)
+           SLIDE 0 â€” TITLE SLIDE (full-bleed image)
            ============================================ */
         .title-slide {
             background:
@@ -594,7 +594,7 @@
                 center / cover no-repeat;
         }
 
-        /* Hide diagonal shape — image provides the atmosphere */
+        /* Hide diagonal shape â€” image provides the atmosphere */
         .title-slide::before { display: none; }
 
         .title-slide .slide-content {
@@ -651,8 +651,8 @@
         }
 
         /* ============================================
-           SLIDE BACKGROUND IMAGES — Unsplash FedEx
-           Layer order (top → bottom):
+           SLIDE BACKGROUND IMAGES â€” Unsplash FedEx
+           Layer order (top â†’ bottom):
              1. Grid texture (faint lines)
              2. Dark overlay  (keeps content readable)
              3. FedEx photo   (atmosphere / depth)
@@ -664,7 +664,7 @@
             background-size: 60px 60px, 60px 60px, 100% 100%, cover;
         }
 
-        /* Slide 1 — Weekly Update
+        /* Slide 1 â€” Weekly Update
            Photo: white FedEx van near building (photo-1533324445462) */
         #slide-1 {
             background:
@@ -675,7 +675,7 @@
                 center / cover no-repeat;
         }
 
-        /* Slide 2 — Productivity Metrics
+        /* Slide 2 â€” Productivity Metrics
            Photo: FedEx airplane flying in clear blue sky (photo-1726056545636) */
         #slide-2 {
             background:
@@ -686,7 +686,7 @@
                 center / cover no-repeat;
         }
 
-        /* Slide 3 — Transportation Safety
+        /* Slide 3 â€” Transportation Safety
            Photo: FedEx truck on street (photo-1698012185061) */
         #slide-3 {
             background:
@@ -697,7 +697,7 @@
                 center / cover no-repeat;
         }
 
-        /* Slide 4 — Route Efficiency Chart
+        /* Slide 4 â€” Route Efficiency Chart
            Photo: FedEx truck parked on road (photo-1719729940971) */
         #slide-4 {
             background:
@@ -709,7 +709,7 @@
         }
 
         /* ============================================
-           SLIDE 4 — EFFICIENCY BAR CHART
+           SLIDE 4 â€” EFFICIENCY BAR CHART
            ============================================ */
         #slide-4 .slide-title {
             font-size: clamp(1.5rem, 4vw, 3.5rem);
@@ -905,18 +905,18 @@
 
     <!-- Inline editing controls -->
     <div class="edit-hotzone" id="editHotzone" aria-hidden="true"></div>
-    <button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">✏ Edit</button>
+    <button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">âœ Edit</button>
     <div class="edit-banner" id="editBanner">
-        ✏ EDIT MODE &nbsp;—&nbsp; Click any text to edit &nbsp;|&nbsp; <strong>Ctrl+S</strong> save file &nbsp;|&nbsp; <strong>E</strong> exit
+        âœ EDIT MODE &nbsp;â€”&nbsp; Click any text to edit &nbsp;|&nbsp; <strong>Ctrl+S</strong> save file &nbsp;|&nbsp; <strong>E</strong> exit
     </div>
 
     <!-- Keyboard hint -->
     <div class="keyboard-hint" aria-hidden="true">
-        <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;<kbd>E</kbd> edit
+        <kbd>â†</kbd><kbd>â†’</kbd> navigate &nbsp;<kbd>E</kbd> edit
     </div>
 
     <!-- ====================================================
-         SLIDE 0 — TITLE
+         SLIDE 0 â€” TITLE
          ==================================================== -->
     <section class="slide title-slide" id="slide-0" aria-label="Title Slide">
         <div class="brand-mark" aria-hidden="true">
@@ -929,217 +929,12 @@
             <h1 class="title-main reveal" style="transition-delay:0.22s">LH MNTR</h1>
             <div class="title-sub reveal" style="transition-delay:0.34s">Staff Meeting</div>
             <div class="title-rule reveal" style="transition-delay:0.44s"></div>
-            <div class="title-date reveal" style="transition-delay:0.52s">Week 20 &nbsp;·&nbsp; May 2025</div>
+            <div class="title-date reveal" style="transition-delay:0.52s">Week 20 &nbsp;Â·&nbsp; May 2025</div>
         </div>
     </section>
 
-    <!-- ====================================================
-         SLIDE 1 — WEEKLY UPDATE
-         ==================================================== -->
-    <section class="slide" id="slide-1" aria-label="Weekly Update">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
+    
 
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Weekly Update</span>
-                <span class="slide-meta">Week 20 &nbsp;·&nbsp; May 12–16, 2025</span>
-            </div>
-
-            <h1 class="slide-title reveal" style="transition-delay:0.15s">
-                This Week<br>In <span class="accent">Operations</span>
-            </h1>
-
-            <div class="update-grid">
-                <div class="update-card reveal" style="transition-delay:0.28s">
-                    <div class="update-card-label">Operations</div>
-                    <div class="update-card-title">Hub Performance</div>
-                    <div class="update-card-body">All regional hubs at full capacity. Memphis SuperHub processed 2.1M packages — 4.2% above weekly target.</div>
-                </div>
-                <div class="update-card reveal" style="transition-delay:0.38s">
-                    <div class="update-card-label">Workforce</div>
-                    <div class="update-card-title">Team Attendance</div>
-                    <div class="update-card-body">Attendance at 97.3% across all shifts. Q2 peak season overtime approvals completed and communicated to managers.</div>
-                </div>
-                <div class="update-card reveal" style="transition-delay:0.48s">
-                    <div class="update-card-label">Upcoming</div>
-                    <div class="update-card-title">Route Optimization Pilot</div>
-                    <div class="update-card-body">Ground delivery pilot launches Monday. 8 Southwest district routes will run AI-assisted sequencing for the first time.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====================================================
-         SLIDE 2 — PRODUCTIVITY METRICS
-         ==================================================== -->
-    <section class="slide" id="slide-2" aria-label="Productivity Metrics">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
-
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Productivity Metrics</span>
-            </div>
-
-            <h2 class="slide-title reveal" style="transition-delay:0.15s">
-                Performance<br><span class="accent">At a Glance</span>
-            </h2>
-
-            <div class="metrics-grid">
-                <div class="metric-card reveal" style="transition-delay:0.28s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="48291">0</span>
-                    </div>
-                    <div class="metric-label">Packages Processed</div>
-                    <div class="metric-trend trend-up">↑ 3.1% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.38s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="974" data-decimal="1">0</span><span class="metric-unit">%</span>
-                    </div>
-                    <div class="metric-label">On-Time Delivery Rate</div>
-                    <div class="metric-trend trend-up">↑ 0.8% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.48s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="942" data-decimal="1">0</span><span class="metric-unit">%</span>
-                    </div>
-                    <div class="metric-label">Route Efficiency</div>
-                    <div class="metric-trend trend-down">↓ 0.4% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.58s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="48" data-decimal="1">0</span><span class="metric-unit">/5</span>
-                    </div>
-                    <div class="metric-label">Customer Satisfaction</div>
-                    <div class="metric-trend trend-up">↑ 0.2 vs last week</div>
-                </div>
-            </div>
-
-            <div class="metrics-note reveal" style="transition-delay:0.66s">
-                Reflects all active U.S. domestic routes. Data updated end-of-day Friday.
-            </div>
-        </div>
-    </section>
-
-    <!-- ====================================================
-         SLIDE 3 — TRANSPORTATION SAFETY
-         ==================================================== -->
-    <section class="slide" id="slide-3" aria-label="Transportation Safety">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
-
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Transportation Safety</span>
-                <span class="slide-meta">Safety Commitment &nbsp;·&nbsp; Week 20</span>
-            </div>
-
-            <div class="safety-layout">
-                <!-- Left: statement -->
-                <div>
-                    <div class="safety-statement reveal" style="transition-delay:0.18s">
-                        Safety Is<br>Not A Choice —<br>It's Our<br><span class="highlight">Commitment</span>
-                    </div>
-                    <div class="safety-sub reveal" style="transition-delay:0.28s">
-                        Every driver, handler, and team member plays a role. Zero incidents is not a goal — it is our operating standard.
-                    </div>
-                </div>
-
-                <!-- Right: stats -->
-                <div class="safety-stats">
-                    <div class="safety-stat reveal" style="transition-delay:0.34s">
-                        <div class="safety-stat-num">14</div>
-                        <div>
-                            <div class="safety-stat-title">Days Without Incident</div>
-                            <div class="safety-stat-desc">Current streak across Southwest district</div>
-                        </div>
-                    </div>
-                    <div class="safety-stat reveal" style="transition-delay:0.44s">
-                        <div class="safety-stat-num">100%</div>
-                        <div>
-                            <div class="safety-stat-title">Pre-Trip Inspections Complete</div>
-                            <div class="safety-stat-desc">All vehicles cleared before dispatch this week</div>
-                        </div>
-                    </div>
-                    <div class="safety-stat reveal" style="transition-delay:0.54s">
-                        <div class="safety-stat-num">2</div>
-                        <div>
-                            <div class="safety-stat-title">Near Misses Reported</div>
-                            <div class="safety-stat-desc">Reported, reviewed, corrective action taken</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Full-width pledge -->
-                <div class="safety-pledge reveal" style="transition-delay:0.64s">
-                    <span class="safety-pledge-icon" aria-hidden="true">🛡</span>
-                    <span class="safety-pledge-text">Zero Incidents. Zero Compromises. Every Delivery, Every Day.</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====================================================
-         SLIDE 4 — ROUTE EFFICIENCY BY DAY
-         ==================================================== -->
-    <section class="slide" id="slide-4" aria-label="Route Efficiency by Day">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
-
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Route Efficiency</span>
-                <span class="slide-meta">Week 20 &nbsp;·&nbsp; Daily Breakdown</span>
-            </div>
-
-            <h2 class="slide-title reveal" style="transition-delay:0.12s">
-                Efficiency<br><span class="accent">By Day</span>
-            </h2>
-
-            <div class="chart-layout">
-                <!-- Bar chart -->
-                <div class="chart-container reveal" style="transition-delay:0.22s">
-                    <canvas id="efficiencyChart" aria-label="Route efficiency bar chart"></canvas>
-                </div>
-
-                <!-- Summary stats -->
-                <div class="chart-summary">
-                    <div class="chart-stat reveal" style="transition-delay:0.32s">
-                        <div class="chart-stat-value">93.1%</div>
-                        <div class="chart-stat-label">Week Average</div>
-                        <div class="metric-trend trend-down">↓ 0.4% vs last week</div>
-                    </div>
-                    <div class="chart-stat reveal" style="transition-delay:0.42s">
-                        <div class="chart-stat-value" style="color:var(--fedex-orange)">Wed</div>
-                        <div class="chart-stat-label">Best Day</div>
-                        <div class="metric-trend trend-up">96.3% efficiency</div>
-                    </div>
-                    <div class="chart-stat reveal" style="transition-delay:0.52s">
-                        <div class="chart-stat-value" style="color:#E05A5A">Fri</div>
-                        <div class="chart-stat-label">Needs Attention</div>
-                        <div class="metric-trend trend-down">89.5% — below target</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chart-legend reveal" style="transition-delay:0.6s">
-                <span class="legend-item legend-purple">Route efficiency</span>
-                <span class="legend-item legend-dash">Target (95%)</span>
-                <span class="legend-item legend-orange">Best day</span>
-                <span class="legend-item legend-red">Below target</span>
-            </div>
-        </div>
-    </section>
 
     <script>
         /* ============================================
@@ -1245,7 +1040,7 @@
                 }, { passive: true });
             }
 
-            /* Chart.js bar chart — initialise once when slide 4 enters view */
+            /* Chart.js bar chart â€” initialise once when slide 4 enters view */
             initEfficiencyChart(slide) {
                 if (slide.id !== 'slide-4') return;
                 if (slide.dataset.chartInit) return;
@@ -1254,7 +1049,7 @@
                 const canvas = document.getElementById('efficiencyChart');
                 if (!canvas || typeof Chart === 'undefined') return;
 
-                /* ── Data ── update these numbers each week ── */
+                /* â”€â”€ Data â”€â”€ update these numbers each week â”€â”€ */
                 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
                 const vals = [91.2, 94.7, 96.3, 93.8, 89.5];
                 const target = 95;
@@ -1345,7 +1140,7 @@
                 });
             }
 
-            /* Animated number counters — trigger once per slide */
+            /* Animated number counters â€” trigger once per slide */
             startCounters(slide) {
                 slide.querySelectorAll('.counter').forEach(el => {
                     if (el.dataset.counted) return;
@@ -1417,7 +1212,7 @@
                 document.body.classList.toggle('edit-active', this.isActive);
                 this.toggle.classList.toggle('active', this.isActive);
                 this.banner.classList.toggle('active',  this.isActive);
-                this.toggle.textContent = this.isActive ? '✓ Done' : '✏ Edit';
+                this.toggle.textContent = this.isActive ? 'âœ“ Done' : 'âœ Edit';
 
                 const sel = [
                     '.title-eyebrow', '.title-main', '.title-sub', '.title-date',
