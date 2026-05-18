@@ -1,806 +1,1102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Delhi · Goa · Punjab</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FedEx Express — Weekly Staff Meeting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES — FedEx Theme
+           Edit these variables to re-theme the deck
+           ============================================ */
+        :root {
+            /* FedEx Brand */
+            --fedex-purple:       #4D148C;
+            --fedex-purple-mid:   #6B2DAF;
+            --fedex-purple-light: rgba(77, 20, 140, 0.12);
+            --fedex-orange:       #FF6200;
+            --fedex-orange-light: rgba(255, 98, 0, 0.10);
 
-/* ===================================================
-   CSS CUSTOM PROPERTIES (THEME)
-   Edit these variables to restyle the entire deck.
-   =================================================== */
-:root {
-  /* Dark Botanical palette */
-  --bg-primary:    #0f0f0f;
-  --text-primary:  #e8e4df;
-  --text-muted:    #9a9590;
-  --accent-warm:   #d4a574;  /* Delhi  — amber   */
-  --accent-pink:   #e8b4b8;  /* Goa    — rose    */
-  --accent-gold:   #c9b896;  /* Punjab — harvest */
+            /* Backgrounds */
+            --bg-primary:  #08071A;
+            --bg-card:     rgba(77, 20, 140, 0.09);
+            --bg-card-alt: rgba(255, 98, 0, 0.06);
 
-  /* Typography */
-  --font-display: 'Cormorant', serif;
-  --font-body:    'IBM Plex Sans', sans-serif;
+            /* Text */
+            --text-primary:   #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.52);
+            --text-accent:    #FF6200;
 
-  /* Animation */
-  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-purple: rgba(77, 20, 140, 0.50);
 
-  /* === viewport-base.css variables (mandatory) === */
-  --title-size:   clamp(1.5rem, 5vw, 4rem);
-  --h2-size:      clamp(1.25rem, 3.5vw, 2.5rem);
-  --body-size:    clamp(0.75rem, 1.5vw, 1.125rem);
-  --small-size:   clamp(0.65rem, 1vw, 0.875rem);
-  --slide-padding: clamp(1rem, 4vw, 4rem);
-  --content-gap:   clamp(0.5rem, 2vw, 2rem);
-  --element-gap:   clamp(0.25rem, 1vw, 1rem);
-}
+            /* Typography */
+            --font-display: 'Barlow Condensed', sans-serif;
+            --font-body:    'Barlow', sans-serif;
 
-/* ===================================================
-   BASE RESET
-   =================================================== */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+            /* Custom size tokens (supplement viewport-base.css) */
+            --metric-size: clamp(2rem, 4.5vw, 3.75rem);
+            --label-size:  clamp(0.58rem, 1.1vw, 0.82rem);
+            --tag-size:    clamp(0.58rem, 0.95vw, 0.72rem);
+            --card-title:  clamp(0.85rem, 1.7vw, 1.2rem);
+            --card-body:   clamp(0.62rem, 1.05vw, 0.82rem);
 
-/* ===================================================
-   viewport-base.css — MANDATORY (include in full)
-   =================================================== */
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-}
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
-.slide {
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-.slide-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 100%;
-  overflow: hidden;
-  padding: var(--slide-padding);
-}
-.card, .container, .content-box {
-  max-width: min(90vw, 1000px);
-  max-height: min(80vh, 700px);
-}
-.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
-.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-}
-img, .image-container {
-  max-width: 100%;
-  max-height: min(50vh, 400px);
-  object-fit: contain;
-}
-/* Short viewports < 700px */
-@media (max-height: 700px) {
-  :root {
-    --slide-padding: clamp(0.75rem, 3vw, 2rem);
-    --content-gap:   clamp(0.4rem, 1.5vw, 1rem);
-    --title-size:    clamp(1.25rem, 4.5vw, 2.5rem);
-    --h2-size:       clamp(1rem, 3vw, 1.75rem);
-  }
-}
-/* Very short < 600px */
-@media (max-height: 600px) {
-  :root {
-    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
-    --content-gap:   clamp(0.3rem, 1vw, 0.75rem);
-    --title-size:    clamp(1.1rem, 4vw, 2rem);
-    --body-size:     clamp(0.7rem, 1.2vw, 0.95rem);
-  }
-  .nav-dots, .keyboard-hint, .decorative { display: none; }
-}
-/* Landscape phones < 500px */
-@media (max-height: 500px) {
-  :root {
-    --slide-padding: clamp(0.4rem, 2vw, 1rem);
-    --title-size:    clamp(1rem, 3.5vw, 1.5rem);
-    --h2-size:       clamp(0.9rem, 2.5vw, 1.25rem);
-    --body-size:     clamp(0.65rem, 1vw, 0.85rem);
-  }
-}
-/* Narrow viewports < 600px wide */
-@media (max-width: 600px) {
-  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
-  .grid { grid-template-columns: 1fr; }
-}
-/* Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.2s !important;
-  }
-  html { scroll-behavior: auto; }
-}
-/* === END viewport-base.css === */
+            /* Animation */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
+        /* ============================================
+           RESET
+           ============================================ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ===================================================
-   PROGRESS BAR
-   Thin line at top, fills as you advance slides
-   =================================================== */
-.progress-bar {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 2px; z-index: 1000;
-  background: linear-gradient(
-    to right,
-    var(--accent-warm) var(--prog, 0%),
-    rgba(232,228,223,0.08) var(--prog, 0%)
-  );
-  transition: background 0.4s ease;
-}
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+        }
 
+        /* ============================================
+           VIEWPORT BASE CSS — FULL CONTENTS
+           Source: viewport-base.css (mandatory)
+           ============================================ */
+        html, body { height: 100%; overflow-x: hidden; }
 
-/* ===================================================
-   NAVIGATION DOTS
-   Fixed right-center, one dot per slide
-   =================================================== */
-.nav-dots {
-  position: fixed;
-  right: clamp(1rem, 2.5vw, 2rem);
-  top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column;
-  gap: clamp(0.4rem, 1vh, 0.6rem);
-  z-index: 1000;
-  list-style: none;
-}
-.nav-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(232, 228, 223, 0.2);
-  border: none; padding: 0; cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-.nav-dot.active  { background: var(--accent-warm); transform: scale(1.5); }
-.nav-dot:hover   { background: rgba(232, 228, 223, 0.5); }
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
 
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-/* ===================================================
-   DARK BOTANICAL — SLIDE BASE
-   All slides share dark bg; content centers vertically
-   =================================================== */
-.slide {
-  background: var(--bg-primary);
-  align-items: center;
-  justify-content: center;
-}
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+        }
 
-/* ===================================================
-   ATMOSPHERIC BLOBS
-   Soft blurred radial gradients — each slide colors
-   its own blobs via per-slide classes below.
-   =================================================== */
-.blob {
-  position: absolute; border-radius: 50%;
-  filter: blur(90px); pointer-events: none;
-  opacity: 0;
-}
-/* Blobs reveal when .visible is added by IntersectionObserver */
-.slide.visible .blob       { animation: blobIn 2.2s ease forwards; }
-.slide.visible .blob:nth-of-type(1) { animation-delay: 0s;    }
-.slide.visible .blob:nth-of-type(2) { animation-delay: 0.35s; }
-.slide.visible .blob:nth-of-type(3) { animation-delay: 0.7s;  }
-@keyframes blobIn { to { opacity: 1; } }
+        :root {
+            --title-size:    clamp(1.5rem, 5vw, 4rem);
+            --h2-size:       clamp(1.25rem, 3.5vw, 2.5rem);
+            --h3-size:       clamp(1rem, 2.5vw, 1.75rem);
+            --body-size:     clamp(0.75rem, 1.5vw, 1.125rem);
+            --small-size:    clamp(0.65rem, 1vw, 0.875rem);
+            --slide-padding: clamp(1rem, 4vw, 4rem);
+            --content-gap:   clamp(0.5rem, 2vw, 2rem);
+            --element-gap:   clamp(0.25rem, 1vw, 1rem);
+        }
 
-/* --- Slide 1: Delhi — amber / saffron warmth ----------- */
-.slide-delhi { --slide-accent: var(--accent-warm); }
-.slide-delhi .blob:nth-of-type(1) {
-  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
-  background: radial-gradient(circle, rgba(212,165,116,0.22) 0%, transparent 70%);
-  top: -14%; right: -8%;
-}
-.slide-delhi .blob:nth-of-type(2) {
-  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
-  background: radial-gradient(circle, rgba(192,140,70,0.18) 0%, transparent 70%);
-  bottom: -8%; left: -6%;
-}
-.slide-delhi .blob:nth-of-type(3) {
-  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
-  background: radial-gradient(circle, rgba(232,190,130,0.12) 0%, transparent 70%);
-  top: 46%; left: 44%;
-}
+        .card, .container, .content-box {
+            max-width: min(90vw, 1000px);
+            max-height: min(80vh, 700px);
+        }
 
-/* --- Slide 2: Goa — rose / blush / coral --------------- */
-.slide-goa { --slide-accent: var(--accent-pink); }
-.slide-goa .blob:nth-of-type(1) {
-  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
-  background: radial-gradient(circle, rgba(232,180,184,0.22) 0%, transparent 70%);
-  top: -10%; left: -6%;
-}
-.slide-goa .blob:nth-of-type(2) {
-  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
-  background: radial-gradient(circle, rgba(200,148,158,0.18) 0%, transparent 70%);
-  bottom: -6%; right: -4%;
-}
-.slide-goa .blob:nth-of-type(3) {
-  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
-  background: radial-gradient(circle, rgba(244,210,214,0.10) 0%, transparent 70%);
-  top: 32%; right: 36%;
-}
+        .feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+        .feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
 
-/* --- Slide 3: Punjab — mustard / harvest gold ---------- */
-.slide-punjab { --slide-accent: var(--accent-gold); }
-.slide-punjab .blob:nth-of-type(1) {
-  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
-  background: radial-gradient(circle, rgba(201,184,150,0.22) 0%, transparent 70%);
-  bottom: -10%; right: -4%;
-}
-.slide-punjab .blob:nth-of-type(2) {
-  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
-  background: radial-gradient(circle, rgba(210,190,108,0.18) 0%, transparent 70%);
-  top: -8%; left: -4%;
-}
-.slide-punjab .blob:nth-of-type(3) {
-  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
-  background: radial-gradient(circle, rgba(230,212,158,0.12) 0%, transparent 70%);
-  top: 42%; left: 40%;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
 
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
 
-/* ===================================================
-   THIN VERTICAL ACCENT LINE
-   Left-side decorative rule; fades in with the slide
-   =================================================== */
-.accent-line {
-  position: absolute;
-  left: clamp(2rem, 5vw, 5rem);
-  top: 18%; bottom: 18%;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--slide-accent) 35%,
-    var(--slide-accent) 65%,
-    transparent
-  );
-  opacity: 0;
-  transition: opacity 1.2s ease 0.6s;
-  pointer-events: none;
-}
-.slide.visible .accent-line { opacity: 0.3; }
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap:   clamp(0.4rem, 1.5vw, 1rem);
+                --title-size:    clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size:       clamp(1rem, 3vw, 1.75rem);
+            }
+        }
 
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap:   clamp(0.3rem, 1vw, 0.75rem);
+                --title-size:    clamp(1.1rem, 4vw, 2rem);
+                --body-size:     clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative { display: none; }
+        }
 
-/* ===================================================
-   SLIDE INNER CONTENT WRAPPER
-   Centered; z-index above blobs
-   =================================================== */
-.slide-inner {
-  position: relative; z-index: 2;
-  text-align: center;
-  padding: var(--slide-padding);
-  max-width: min(88vw, 680px);
-  display: flex; flex-direction: column; align-items: center;
-  gap: 0; /* spacing handled per element below */
-}
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size:    clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size:       clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size:     clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
 
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+            .grid { grid-template-columns: 1fr; }
+        }
 
-/* ===================================================
-   TYPOGRAPHY
-   =================================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
 
-/* Eyebrow — small caps location marker */
-.eyebrow {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: clamp(0.55rem, 0.95vw, 0.78rem);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--slide-accent);
-  margin-bottom: clamp(0.6rem, 1.8vh, 1.8rem);
-}
+        /* ============================================
+           PROGRESS BAR
+           ============================================ */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: var(--fedex-orange);
+            z-index: 1000;
+            transition: width 0.4s var(--ease-out-expo);
+            width: 0%;
+            box-shadow: 0 0 8px rgba(255, 98, 0, 0.6);
+        }
 
-/* State name — giant Cormorant hero */
-.state-name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(4.5rem, 13vw, 10.5rem);
-  color: var(--text-primary);
-  line-height: 0.88;
-  letter-spacing: -0.025em;
-}
+        /* ============================================
+           NAVIGATION DOTS
+           ============================================ */
+        .nav-dots {
+            position: fixed;
+            right: clamp(1rem, 2.5vw, 1.75rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            z-index: 100;
+        }
 
-/* Tagline — italic, accent-colored */
-.tagline {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(0.85rem, 1.8vw, 1.4rem);
-  color: var(--slide-accent);
-  line-height: 1.5;
-  margin-top: clamp(0.5rem, 1.4vh, 1.4rem);
-}
+        .nav-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: all 0.28s ease;
+        }
 
-/* Ornamental divider between tagline and tags */
-.ornament {
-  display: flex; align-items: center;
-  gap: clamp(0.5rem, 1.4vw, 1.2rem);
-  margin: clamp(0.9rem, 2.2vh, 2.2rem) auto;
-}
-.orn-line {
-  width: clamp(28px, 5vw, 58px); height: 1px;
-  background: linear-gradient(to right, transparent, var(--slide-accent));
-}
-.orn-line:last-child {
-  background: linear-gradient(to left, transparent, var(--slide-accent));
-}
-.orn-dot {
-  width: 4px; height: 4px; border-radius: 50%;
-  background: var(--slide-accent);
-  flex-shrink: 0;
-}
+        .nav-dot.active {
+            background: var(--fedex-orange);
+            border-color: var(--fedex-orange);
+            transform: scale(1.35);
+        }
 
-/* Feature tags */
-.tags {
-  display: flex; flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(0.35rem, 0.9vw, 0.65rem);
-}
-.tag {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: clamp(0.52rem, 0.85vw, 0.7rem);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  border: 1px solid rgba(154,149,144,0.22);
-  padding: clamp(0.28rem, 0.7vh, 0.44rem) clamp(0.6rem, 1.2vw, 0.95rem);
-}
+        /* ============================================
+           SLIDE — SHARED STRUCTURE
+           ============================================ */
 
+        /* Geometric diagonal background shape */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: -15%;
+            right: -8%;
+            width: 45%;
+            height: 75%;
+            background: linear-gradient(160deg,
+                rgba(77, 20, 140, 0.11) 0%,
+                rgba(77, 20, 140, 0.04) 60%,
+                transparent 100%);
+            transform: skewX(-14deg);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-/* ===================================================
-   REVEAL ANIMATIONS
-   .reveal / .reveal-scale: invisible by default.
-   Parent slide gaining .visible triggers transitions.
-   Transition-delays are set inline per element.
-   =================================================== */
-.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.85s var(--ease-expo), transform 0.85s var(--ease-expo);
-}
-.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+        /* Subtle grid texture on all slides */
+        .slide {
+            background:
+                linear-gradient(rgba(255,255,255,0.013) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.013) 1px, transparent 1px),
+                var(--bg-primary);
+            background-size: 60px 60px, 60px 60px, 100%;
+        }
 
-/* Scale-in variant for the large state name */
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.91);
-  transition: opacity 1.05s var(--ease-expo), transform 1.05s var(--ease-expo);
-}
-.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+        .slide-content { position: relative; z-index: 1; justify-content: flex-start; padding-top: clamp(1.5rem, 4vh, 3rem); }
 
+        /* FedEx brand mark — top right corner */
+        .brand-mark {
+            position: absolute;
+            top: clamp(0.75rem, 2vh, 1.4rem);
+            right: clamp(1rem, 2.5vw, 2rem);
+            display: flex;
+            align-items: baseline;
+            gap: 0;
+            z-index: 10;
+        }
 
-/* ===================================================
-   INLINE EDITING UI
-   Hover top-left corner (or press E) → edit button
-   appears. Ctrl+S exports a clean standalone file.
-   =================================================== */
-.edit-hotzone {
-  position: fixed; top: 0; left: 0;
-  width: 80px; height: 80px;
-  z-index: 10000; cursor: pointer;
-}
-.edit-toggle {
-  position: fixed; top: 1.2rem; left: 1.2rem;
-  opacity: 0; pointer-events: none;
-  background: rgba(212,165,116,0.1);
-  border: 1px solid rgba(212,165,116,0.35);
-  color: var(--accent-warm);
-  font-family: var(--font-body);
-  font-size: clamp(0.55rem, 0.85vw, 0.68rem);
-  letter-spacing: 0.2em; text-transform: uppercase;
-  padding: 0.4rem 0.8rem; cursor: pointer;
-  transition: opacity 0.3s ease;
-  z-index: 10001;
-}
-.edit-toggle.show, .edit-toggle.active {
-  opacity: 1; pointer-events: auto;
-}
-.edit-banner {
-  position: fixed; bottom: 1.5rem; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15,15,15,0.92);
-  border: 1px solid rgba(212,165,116,0.25);
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: clamp(0.5rem, 0.78vw, 0.62rem);
-  letter-spacing: 0.25em; text-transform: uppercase;
-  padding: 0.48rem 1.2rem;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 10001; white-space: nowrap;
-}
-.edit-banner.active { opacity: 1; }
+        .brand-fed {
+            font-family: var(--font-display);
+            font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+            font-weight: 900;
+            color: var(--fedex-purple-mid);
+            letter-spacing: -0.01em;
+            line-height: 1;
+        }
 
-/* Dashed outlines on editable elements in edit mode */
-body.edit-active [contenteditable] {
-  outline: 1px dashed rgba(212,165,116,0.35);
-  cursor: text;
-  border-radius: 2px;
-}
-body.edit-active [contenteditable]:focus {
-  outline: 1px solid var(--accent-warm);
-}
+        .brand-ex {
+            font-family: var(--font-display);
+            font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+            font-weight: 900;
+            color: var(--fedex-orange);
+            letter-spacing: -0.01em;
+            line-height: 1;
+        }
 
-</style>
+        .brand-sub {
+            font-family: var(--font-body);
+            font-size: clamp(0.42rem, 0.75vw, 0.58rem);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-left: 0.45em;
+            margin-bottom: 0.05em;
+        }
+
+        /* Slide header row: label + date */
+        .slide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: clamp(0.55rem, 1.4vh, 1rem);
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: clamp(0.85rem, 2.5vh, 2rem);
+        }
+
+        .slide-label {
+            font-family: var(--font-display);
+            font-size: var(--tag-size);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--fedex-orange);
+        }
+
+        .slide-meta {
+            font-family: var(--font-body);
+            font-size: var(--tag-size);
+            color: var(--text-secondary);
+            letter-spacing: 0.06em;
+        }
+
+        /* Large slide title */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -0.01em;
+            line-height: 0.93;
+            text-transform: uppercase;
+            margin-bottom: clamp(1rem, 3vh, 2rem);
+        }
+
+        .slide-title .accent { color: var(--fedex-orange); }
+
+        /* ============================================
+           REVEAL ANIMATIONS
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s var(--ease-out-expo),
+                        transform 0.55s var(--ease-out-expo);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-28px);
+            transition: opacity 0.55s var(--ease-out-expo),
+                        transform 0.55s var(--ease-out-expo);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.93);
+            transition: opacity 0.55s var(--ease-out-expo),
+                        transform 0.55s var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-scale {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ============================================
+           SLIDE 1 — WEEKLY UPDATE
+           ============================================ */
+        .update-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.7rem, 1.8vw, 1.4rem);
+        }
+
+        .update-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-purple);
+            border-top: 3px solid var(--fedex-purple);
+            border-radius: 3px;
+            padding: clamp(0.85rem, 1.8vw, 1.4rem);
+        }
+
+        .update-card-label {
+            font-family: var(--font-display);
+            font-size: var(--tag-size);
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fedex-orange);
+            margin-bottom: 0.35em;
+        }
+
+        .update-card-title {
+            font-family: var(--font-display);
+            font-size: var(--card-title);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.15;
+            margin-bottom: 0.4em;
+        }
+
+        .update-card-body {
+            font-family: var(--font-body);
+            font-size: var(--card-body);
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* ============================================
+           SLIDE 2 — PRODUCTIVITY METRICS
+           ============================================ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(0.65rem, 1.4vw, 1.2rem);
+            margin-bottom: clamp(0.65rem, 1.8vh, 1.25rem);
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-purple);
+            border-radius: 3px;
+            padding: clamp(0.9rem, 1.8vw, 1.6rem) clamp(0.85rem, 1.6vw, 1.4rem);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated bottom accent line */
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--fedex-orange);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.7s var(--ease-out-expo) 0.35s;
+        }
+
+        .slide.visible .metric-card::after { transform: scaleX(1); }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: var(--metric-size);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .metric-unit {
+            font-size: 0.42em;
+            color: var(--fedex-orange);
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .metric-label {
+            font-family: var(--font-body);
+            font-size: var(--label-size);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.3em;
+            line-height: 1.3;
+        }
+
+        .metric-trend {
+            font-family: var(--font-body);
+            font-size: clamp(0.58rem, 0.88vw, 0.72rem);
+            margin-top: 0.35em;
+            font-weight: 600;
+        }
+
+        .trend-up   { color: #5EBD7A; }
+        .trend-down { color: #E05A5A; }
+        .trend-flat { color: var(--text-secondary); }
+
+        .metrics-note {
+            font-family: var(--font-body);
+            font-size: clamp(0.58rem, 0.92vw, 0.72rem);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .metrics-note::before {
+            content: '';
+            display: inline-block;
+            width: 18px; height: 1px;
+            background: var(--fedex-orange);
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           SLIDE 3 — TRANSPORTATION SAFETY
+           ============================================ */
+        .safety-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: clamp(1.2rem, 3vw, 2.5rem);
+            align-items: start;
+        }
+
+        .safety-statement {
+            font-family: var(--font-display);
+            font-size: clamp(1.55rem, 3.8vw, 3.1rem);
+            font-weight: 900;
+            line-height: 1.0;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+
+        .safety-statement .highlight { color: var(--fedex-orange); }
+
+        .safety-sub {
+            font-family: var(--font-body);
+            font-size: clamp(0.72rem, 1.25vw, 0.95rem);
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-top: clamp(0.65rem, 1.8vh, 1.1rem);
+            max-width: 38ch;
+        }
+
+        .safety-stats {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.3vh, 0.95rem);
+        }
+
+        .safety-stat {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.7rem, 1.4vw, 1.1rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-purple);
+            border-left: 4px solid var(--fedex-purple);
+            border-radius: 3px;
+            padding: clamp(0.65rem, 1.3vw, 1rem) clamp(0.85rem, 1.6vw, 1.3rem);
+        }
+
+        .safety-stat-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+            font-weight: 900;
+            color: var(--fedex-orange);
+            line-height: 1;
+            min-width: 3.8rem;
+            flex-shrink: 0;
+        }
+
+        .safety-stat-title {
+            font-family: var(--font-display);
+            font-size: clamp(0.8rem, 1.4vw, 1rem);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+        }
+
+        .safety-stat-desc {
+            font-family: var(--font-body);
+            font-size: clamp(0.58rem, 0.95vw, 0.75rem);
+            color: var(--text-secondary);
+            margin-top: 0.12em;
+        }
+
+        /* Safety pledge spans full width */
+        .safety-pledge {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, var(--fedex-purple) 0%, var(--fedex-purple-mid) 100%);
+            border-radius: 3px;
+            padding: clamp(0.6rem, 1.4vh, 0.95rem) clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .safety-pledge-icon {
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            flex-shrink: 0;
+        }
+
+        .safety-pledge-text {
+            font-family: var(--font-display);
+            font-size: clamp(0.75rem, 1.4vw, 1rem);
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* Responsive stacks */
+        @media (max-width: 800px) {
+            .update-grid   { grid-template-columns: 1fr; }
+            .metrics-grid  { grid-template-columns: repeat(2, 1fr); }
+            .safety-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-height: 600px) {
+            .safety-pledge { display: none; }
+            .metrics-note  { display: none; }
+        }
+
+        /* ============================================
+           INLINE EDITING
+           ============================================ */
+        .edit-hotzone {
+            position: fixed;
+            top: 0; left: 0;
+            width: 80px; height: 80px;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .edit-toggle {
+            position: fixed;
+            top: 1rem; left: 1rem;
+            background: var(--fedex-purple);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.32em 0.7em;
+            font-size: 0.78rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s ease, background 0.2s ease;
+            z-index: 10001;
+        }
+
+        .edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+        .edit-toggle.active { background: var(--fedex-orange); }
+
+        .edit-banner {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--fedex-purple);
+            color: #fff;
+            text-align: center;
+            padding: 0.38em 1em;
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            z-index: 10000;
+            transform: translateY(100%);
+            transition: transform 0.28s ease;
+        }
+
+        .edit-banner.active { transform: translateY(0); }
+
+        body.edit-active [contenteditable] {
+            outline: 1.5px dashed rgba(255, 98, 0, 0.55);
+            border-radius: 2px;
+            cursor: text;
+            min-width: 1ch;
+        }
+
+        /* ============================================
+           KEYBOARD HINT
+           ============================================ */
+        .keyboard-hint {
+            position: fixed;
+            bottom: clamp(0.75rem, 2vh, 1.4rem);
+            right: clamp(1.5rem, 3vw, 2.5rem);
+            font-family: var(--font-body);
+            font-size: clamp(0.52rem, 0.85vw, 0.66rem);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            opacity: 0.45;
+            z-index: 50;
+            letter-spacing: 0.04em;
+        }
+
+        kbd {
+            display: inline-block;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 3px;
+            padding: 0.1em 0.32em;
+            font-family: var(--font-body);
+            font-size: inherit;
+        }
+    </style>
 </head>
 <body>
 
-<!-- =====================================================
-     PROGRESS BAR
-     Fills left-to-right as you move through slides
-     ===================================================== -->
-<div class="progress-bar" id="progressBar"></div>
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar"></div>
 
-<!-- =====================================================
-     NAVIGATION DOTS
-     Populated by JS; click to jump to any slide
-     ===================================================== -->
-<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
 
-
-<!-- =====================================================
-     SLIDE 1 — DELHI
-     The imperial capital: Mughal grandeur, old streets,
-     the pulse of a billion-person democracy.
-     Accent: amber / saffron warmth
-     ===================================================== -->
-<section class="slide slide-delhi" id="slide-1" aria-label="Slide 1: Delhi">
-
-  <!-- Atmospheric background blobs -->
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-
-  <!-- Left decorative accent line -->
-  <div class="accent-line" aria-hidden="true"></div>
-
-  <div class="slide-inner">
-    <p class="eyebrow reveal" style="transition-delay:0.1s">01 &nbsp;·&nbsp; The Imperial Capital</p>
-    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Delhi</h2>
-    <p class="tagline reveal" style="transition-delay:0.52s">
-      Where empires whispered<br>and modernity roars
-    </p>
-    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
-      <span class="orn-line"></span>
-      <span class="orn-dot"></span>
-      <span class="orn-line"></span>
+    <!-- Inline editing controls -->
+    <div class="edit-hotzone" id="editHotzone" aria-hidden="true"></div>
+    <button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">✏ Edit</button>
+    <div class="edit-banner" id="editBanner">
+        ✏ EDIT MODE &nbsp;—&nbsp; Click any text to edit &nbsp;|&nbsp; <strong>Ctrl+S</strong> save file &nbsp;|&nbsp; <strong>E</strong> exit
     </div>
-    <div class="tags reveal" style="transition-delay:0.94s">
-      <span class="tag">Mughal Heritage</span>
-      <span class="tag">Street Food</span>
-      <span class="tag">Political Heart</span>
-      <span class="tag">Old &amp; New Delhi</span>
+
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint" aria-hidden="true">
+        <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;<kbd>E</kbd> edit
     </div>
-  </div>
 
-</section>
+    <!-- ====================================================
+         SLIDE 1 — WEEKLY UPDATE
+         ==================================================== -->
+    <section class="slide" id="slide-1" aria-label="Weekly Update">
+        <div class="brand-mark" aria-hidden="true">
+            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
+            <span class="brand-sub">Express</span>
+        </div>
 
+        <div class="slide-content">
+            <div class="slide-header reveal" style="transition-delay:0.05s">
+                <span class="slide-label">Weekly Update</span>
+                <span class="slide-meta">Week 20 &nbsp;·&nbsp; May 12–16, 2025</span>
+            </div>
 
-<!-- =====================================================
-     SLIDE 2 — GOA
-     India's coastal jewel: Portuguese architecture,
-     spice gardens, sun-soaked beaches, free spirit.
-     Accent: rose / blush
-     ===================================================== -->
-<section class="slide slide-goa" id="slide-2" aria-label="Slide 2: Goa">
+            <h1 class="slide-title reveal" style="transition-delay:0.15s">
+                This Week<br>In <span class="accent">Operations</span>
+            </h1>
 
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-  <div class="accent-line" aria-hidden="true"></div>
+            <div class="update-grid">
+                <div class="update-card reveal" style="transition-delay:0.28s">
+                    <div class="update-card-label">Operations</div>
+                    <div class="update-card-title">Hub Performance</div>
+                    <div class="update-card-body">All regional hubs at full capacity. Memphis SuperHub processed 2.1M packages — 4.2% above weekly target.</div>
+                </div>
+                <div class="update-card reveal" style="transition-delay:0.38s">
+                    <div class="update-card-label">Workforce</div>
+                    <div class="update-card-title">Team Attendance</div>
+                    <div class="update-card-body">Attendance at 97.3% across all shifts. Q2 peak season overtime approvals completed and communicated to managers.</div>
+                </div>
+                <div class="update-card reveal" style="transition-delay:0.48s">
+                    <div class="update-card-label">Upcoming</div>
+                    <div class="update-card-title">Route Optimization Pilot</div>
+                    <div class="update-card-body">Ground delivery pilot launches Monday. 8 Southwest district routes will run AI-assisted sequencing for the first time.</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div class="slide-inner">
-    <p class="eyebrow reveal" style="transition-delay:0.1s">02 &nbsp;·&nbsp; The Coastal Jewel</p>
-    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Goa</h2>
-    <p class="tagline reveal" style="transition-delay:0.52s">
-      Where the Arabian Sea<br>meets Portuguese soul
-    </p>
-    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
-      <span class="orn-line"></span>
-      <span class="orn-dot"></span>
-      <span class="orn-line"></span>
-    </div>
-    <div class="tags reveal" style="transition-delay:0.94s">
-      <span class="tag">Sun &amp; Surf</span>
-      <span class="tag">Colonial Legacy</span>
-      <span class="tag">Spice Gardens</span>
-      <span class="tag">Free Spirit</span>
-    </div>
-  </div>
+    <!-- ====================================================
+         SLIDE 2 — PRODUCTIVITY METRICS
+         ==================================================== -->
+    <section class="slide" id="slide-2" aria-label="Productivity Metrics">
+        <div class="brand-mark" aria-hidden="true">
+            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
+            <span class="brand-sub">Express</span>
+        </div>
 
-</section>
+        <div class="slide-content">
+            <div class="slide-header reveal" style="transition-delay:0.05s">
+                <span class="slide-label">Productivity Metrics</span>
+                <span class="slide-meta">Week 20 &nbsp;·&nbsp; vs. Last Week</span>
+            </div>
 
+            <h2 class="slide-title reveal" style="transition-delay:0.15s">
+                Performance<br><span class="accent">At a Glance</span>
+            </h2>
 
-<!-- =====================================================
-     SLIDE 3 — PUNJAB
-     The land of five rivers: Golden Temple, mustard
-     fields, bhangra rhythms, boundless hospitality.
-     Accent: harvest gold
-     ===================================================== -->
-<section class="slide slide-punjab" id="slide-3" aria-label="Slide 3: Punjab">
+            <div class="metrics-grid">
+                <div class="metric-card reveal" style="transition-delay:0.28s">
+                    <div class="metric-value">
+                        <span class="counter" data-target="48291">0</span>
+                    </div>
+                    <div class="metric-label">Packages Processed</div>
+                    <div class="metric-trend trend-up">↑ 3.1% vs last week</div>
+                </div>
+                <div class="metric-card reveal" style="transition-delay:0.38s">
+                    <div class="metric-value">
+                        <span class="counter" data-target="974" data-decimal="1">0</span><span class="metric-unit">%</span>
+                    </div>
+                    <div class="metric-label">On-Time Delivery Rate</div>
+                    <div class="metric-trend trend-up">↑ 0.8% vs last week</div>
+                </div>
+                <div class="metric-card reveal" style="transition-delay:0.48s">
+                    <div class="metric-value">
+                        <span class="counter" data-target="942" data-decimal="1">0</span><span class="metric-unit">%</span>
+                    </div>
+                    <div class="metric-label">Route Efficiency</div>
+                    <div class="metric-trend trend-down">↓ 0.4% vs last week</div>
+                </div>
+                <div class="metric-card reveal" style="transition-delay:0.58s">
+                    <div class="metric-value">
+                        <span class="counter" data-target="48" data-decimal="1">0</span><span class="metric-unit">/5</span>
+                    </div>
+                    <div class="metric-label">Customer Satisfaction</div>
+                    <div class="metric-trend trend-up">↑ 0.2 vs last week</div>
+                </div>
+            </div>
 
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-  <div class="blob" aria-hidden="true"></div>
-  <div class="accent-line" aria-hidden="true"></div>
+            <div class="metrics-note reveal" style="transition-delay:0.66s">
+                Reflects all active U.S. domestic routes. Data updated end-of-day Friday.
+            </div>
+        </div>
+    </section>
 
-  <div class="slide-inner">
-    <p class="eyebrow reveal" style="transition-delay:0.1s">03 &nbsp;·&nbsp; The Land of Five Rivers</p>
-    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Punjab</h2>
-    <p class="tagline reveal" style="transition-delay:0.52s">
-      Where golden fields sing<br>and hearts are wide open
-    </p>
-    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
-      <span class="orn-line"></span>
-      <span class="orn-dot"></span>
-      <span class="orn-line"></span>
-    </div>
-    <div class="tags reveal" style="transition-delay:0.94s">
-      <span class="tag">Golden Temple</span>
-      <span class="tag">Breadbasket of India</span>
-      <span class="tag">Bhangra</span>
-      <span class="tag">Warm Hospitality</span>
-    </div>
-  </div>
+    <!-- ====================================================
+         SLIDE 3 — TRANSPORTATION SAFETY
+         ==================================================== -->
+    <section class="slide" id="slide-3" aria-label="Transportation Safety">
+        <div class="brand-mark" aria-hidden="true">
+            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
+            <span class="brand-sub">Express</span>
+        </div>
 
-</section>
+        <div class="slide-content">
+            <div class="slide-header reveal" style="transition-delay:0.05s">
+                <span class="slide-label">Transportation Safety</span>
+                <span class="slide-meta">Safety Commitment &nbsp;·&nbsp; Week 20</span>
+            </div>
 
+            <div class="safety-layout">
+                <!-- Left: statement -->
+                <div>
+                    <div class="safety-statement reveal" style="transition-delay:0.18s">
+                        Safety Is<br>Not A Choice —<br>It's Our<br><span class="highlight">Commitment</span>
+                    </div>
+                    <div class="safety-sub reveal" style="transition-delay:0.28s">
+                        Every driver, handler, and team member plays a role. Zero incidents is not a goal — it is our operating standard.
+                    </div>
+                </div>
 
-<!-- =====================================================
-     INLINE EDITING UI
-     Hover top-left corner OR press E to reveal the
-     edit button. Click any text to edit. Ctrl+S saves.
-     ===================================================== -->
-<div class="edit-hotzone" id="editHotzone" aria-hidden="true"></div>
-<button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">Edit</button>
-<div class="edit-banner" id="editBanner">Edit mode &nbsp;·&nbsp; Click any text &nbsp;·&nbsp; Ctrl+S to save</div>
+                <!-- Right: stats -->
+                <div class="safety-stats">
+                    <div class="safety-stat reveal" style="transition-delay:0.34s">
+                        <div class="safety-stat-num">14</div>
+                        <div>
+                            <div class="safety-stat-title">Days Without Incident</div>
+                            <div class="safety-stat-desc">Current streak across Southwest district</div>
+                        </div>
+                    </div>
+                    <div class="safety-stat reveal" style="transition-delay:0.44s">
+                        <div class="safety-stat-num">100%</div>
+                        <div>
+                            <div class="safety-stat-title">Pre-Trip Inspections Complete</div>
+                            <div class="safety-stat-desc">All vehicles cleared before dispatch this week</div>
+                        </div>
+                    </div>
+                    <div class="safety-stat reveal" style="transition-delay:0.54s">
+                        <div class="safety-stat-num">2</div>
+                        <div>
+                            <div class="safety-stat-title">Near Misses Reported</div>
+                            <div class="safety-stat-desc">Reported, reviewed, corrective action taken</div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Full-width pledge -->
+                <div class="safety-pledge reveal" style="transition-delay:0.64s">
+                    <span class="safety-pledge-icon" aria-hidden="true">🛡</span>
+                    <span class="safety-pledge-text">Zero Incidents. Zero Compromises. Every Delivery, Every Day.</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script>
-/* =========================================================
-   SLIDE PRESENTATION CONTROLLER
-   Manages scroll navigation, keyboard, touch, progress
-   bar, and navigation dots.
-   ========================================================= */
-class SlidePresentation {
-  constructor() {
-    this.slides        = Array.from(document.querySelectorAll('.slide'));
-    this.currentIndex  = 0;
-    this.progressBar   = document.getElementById('progressBar');
-    this.navContainer  = document.getElementById('navDots');
+    <script>
+        /* ============================================
+           SLIDE PRESENTATION CONTROLLER
+           ============================================ */
+        class SlidePresentation {
+            constructor() {
+                this.slides       = Array.from(document.querySelectorAll('.slide'));
+                this.currentIndex = 0;
+                this.wheelCooldown = false;
+                this.touchStartY   = 0;
+                this.progressBar   = document.getElementById('progressBar');
+                this.navDotsEl     = document.getElementById('navDots');
 
-    this.buildNavDots();
-    this.observeSlides();
-    this.listenKeyboard();
-    this.listenWheel();
-    this.listenTouch();
+                this.buildNavDots();
+                this.observeSlides();
+                this.listenKeyboard();
+                this.listenWheel();
+                this.listenTouch();
+                this.updateProgress(0);
+            }
 
-    /* Mark first slide visible immediately */
-    this.slides[0]?.classList.add('visible');
-  }
+            buildNavDots() {
+                this.navDotsEl.innerHTML = ''; // prevent duplicates after innerHTML restore
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => this.goTo(i));
+                    this.navDotsEl.appendChild(dot);
+                });
+            }
 
-  /* Build nav dots — clear first to avoid duplicates if file is re-saved */
-  buildNavDots() {
-    this.navContainer.innerHTML = '';
-    this.slides.forEach((_, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'nav-dot' + (i === 0 ? ' active' : '');
-      btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
-      btn.addEventListener('click', () => this.goto(i));
-      this.navContainer.appendChild(btn);
-    });
-  }
+            observeSlides() {
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.classList.add('visible');
+                        const idx = this.slides.indexOf(entry.target);
+                        if (idx !== -1) {
+                            this.currentIndex = idx;
+                            this.updateProgress(idx);
+                            this.updateDots(idx);
+                            this.startCounters(entry.target);
+                        }
+                    });
+                }, { threshold: 0.55 });
 
-  /* IntersectionObserver: add .visible when slide is in view */
-  observeSlides() {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          const idx = this.slides.indexOf(e.target);
-          if (idx !== -1) this.sync(idx);
+                this.slides.forEach(s => io.observe(s));
+            }
+
+            updateProgress(idx) {
+                const pct = this.slides.length <= 1 ? 100
+                    : (idx / (this.slides.length - 1)) * 100;
+                this.progressBar.style.width = pct + '%';
+            }
+
+            updateDots(idx) {
+                this.navDotsEl.querySelectorAll('.nav-dot')
+                    .forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+
+            goTo(idx) {
+                if (idx < 0 || idx >= this.slides.length) return;
+                this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+            }
+
+            listenKeyboard() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.getAttribute('contenteditable')) return;
+                    switch (e.key) {
+                        case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
+                            e.preventDefault(); this.goTo(this.currentIndex + 1); break;
+                        case 'ArrowUp': case 'ArrowLeft': case 'PageUp':
+                            e.preventDefault(); this.goTo(this.currentIndex - 1); break;
+                        case 'Home':
+                            e.preventDefault(); this.goTo(0); break;
+                        case 'End':
+                            e.preventDefault(); this.goTo(this.slides.length - 1); break;
+                    }
+                });
+            }
+
+            listenWheel() {
+                document.addEventListener('wheel', (e) => {
+                    if (this.wheelCooldown || Math.abs(e.deltaY) < 30) return;
+                    this.wheelCooldown = true;
+                    setTimeout(() => { this.wheelCooldown = false; }, 800);
+                    this.goTo(this.currentIndex + (e.deltaY > 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            listenTouch() {
+                document.addEventListener('touchstart', (e) => {
+                    this.touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    const diff = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(diff) < 48) return;
+                    this.goTo(this.currentIndex + (diff > 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            /* Animated number counters — trigger once per slide */
+            startCounters(slide) {
+                slide.querySelectorAll('.counter').forEach(el => {
+                    if (el.dataset.counted) return;
+                    el.dataset.counted = 'true';
+
+                    const target  = parseInt(el.dataset.target, 10);
+                    const decimal = parseInt(el.dataset.decimal || '0', 10);
+                    const divisor = Math.pow(10, decimal);
+                    const start   = performance.now();
+                    const dur     = 1100;
+
+                    const step = (now) => {
+                        const t    = Math.min((now - start) / dur, 1);
+                        const ease = 1 - Math.pow(1 - t, 3); // ease out cubic
+                        const val  = target * ease;
+                        el.textContent = decimal > 0
+                            ? (val / divisor).toFixed(decimal)
+                            : Math.round(val).toLocaleString();
+                        if (t < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                });
+            }
         }
-      });
-    }, { threshold: 0.55 });
-    this.slides.forEach(s => io.observe(s));
-  }
 
-  /* Keep progress bar and nav dots in sync */
-  sync(idx) {
-    this.currentIndex = idx;
-    const pct = this.slides.length > 1
-      ? (idx / (this.slides.length - 1)) * 100
-      : 100;
-    this.progressBar.style.background =
-      `linear-gradient(to right, var(--accent-warm) ${pct}%, rgba(232,228,223,0.08) ${pct}%)`;
-    this.navContainer.querySelectorAll('.nav-dot').forEach((d, i) =>
-      d.classList.toggle('active', i === idx));
-  }
+        /* ============================================
+           INLINE EDITOR
+           ============================================ */
+        class InlineEditor {
+            constructor() {
+                this.isActive  = false;
+                this.STORE_KEY = 'fedex-weekly-slides';
+                this.toggle    = document.getElementById('editToggle');
+                this.banner    = document.getElementById('editBanner');
+                this.hotzone   = document.getElementById('editHotzone');
 
-  goto(idx) {
-    if (idx < 0 || idx >= this.slides.length) return;
-    this.slides[idx].scrollIntoView({ behavior: 'smooth' });
-  }
+                this.wireHotzone();
+                this.toggle.addEventListener('click',   () => this.flip());
+                this.hotzone.addEventListener('click',  () => this.flip());
+                document.addEventListener('keydown', (e) => this.onKey(e));
+            }
 
-  /* Keyboard: arrows, Space, Page Up/Down, Home, End */
-  listenKeyboard() {
-    document.addEventListener('keydown', e => {
-      if (e.target.getAttribute('contenteditable')) return;
-      switch (e.key) {
-        case 'ArrowDown': case 'ArrowRight': case ' ':
-          e.preventDefault(); this.goto(this.currentIndex + 1); break;
-        case 'ArrowUp': case 'ArrowLeft':
-          e.preventDefault(); this.goto(this.currentIndex - 1); break;
-        case 'PageDown': e.preventDefault(); this.goto(this.currentIndex + 1); break;
-        case 'PageUp':   e.preventDefault(); this.goto(this.currentIndex - 1); break;
-        case 'Home':     e.preventDefault(); this.goto(0); break;
-        case 'End':      e.preventDefault(); this.goto(this.slides.length - 1); break;
-      }
-    });
-  }
+            wireHotzone() {
+                let hideTimeout = null;
+                const show = () => { clearTimeout(hideTimeout); this.toggle.classList.add('show'); };
+                const hide = () => {
+                    hideTimeout = setTimeout(() => {
+                        if (!this.isActive) this.toggle.classList.remove('show');
+                    }, 400);
+                };
+                this.hotzone.addEventListener('mouseenter', show);
+                this.hotzone.addEventListener('mouseleave', hide);
+                this.toggle.addEventListener('mouseenter',  show);
+                this.toggle.addEventListener('mouseleave',  hide);
+            }
 
-  /* Mouse wheel — 800ms cooldown prevents rapid-fire skipping */
-  listenWheel() {
-    let last = 0;
-    document.addEventListener('wheel', e => {
-      e.preventDefault();
-      const now = Date.now();
-      if (now - last < 800) return;
-      last = now;
-      this.goto(e.deltaY > 0 ? this.currentIndex + 1 : this.currentIndex - 1);
-    }, { passive: false });
-  }
+            onKey(e) {
+                if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+                    this.flip();
+                }
+                if (e.ctrlKey && e.key === 's' && this.isActive) {
+                    e.preventDefault();
+                    this.exportFile();
+                }
+            }
 
-  /* Touch / swipe */
-  listenTouch() {
-    let startY = 0;
-    document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
-    document.addEventListener('touchend', e => {
-      const diff = startY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) > 48)
-        this.goto(diff > 0 ? this.currentIndex + 1 : this.currentIndex - 1);
-    }, { passive: true });
-  }
-}
+            flip() {
+                this.isActive = !this.isActive;
+                document.body.classList.toggle('edit-active', this.isActive);
+                this.toggle.classList.toggle('active', this.isActive);
+                this.banner.classList.toggle('active',  this.isActive);
+                this.toggle.textContent = this.isActive ? '✓ Done' : '✏ Edit';
 
+                const sel = [
+                    'h1.slide-title', 'h2.slide-title',
+                    '.update-card-label', '.update-card-title', '.update-card-body',
+                    '.slide-label', '.slide-meta',
+                    '.metric-label', '.metric-trend', '.metrics-note',
+                    '.safety-statement', '.safety-sub',
+                    '.safety-stat-num', '.safety-stat-title', '.safety-stat-desc',
+                    '.safety-pledge-text'
+                ].join(', ');
 
-/* =========================================================
-   INLINE EDITOR
-   Three ways to enter edit mode:
-     1. Hover the top-left hotzone → edit button appears
-     2. Click the edit button
-     3. Press E anywhere on the page
-   In edit mode: click any text to edit it in-browser.
-   Ctrl+S exports a clean standalone HTML file.
-   Changes auto-saved to localStorage between sessions.
-   ========================================================= */
-class InlineEditor {
-  constructor() {
-    this.isActive   = false;
-    this.toggle     = document.getElementById('editToggle');
-    this.banner     = document.getElementById('editBanner');
-    this.hotzone    = document.getElementById('editHotzone');
-    /* Selector for all editable text elements */
-    this.sel = 'h2.state-name, p.tagline, p.eyebrow, .tag';
+                document.querySelectorAll(sel).forEach(el => {
+                    if (this.isActive) {
+                        el.setAttribute('contenteditable', 'true');
+                        el.addEventListener('input', () => this.persist(), { passive: true });
+                    } else {
+                        el.removeAttribute('contenteditable');
+                    }
+                });
 
-    this.wireHotzone();
-    this.wireKeyboard();
-    this.toggle.addEventListener('click', () => this.flip());
-    this.wireCtrlS();
-    this.restore();
-  }
+                if (!this.isActive) this.persist();
+            }
 
-  /* Hotzone hover with 400ms grace period — prevents button vanishing mid-move */
-  wireHotzone() {
-    let timer = null;
-    const show  = () => { clearTimeout(timer); this.toggle.classList.add('show'); };
-    const defer = () => { timer = setTimeout(() => { if (!this.isActive) this.toggle.classList.remove('show'); }, 400); };
+            /* Save body HTML with edit state stripped */
+            persist() {
+                const editables = Array.from(document.querySelectorAll('[contenteditable]'));
+                editables.forEach(el => el.removeAttribute('contenteditable'));
+                document.body.classList.remove('edit-active');
 
-    this.hotzone.addEventListener('mouseenter', show);
-    this.hotzone.addEventListener('mouseleave', defer);
-    this.hotzone.addEventListener('click', () => this.flip());
-    this.toggle.addEventListener('mouseenter', () => clearTimeout(timer));
-    this.toggle.addEventListener('mouseleave', defer);
-  }
+                localStorage.setItem(this.STORE_KEY, document.body.innerHTML);
 
-  /* E key: toggle edit mode (skip when focus is inside an editable element) */
-  wireKeyboard() {
-    document.addEventListener('keydown', e => {
-      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable'))
-        this.flip();
-    });
-  }
+                document.body.classList.add('edit-active');
+                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+            }
 
-  flip() {
-    this.isActive = !this.isActive;
-    document.body.classList.toggle('edit-active', this.isActive);
-    this.toggle.classList.toggle('active', this.isActive);
-    this.toggle.classList.toggle('show',   this.isActive);
-    this.banner.classList.toggle('active', this.isActive);
-    this.toggle.textContent = this.isActive ? 'Done' : 'Edit';
+            /* Download HTML file with edit state stripped */
+            exportFile() {
+                const editables = Array.from(document.querySelectorAll('[contenteditable]'));
+                editables.forEach(el => el.removeAttribute('contenteditable'));
+                document.body.classList.remove('edit-active');
+                this.toggle.classList.remove('active', 'show');
+                this.banner.classList.remove('active');
 
-    document.querySelectorAll(this.sel).forEach(el => {
-      if (this.isActive) el.setAttribute('contenteditable', 'true');
-      else { el.removeAttribute('contenteditable'); this.persist(); }
-    });
-  }
+                const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-  /* Save current text to localStorage */
-  persist() {
-    const data = {};
-    document.querySelectorAll(this.sel).forEach((el, i) => { data[i] = el.innerHTML; });
-    try { localStorage.setItem('india-slides', JSON.stringify(data)); } catch (_) {}
-  }
+                document.body.classList.add('edit-active');
+                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+                this.toggle.classList.add('active');
+                this.banner.classList.add('active');
 
-  /* Restore saved text on page load */
-  restore() {
-    try {
-      const data = JSON.parse(localStorage.getItem('india-slides') || 'null');
-      if (!data) return;
-      document.querySelectorAll(this.sel).forEach((el, i) => {
-        if (data[i] !== undefined) el.innerHTML = data[i];
-      });
-    } catch (_) {}
-  }
+                const blob = new Blob([html], { type: 'text/html' });
+                const a    = document.createElement('a');
+                a.href     = URL.createObjectURL(blob);
+                a.download = 'fedex-weekly-meeting.html';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            }
+        }
 
-  /* Ctrl+S: strip edit state, capture outerHTML, restore edit state */
-  wireCtrlS() {
-    document.addEventListener('keydown', e => {
-      if (!(e.ctrlKey && e.key === 's')) return;
-      e.preventDefault();
-      this.exportFile();
-    });
-  }
+        /* ============================================
+           RESTORE SAVED CONTENT, THEN INITIALIZE
+           ============================================ */
+        const _saved = localStorage.getItem('fedex-weekly-slides');
+        if (_saved) document.body.innerHTML = _saved;
 
-  exportFile() {
-    /* 1. Strip edit state so saved file opens cleanly */
-    const editables = Array.from(document.querySelectorAll('[contenteditable]'));
-    editables.forEach(el => el.removeAttribute('contenteditable'));
-    document.body.classList.remove('edit-active');
-    this.toggle.classList.remove('active', 'show');
-    this.banner.classList.remove('active');
-
-    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-    /* 2. Restore edit state so user can keep editing */
-    document.body.classList.add('edit-active');
-    editables.forEach(el => el.setAttribute('contenteditable', 'true'));
-    this.toggle.classList.add('active');
-    this.banner.classList.add('active');
-
-    /* 3. Trigger download */
-    const blob = new Blob([html], { type: 'text/html' });
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(blob);
-    a.download = 'india-states.html';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-}
-
-/* Initialise both controllers */
-const deck   = new SlidePresentation();
-const editor = new InlineEditor();
-</script>
-
+        const presentation = new SlidePresentation();
+        const editor       = new InlineEditor();
+    </script>
 </body>
 </html>
