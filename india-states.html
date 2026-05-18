@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi · Goa · Punjab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===================================================
+   CSS CUSTOM PROPERTIES (THEME)
+   Edit these variables to restyle the entire deck.
+   =================================================== */
+:root {
+  /* Dark Botanical palette */
+  --bg-primary:    #0f0f0f;
+  --text-primary:  #e8e4df;
+  --text-muted:    #9a9590;
+  --accent-warm:   #d4a574;  /* Delhi  — amber   */
+  --accent-pink:   #e8b4b8;  /* Goa    — rose    */
+  --accent-gold:   #c9b896;  /* Punjab — harvest */
+
+  /* Typography */
+  --font-display: 'Cormorant', serif;
+  --font-body:    'IBM Plex Sans', sans-serif;
+
+  /* Animation */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* === viewport-base.css variables (mandatory) === */
+  --title-size:   clamp(1.5rem, 5vw, 4rem);
+  --h2-size:      clamp(1.25rem, 3.5vw, 2.5rem);
+  --body-size:    clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size:   clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 4vw, 4rem);
+  --content-gap:   clamp(0.5rem, 2vw, 2rem);
+  --element-gap:   clamp(0.25rem, 1vw, 1rem);
+}
+
+/* ===================================================
+   BASE RESET
+   =================================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===================================================
+   viewport-base.css — MANDATORY (include in full)
+   =================================================== */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  padding: var(--slide-padding);
+}
+.card, .container, .content-box {
+  max-width: min(90vw, 1000px);
+  max-height: min(80vh, 700px);
+}
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+img, .image-container {
+  max-width: 100%;
+  max-height: min(50vh, 400px);
+  object-fit: contain;
+}
+/* Short viewports < 700px */
+@media (max-height: 700px) {
+  :root {
+    --slide-padding: clamp(0.75rem, 3vw, 2rem);
+    --content-gap:   clamp(0.4rem, 1.5vw, 1rem);
+    --title-size:    clamp(1.25rem, 4.5vw, 2.5rem);
+    --h2-size:       clamp(1rem, 3vw, 1.75rem);
+  }
+}
+/* Very short < 600px */
+@media (max-height: 600px) {
+  :root {
+    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+    --content-gap:   clamp(0.3rem, 1vw, 0.75rem);
+    --title-size:    clamp(1.1rem, 4vw, 2rem);
+    --body-size:     clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+/* Landscape phones < 500px */
+@media (max-height: 500px) {
+  :root {
+    --slide-padding: clamp(0.4rem, 2vw, 1rem);
+    --title-size:    clamp(1rem, 3.5vw, 1.5rem);
+    --h2-size:       clamp(0.9rem, 2.5vw, 1.25rem);
+    --body-size:     clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+/* Narrow viewports < 600px wide */
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+}
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+  html { scroll-behavior: auto; }
+}
+/* === END viewport-base.css === */
+
+
+/* ===================================================
+   PROGRESS BAR
+   Thin line at top, fills as you advance slides
+   =================================================== */
+.progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 2px; z-index: 1000;
+  background: linear-gradient(
+    to right,
+    var(--accent-warm) var(--prog, 0%),
+    rgba(232,228,223,0.08) var(--prog, 0%)
+  );
+  transition: background 0.4s ease;
+}
+
+
+/* ===================================================
+   NAVIGATION DOTS
+   Fixed right-center, one dot per slide
+   =================================================== */
+.nav-dots {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2rem);
+  top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column;
+  gap: clamp(0.4rem, 1vh, 0.6rem);
+  z-index: 1000;
+  list-style: none;
+}
+.nav-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(232, 228, 223, 0.2);
+  border: none; padding: 0; cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.nav-dot.active  { background: var(--accent-warm); transform: scale(1.5); }
+.nav-dot:hover   { background: rgba(232, 228, 223, 0.5); }
+
+
+/* ===================================================
+   DARK BOTANICAL — SLIDE BASE
+   All slides share dark bg; content centers vertically
+   =================================================== */
+.slide {
+  background: var(--bg-primary);
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===================================================
+   ATMOSPHERIC BLOBS
+   Soft blurred radial gradients — each slide colors
+   its own blobs via per-slide classes below.
+   =================================================== */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(90px); pointer-events: none;
+  opacity: 0;
+}
+/* Blobs reveal when .visible is added by IntersectionObserver */
+.slide.visible .blob       { animation: blobIn 2.2s ease forwards; }
+.slide.visible .blob:nth-of-type(1) { animation-delay: 0s;    }
+.slide.visible .blob:nth-of-type(2) { animation-delay: 0.35s; }
+.slide.visible .blob:nth-of-type(3) { animation-delay: 0.7s;  }
+@keyframes blobIn { to { opacity: 1; } }
+
+/* --- Slide 1: Delhi — amber / saffron warmth ----------- */
+.slide-delhi { --slide-accent: var(--accent-warm); }
+.slide-delhi .blob:nth-of-type(1) {
+  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
+  background: radial-gradient(circle, rgba(212,165,116,0.22) 0%, transparent 70%);
+  top: -14%; right: -8%;
+}
+.slide-delhi .blob:nth-of-type(2) {
+  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
+  background: radial-gradient(circle, rgba(192,140,70,0.18) 0%, transparent 70%);
+  bottom: -8%; left: -6%;
+}
+.slide-delhi .blob:nth-of-type(3) {
+  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
+  background: radial-gradient(circle, rgba(232,190,130,0.12) 0%, transparent 70%);
+  top: 46%; left: 44%;
+}
+
+/* --- Slide 2: Goa — rose / blush / coral --------------- */
+.slide-goa { --slide-accent: var(--accent-pink); }
+.slide-goa .blob:nth-of-type(1) {
+  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
+  background: radial-gradient(circle, rgba(232,180,184,0.22) 0%, transparent 70%);
+  top: -10%; left: -6%;
+}
+.slide-goa .blob:nth-of-type(2) {
+  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
+  background: radial-gradient(circle, rgba(200,148,158,0.18) 0%, transparent 70%);
+  bottom: -6%; right: -4%;
+}
+.slide-goa .blob:nth-of-type(3) {
+  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
+  background: radial-gradient(circle, rgba(244,210,214,0.10) 0%, transparent 70%);
+  top: 32%; right: 36%;
+}
+
+/* --- Slide 3: Punjab — mustard / harvest gold ---------- */
+.slide-punjab { --slide-accent: var(--accent-gold); }
+.slide-punjab .blob:nth-of-type(1) {
+  width: clamp(260px, 46vw, 620px); height: clamp(260px, 46vw, 620px);
+  background: radial-gradient(circle, rgba(201,184,150,0.22) 0%, transparent 70%);
+  bottom: -10%; right: -4%;
+}
+.slide-punjab .blob:nth-of-type(2) {
+  width: clamp(180px, 30vw, 420px); height: clamp(180px, 30vw, 420px);
+  background: radial-gradient(circle, rgba(210,190,108,0.18) 0%, transparent 70%);
+  top: -8%; left: -4%;
+}
+.slide-punjab .blob:nth-of-type(3) {
+  width: clamp(100px, 16vw, 220px); height: clamp(100px, 16vw, 220px);
+  background: radial-gradient(circle, rgba(230,212,158,0.12) 0%, transparent 70%);
+  top: 42%; left: 40%;
+}
+
+
+/* ===================================================
+   THIN VERTICAL ACCENT LINE
+   Left-side decorative rule; fades in with the slide
+   =================================================== */
+.accent-line {
+  position: absolute;
+  left: clamp(2rem, 5vw, 5rem);
+  top: 18%; bottom: 18%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--slide-accent) 35%,
+    var(--slide-accent) 65%,
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 1.2s ease 0.6s;
+  pointer-events: none;
+}
+.slide.visible .accent-line { opacity: 0.3; }
+
+
+/* ===================================================
+   SLIDE INNER CONTENT WRAPPER
+   Centered; z-index above blobs
+   =================================================== */
+.slide-inner {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: var(--slide-padding);
+  max-width: min(88vw, 680px);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0; /* spacing handled per element below */
+}
+
+
+/* ===================================================
+   TYPOGRAPHY
+   =================================================== */
+
+/* Eyebrow — small caps location marker */
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.55rem, 0.95vw, 0.78rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--slide-accent);
+  margin-bottom: clamp(0.6rem, 1.8vh, 1.8rem);
+}
+
+/* State name — giant Cormorant hero */
+.state-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(4.5rem, 13vw, 10.5rem);
+  color: var(--text-primary);
+  line-height: 0.88;
+  letter-spacing: -0.025em;
+}
+
+/* Tagline — italic, accent-colored */
+.tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.8vw, 1.4rem);
+  color: var(--slide-accent);
+  line-height: 1.5;
+  margin-top: clamp(0.5rem, 1.4vh, 1.4rem);
+}
+
+/* Ornamental divider between tagline and tags */
+.ornament {
+  display: flex; align-items: center;
+  gap: clamp(0.5rem, 1.4vw, 1.2rem);
+  margin: clamp(0.9rem, 2.2vh, 2.2rem) auto;
+}
+.orn-line {
+  width: clamp(28px, 5vw, 58px); height: 1px;
+  background: linear-gradient(to right, transparent, var(--slide-accent));
+}
+.orn-line:last-child {
+  background: linear-gradient(to left, transparent, var(--slide-accent));
+}
+.orn-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--slide-accent);
+  flex-shrink: 0;
+}
+
+/* Feature tags */
+.tags {
+  display: flex; flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.35rem, 0.9vw, 0.65rem);
+}
+.tag {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.52rem, 0.85vw, 0.7rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid rgba(154,149,144,0.22);
+  padding: clamp(0.28rem, 0.7vh, 0.44rem) clamp(0.6rem, 1.2vw, 0.95rem);
+}
+
+
+/* ===================================================
+   REVEAL ANIMATIONS
+   .reveal / .reveal-scale: invisible by default.
+   Parent slide gaining .visible triggers transitions.
+   Transition-delays are set inline per element.
+   =================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.85s var(--ease-expo), transform 0.85s var(--ease-expo);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+/* Scale-in variant for the large state name */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.91);
+  transition: opacity 1.05s var(--ease-expo), transform 1.05s var(--ease-expo);
+}
+.slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+
+/* ===================================================
+   INLINE EDITING UI
+   Hover top-left corner (or press E) → edit button
+   appears. Ctrl+S exports a clean standalone file.
+   =================================================== */
+.edit-hotzone {
+  position: fixed; top: 0; left: 0;
+  width: 80px; height: 80px;
+  z-index: 10000; cursor: pointer;
+}
+.edit-toggle {
+  position: fixed; top: 1.2rem; left: 1.2rem;
+  opacity: 0; pointer-events: none;
+  background: rgba(212,165,116,0.1);
+  border: 1px solid rgba(212,165,116,0.35);
+  color: var(--accent-warm);
+  font-family: var(--font-body);
+  font-size: clamp(0.55rem, 0.85vw, 0.68rem);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 0.4rem 0.8rem; cursor: pointer;
+  transition: opacity 0.3s ease;
+  z-index: 10001;
+}
+.edit-toggle.show, .edit-toggle.active {
+  opacity: 1; pointer-events: auto;
+}
+.edit-banner {
+  position: fixed; bottom: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15,15,15,0.92);
+  border: 1px solid rgba(212,165,116,0.25);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: clamp(0.5rem, 0.78vw, 0.62rem);
+  letter-spacing: 0.25em; text-transform: uppercase;
+  padding: 0.48rem 1.2rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10001; white-space: nowrap;
+}
+.edit-banner.active { opacity: 1; }
+
+/* Dashed outlines on editable elements in edit mode */
+body.edit-active [contenteditable] {
+  outline: 1px dashed rgba(212,165,116,0.35);
+  cursor: text;
+  border-radius: 2px;
+}
+body.edit-active [contenteditable]:focus {
+  outline: 1px solid var(--accent-warm);
+}
+
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     PROGRESS BAR
+     Fills left-to-right as you move through slides
+     ===================================================== -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- =====================================================
+     NAVIGATION DOTS
+     Populated by JS; click to jump to any slide
+     ===================================================== -->
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+
+<!-- =====================================================
+     SLIDE 1 — DELHI
+     The imperial capital: Mughal grandeur, old streets,
+     the pulse of a billion-person democracy.
+     Accent: amber / saffron warmth
+     ===================================================== -->
+<section class="slide slide-delhi" id="slide-1" aria-label="Slide 1: Delhi">
+
+  <!-- Atmospheric background blobs -->
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+
+  <!-- Left decorative accent line -->
+  <div class="accent-line" aria-hidden="true"></div>
+
+  <div class="slide-inner">
+    <p class="eyebrow reveal" style="transition-delay:0.1s">01 &nbsp;·&nbsp; The Imperial Capital</p>
+    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Delhi</h2>
+    <p class="tagline reveal" style="transition-delay:0.52s">
+      Where empires whispered<br>and modernity roars
+    </p>
+    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
+      <span class="orn-line"></span>
+      <span class="orn-dot"></span>
+      <span class="orn-line"></span>
+    </div>
+    <div class="tags reveal" style="transition-delay:0.94s">
+      <span class="tag">Mughal Heritage</span>
+      <span class="tag">Street Food</span>
+      <span class="tag">Political Heart</span>
+      <span class="tag">Old &amp; New Delhi</span>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 2 — GOA
+     India's coastal jewel: Portuguese architecture,
+     spice gardens, sun-soaked beaches, free spirit.
+     Accent: rose / blush
+     ===================================================== -->
+<section class="slide slide-goa" id="slide-2" aria-label="Slide 2: Goa">
+
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+  <div class="accent-line" aria-hidden="true"></div>
+
+  <div class="slide-inner">
+    <p class="eyebrow reveal" style="transition-delay:0.1s">02 &nbsp;·&nbsp; The Coastal Jewel</p>
+    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Goa</h2>
+    <p class="tagline reveal" style="transition-delay:0.52s">
+      Where the Arabian Sea<br>meets Portuguese soul
+    </p>
+    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
+      <span class="orn-line"></span>
+      <span class="orn-dot"></span>
+      <span class="orn-line"></span>
+    </div>
+    <div class="tags reveal" style="transition-delay:0.94s">
+      <span class="tag">Sun &amp; Surf</span>
+      <span class="tag">Colonial Legacy</span>
+      <span class="tag">Spice Gardens</span>
+      <span class="tag">Free Spirit</span>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     SLIDE 3 — PUNJAB
+     The land of five rivers: Golden Temple, mustard
+     fields, bhangra rhythms, boundless hospitality.
+     Accent: harvest gold
+     ===================================================== -->
+<section class="slide slide-punjab" id="slide-3" aria-label="Slide 3: Punjab">
+
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+  <div class="blob" aria-hidden="true"></div>
+  <div class="accent-line" aria-hidden="true"></div>
+
+  <div class="slide-inner">
+    <p class="eyebrow reveal" style="transition-delay:0.1s">03 &nbsp;·&nbsp; The Land of Five Rivers</p>
+    <h2 class="state-name reveal-scale" style="transition-delay:0.28s">Punjab</h2>
+    <p class="tagline reveal" style="transition-delay:0.52s">
+      Where golden fields sing<br>and hearts are wide open
+    </p>
+    <div class="ornament reveal" aria-hidden="true" style="transition-delay:0.74s">
+      <span class="orn-line"></span>
+      <span class="orn-dot"></span>
+      <span class="orn-line"></span>
+    </div>
+    <div class="tags reveal" style="transition-delay:0.94s">
+      <span class="tag">Golden Temple</span>
+      <span class="tag">Breadbasket of India</span>
+      <span class="tag">Bhangra</span>
+      <span class="tag">Warm Hospitality</span>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     INLINE EDITING UI
+     Hover top-left corner OR press E to reveal the
+     edit button. Click any text to edit. Ctrl+S saves.
+     ===================================================== -->
+<div class="edit-hotzone" id="editHotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">Edit</button>
+<div class="edit-banner" id="editBanner">Edit mode &nbsp;·&nbsp; Click any text &nbsp;·&nbsp; Ctrl+S to save</div>
+
+
+<script>
+/* =========================================================
+   SLIDE PRESENTATION CONTROLLER
+   Manages scroll navigation, keyboard, touch, progress
+   bar, and navigation dots.
+   ========================================================= */
+class SlidePresentation {
+  constructor() {
+    this.slides        = Array.from(document.querySelectorAll('.slide'));
+    this.currentIndex  = 0;
+    this.progressBar   = document.getElementById('progressBar');
+    this.navContainer  = document.getElementById('navDots');
+
+    this.buildNavDots();
+    this.observeSlides();
+    this.listenKeyboard();
+    this.listenWheel();
+    this.listenTouch();
+
+    /* Mark first slide visible immediately */
+    this.slides[0]?.classList.add('visible');
+  }
+
+  /* Build nav dots — clear first to avoid duplicates if file is re-saved */
+  buildNavDots() {
+    this.navContainer.innerHTML = '';
+    this.slides.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'nav-dot' + (i === 0 ? ' active' : '');
+      btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      btn.addEventListener('click', () => this.goto(i));
+      this.navContainer.appendChild(btn);
+    });
+  }
+
+  /* IntersectionObserver: add .visible when slide is in view */
+  observeSlides() {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          const idx = this.slides.indexOf(e.target);
+          if (idx !== -1) this.sync(idx);
+        }
+      });
+    }, { threshold: 0.55 });
+    this.slides.forEach(s => io.observe(s));
+  }
+
+  /* Keep progress bar and nav dots in sync */
+  sync(idx) {
+    this.currentIndex = idx;
+    const pct = this.slides.length > 1
+      ? (idx / (this.slides.length - 1)) * 100
+      : 100;
+    this.progressBar.style.background =
+      `linear-gradient(to right, var(--accent-warm) ${pct}%, rgba(232,228,223,0.08) ${pct}%)`;
+    this.navContainer.querySelectorAll('.nav-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === idx));
+  }
+
+  goto(idx) {
+    if (idx < 0 || idx >= this.slides.length) return;
+    this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* Keyboard: arrows, Space, Page Up/Down, Home, End */
+  listenKeyboard() {
+    document.addEventListener('keydown', e => {
+      if (e.target.getAttribute('contenteditable')) return;
+      switch (e.key) {
+        case 'ArrowDown': case 'ArrowRight': case ' ':
+          e.preventDefault(); this.goto(this.currentIndex + 1); break;
+        case 'ArrowUp': case 'ArrowLeft':
+          e.preventDefault(); this.goto(this.currentIndex - 1); break;
+        case 'PageDown': e.preventDefault(); this.goto(this.currentIndex + 1); break;
+        case 'PageUp':   e.preventDefault(); this.goto(this.currentIndex - 1); break;
+        case 'Home':     e.preventDefault(); this.goto(0); break;
+        case 'End':      e.preventDefault(); this.goto(this.slides.length - 1); break;
+      }
+    });
+  }
+
+  /* Mouse wheel — 800ms cooldown prevents rapid-fire skipping */
+  listenWheel() {
+    let last = 0;
+    document.addEventListener('wheel', e => {
+      e.preventDefault();
+      const now = Date.now();
+      if (now - last < 800) return;
+      last = now;
+      this.goto(e.deltaY > 0 ? this.currentIndex + 1 : this.currentIndex - 1);
+    }, { passive: false });
+  }
+
+  /* Touch / swipe */
+  listenTouch() {
+    let startY = 0;
+    document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const diff = startY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) > 48)
+        this.goto(diff > 0 ? this.currentIndex + 1 : this.currentIndex - 1);
+    }, { passive: true });
+  }
+}
+
+
+/* =========================================================
+   INLINE EDITOR
+   Three ways to enter edit mode:
+     1. Hover the top-left hotzone → edit button appears
+     2. Click the edit button
+     3. Press E anywhere on the page
+   In edit mode: click any text to edit it in-browser.
+   Ctrl+S exports a clean standalone HTML file.
+   Changes auto-saved to localStorage between sessions.
+   ========================================================= */
+class InlineEditor {
+  constructor() {
+    this.isActive   = false;
+    this.toggle     = document.getElementById('editToggle');
+    this.banner     = document.getElementById('editBanner');
+    this.hotzone    = document.getElementById('editHotzone');
+    /* Selector for all editable text elements */
+    this.sel = 'h2.state-name, p.tagline, p.eyebrow, .tag';
+
+    this.wireHotzone();
+    this.wireKeyboard();
+    this.toggle.addEventListener('click', () => this.flip());
+    this.wireCtrlS();
+    this.restore();
+  }
+
+  /* Hotzone hover with 400ms grace period — prevents button vanishing mid-move */
+  wireHotzone() {
+    let timer = null;
+    const show  = () => { clearTimeout(timer); this.toggle.classList.add('show'); };
+    const defer = () => { timer = setTimeout(() => { if (!this.isActive) this.toggle.classList.remove('show'); }, 400); };
+
+    this.hotzone.addEventListener('mouseenter', show);
+    this.hotzone.addEventListener('mouseleave', defer);
+    this.hotzone.addEventListener('click', () => this.flip());
+    this.toggle.addEventListener('mouseenter', () => clearTimeout(timer));
+    this.toggle.addEventListener('mouseleave', defer);
+  }
+
+  /* E key: toggle edit mode (skip when focus is inside an editable element) */
+  wireKeyboard() {
+    document.addEventListener('keydown', e => {
+      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable'))
+        this.flip();
+    });
+  }
+
+  flip() {
+    this.isActive = !this.isActive;
+    document.body.classList.toggle('edit-active', this.isActive);
+    this.toggle.classList.toggle('active', this.isActive);
+    this.toggle.classList.toggle('show',   this.isActive);
+    this.banner.classList.toggle('active', this.isActive);
+    this.toggle.textContent = this.isActive ? 'Done' : 'Edit';
+
+    document.querySelectorAll(this.sel).forEach(el => {
+      if (this.isActive) el.setAttribute('contenteditable', 'true');
+      else { el.removeAttribute('contenteditable'); this.persist(); }
+    });
+  }
+
+  /* Save current text to localStorage */
+  persist() {
+    const data = {};
+    document.querySelectorAll(this.sel).forEach((el, i) => { data[i] = el.innerHTML; });
+    try { localStorage.setItem('india-slides', JSON.stringify(data)); } catch (_) {}
+  }
+
+  /* Restore saved text on page load */
+  restore() {
+    try {
+      const data = JSON.parse(localStorage.getItem('india-slides') || 'null');
+      if (!data) return;
+      document.querySelectorAll(this.sel).forEach((el, i) => {
+        if (data[i] !== undefined) el.innerHTML = data[i];
+      });
+    } catch (_) {}
+  }
+
+  /* Ctrl+S: strip edit state, capture outerHTML, restore edit state */
+  wireCtrlS() {
+    document.addEventListener('keydown', e => {
+      if (!(e.ctrlKey && e.key === 's')) return;
+      e.preventDefault();
+      this.exportFile();
+    });
+  }
+
+  exportFile() {
+    /* 1. Strip edit state so saved file opens cleanly */
+    const editables = Array.from(document.querySelectorAll('[contenteditable]'));
+    editables.forEach(el => el.removeAttribute('contenteditable'));
+    document.body.classList.remove('edit-active');
+    this.toggle.classList.remove('active', 'show');
+    this.banner.classList.remove('active');
+
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    /* 2. Restore edit state so user can keep editing */
+    document.body.classList.add('edit-active');
+    editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+    this.toggle.classList.add('active');
+    this.banner.classList.add('active');
+
+    /* 3. Trigger download */
+    const blob = new Blob([html], { type: 'text/html' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'india-states.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+}
+
+/* Initialise both controllers */
+const deck   = new SlidePresentation();
+const editor = new InlineEditor();
+</script>
+
+</body>
+</html>
