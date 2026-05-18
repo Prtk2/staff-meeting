@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LH MNTR Staff Meeting — FedEx Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4D148C;
+      --orange: #FF6600;
+      --white:  #FFFFFF;
+      --gray:   #888888;
+      --dark:   #1A1A1A;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 0;
+      gap: 32px;
+    }
+
+    /* ── Slide shell: 16:9 at 1280×720 ── */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+
+    /* ── FedEx wordmark (CSS, bottom-left, all slides) ── */
+    .mark {
+      position: absolute;
+      bottom: 36px;     /* inside 5 % safe-zone */
+      left:   64px;
+      line-height: 1;
+    }
+    .mark-text {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .mark-text .fed { color: var(--purple); }
+    .mark-text .ex  { color: var(--orange); }
+    .mark-exp {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      color: var(--orange);
+    }
+
+    /* ── Slide number (bottom-right) ── */
+    .num {
+      position: absolute;
+      bottom: 40px;
+      right: 64px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      opacity: 0.35;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 1 — TITLE
+       Background: white
+       Whitespace target: ≥60 %
+    ══════════════════════════════════════ */
+    .s1 { background: var(--white); }
+
+    /* Left accent bars */
+    .s1-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 12px;
+      background: var(--purple);
+    }
+    .s1-bar::after {
+      content: '';
+      position: absolute;
+      left: 12px; top: 0; bottom: 0;
+      width: 6px;
+      background: var(--orange);
+    }
+
+    .s1-body {
+      position: absolute;
+      left: 96px;          /* 5 % + bar offset */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .s1-eyebrow {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .s1-headline {
+      font-size: 80px;
+      font-weight: 900;
+      color: var(--purple);
+      letter-spacing: -0.025em;
+      line-height: 1.0;
+    }
+    .s1-date {
+      margin-top: 32px;
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* Override wordmark color on white bg */
+    .s1 .mark-text .fed { color: var(--purple); }
+    .s1 .num { color: var(--dark); }
+
+    /* ══════════════════════════════════════
+       SLIDES 2 – 6 — SECTION DIVIDERS
+       Background: FedEx purple
+       Whitespace target: ≥60 %
+    ══════════════════════════════════════ */
+    .s-sec { background: var(--purple); }
+
+    /* Orange top stripe (8 px, Rule #13 single accent) */
+    .stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background: var(--orange);
+    }
+
+    /* Ghost number — purely decorative depth */
+    .ghost {
+      position: absolute;
+      right: 48px;
+      top: 50%;
+      transform: translateY(-55%);
+      font-size: 320px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: rgba(255,255,255,0.055);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .sec-body {
+      position: absolute;
+      left: 96px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .sec-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .sec-title {
+      font-size: 64px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    /* Wordmark on purple bg */
+    .s-sec .mark-text .fed { color: rgba(255,255,255,0.9); }
+    .s-sec .mark-text .ex  { color: var(--orange); }
+    .s-sec .mark-exp        { color: var(--orange); }
+    .s-sec .num             { color: rgba(255,255,255,0.35); }
+
+    /* ── Scrollable hint ── */
+    .hint {
+      color: #444;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+<p class="hint">LH MNTR Staff Meeting &nbsp;·&nbsp; FedEx Express &nbsp;·&nbsp; May 2026</p>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+════════════════════════════════════════════════════ -->
+<div class="slide s1">
+  <div class="s1-bar"></div>
+
+  <div class="s1-body">
+    <p class="s1-eyebrow">FedEx Express</p>
+    <h1 class="s1-headline">LH MNTR<br>Staff Meeting</h1>
+    <p class="s1-date">May 2026</p>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num" style="color:#888;">1 / 6</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 2 — SAFETY MESSAGE
+════════════════════════════════════════════════════ -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">01</div>
+
+  <div class="sec-body">
+    <p class="sec-label">01 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Safety<br>Message</h2>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">2 / 6</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 3 — KRONOS
+════════════════════════════════════════════════════ -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">02</div>
+
+  <div class="sec-body">
+    <p class="sec-label">02 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Kronos<br>Time Keeping</h2>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">3 / 6</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 4 — OBJECTIVE KEY RESULTS
+════════════════════════════════════════════════════ -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">03</div>
+
+  <div class="sec-body">
+    <p class="sec-label">03 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Objective<br>Key Results</h2>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">4 / 6</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 5 — PRODUCTIVITY
+════════════════════════════════════════════════════ -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">04</div>
+
+  <div class="sec-body">
+    <p class="sec-label">04 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Productivity</h2>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">5 / 6</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 6 — PEOPLE
+════════════════════════════════════════════════════ -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">05</div>
+
+  <div class="sec-body">
+    <p class="sec-label">05 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">People</h2>
+  </div>
+
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">6 / 6</span>
+</div>
+
+</body>
+</html>
