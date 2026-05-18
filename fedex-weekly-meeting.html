@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
     <style>
         /* ============================================
@@ -580,11 +581,99 @@
             line-height: 1.2;
         }
 
+        /* ============================================
+           SLIDE 4 — EFFICIENCY BAR CHART
+           ============================================ */
+        #slide-4 .slide-title {
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            margin-bottom: clamp(0.4rem, 1.2vh, 1rem);
+        }
+
+        .chart-layout {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: clamp(1rem, 2.5vw, 2rem);
+            align-items: start;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: min(50vh, 330px);
+            min-height: 160px;
+        }
+
+        .chart-summary {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.45rem, 1.1vh, 0.85rem);
+            width: clamp(130px, 17vw, 195px);
+        }
+
+        .chart-stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border-purple);
+            border-radius: 3px;
+            padding: clamp(0.6rem, 1.2vw, 0.95rem) clamp(0.65rem, 1.3vw, 1rem);
+        }
+
+        .chart-stat-value {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-stat-label {
+            font-family: var(--font-body);
+            font-size: var(--label-size);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.2em;
+            line-height: 1.3;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: clamp(0.7rem, 1.5vw, 1.3rem);
+            flex-wrap: wrap;
+            margin-top: clamp(0.4rem, 1vh, 0.7rem);
+        }
+
+        .legend-item {
+            font-family: var(--font-body);
+            font-size: var(--tag-size);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .legend-item::before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .legend-purple::before    { height: 3px; background: rgba(77, 20, 140, 0.85); }
+        .legend-orange::before    { height: 3px; background: rgba(255, 98, 0, 0.90); }
+        .legend-red::before       { height: 3px; background: rgba(220, 80, 80, 0.85); }
+        .legend-dash::before      { height: 0; border-top: 1.5px dashed rgba(255,255,255,0.32); }
+
         /* Responsive stacks */
         @media (max-width: 800px) {
             .update-grid   { grid-template-columns: 1fr; }
             .metrics-grid  { grid-template-columns: repeat(2, 1fr); }
             .safety-layout { grid-template-columns: 1fr; }
+            .chart-layout  { grid-template-columns: 1fr; }
+            .chart-summary { flex-direction: row; width: auto; }
+            .chart-stat    { flex: 1; }
         }
 
         @media (max-height: 600px) {
@@ -854,6 +943,60 @@
         </div>
     </section>
 
+    <!-- ====================================================
+         SLIDE 4 — ROUTE EFFICIENCY BY DAY
+         ==================================================== -->
+    <section class="slide" id="slide-4" aria-label="Route Efficiency by Day">
+        <div class="brand-mark" aria-hidden="true">
+            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
+            <span class="brand-sub">Express</span>
+        </div>
+
+        <div class="slide-content">
+            <div class="slide-header reveal" style="transition-delay:0.05s">
+                <span class="slide-label">Route Efficiency</span>
+                <span class="slide-meta">Week 20 &nbsp;·&nbsp; Daily Breakdown</span>
+            </div>
+
+            <h2 class="slide-title reveal" style="transition-delay:0.12s">
+                Efficiency<br><span class="accent">By Day</span>
+            </h2>
+
+            <div class="chart-layout">
+                <!-- Bar chart -->
+                <div class="chart-container reveal" style="transition-delay:0.22s">
+                    <canvas id="efficiencyChart" aria-label="Route efficiency bar chart"></canvas>
+                </div>
+
+                <!-- Summary stats -->
+                <div class="chart-summary">
+                    <div class="chart-stat reveal" style="transition-delay:0.32s">
+                        <div class="chart-stat-value">93.1%</div>
+                        <div class="chart-stat-label">Week Average</div>
+                        <div class="metric-trend trend-down">↓ 0.4% vs last week</div>
+                    </div>
+                    <div class="chart-stat reveal" style="transition-delay:0.42s">
+                        <div class="chart-stat-value" style="color:var(--fedex-orange)">Wed</div>
+                        <div class="chart-stat-label">Best Day</div>
+                        <div class="metric-trend trend-up">96.3% efficiency</div>
+                    </div>
+                    <div class="chart-stat reveal" style="transition-delay:0.52s">
+                        <div class="chart-stat-value" style="color:#E05A5A">Fri</div>
+                        <div class="chart-stat-label">Needs Attention</div>
+                        <div class="metric-trend trend-down">89.5% — below target</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-legend reveal" style="transition-delay:0.6s">
+                <span class="legend-item legend-purple">Route efficiency</span>
+                <span class="legend-item legend-dash">Target (95%)</span>
+                <span class="legend-item legend-orange">Best day</span>
+                <span class="legend-item legend-red">Below target</span>
+            </div>
+        </div>
+    </section>
+
     <script>
         /* ============================================
            SLIDE PRESENTATION CONTROLLER
@@ -897,6 +1040,7 @@
                             this.updateProgress(idx);
                             this.updateDots(idx);
                             this.startCounters(entry.target);
+                            this.initEfficiencyChart(entry.target);
                         }
                     });
                 }, { threshold: 0.55 });
@@ -955,6 +1099,106 @@
                     if (Math.abs(diff) < 48) return;
                     this.goTo(this.currentIndex + (diff > 0 ? 1 : -1));
                 }, { passive: true });
+            }
+
+            /* Chart.js bar chart — initialise once when slide 4 enters view */
+            initEfficiencyChart(slide) {
+                if (slide.id !== 'slide-4') return;
+                if (slide.dataset.chartInit) return;
+                slide.dataset.chartInit = 'true';
+
+                const canvas = document.getElementById('efficiencyChart');
+                if (!canvas || typeof Chart === 'undefined') return;
+
+                /* ── Data ── update these numbers each week ── */
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+                const vals = [91.2, 94.7, 96.3, 93.8, 89.5];
+                const target = 95;
+
+                const maxIdx = vals.indexOf(Math.max(...vals));
+                const minIdx = vals.indexOf(Math.min(...vals));
+
+                const bgColors = vals.map((_, i) =>
+                    i === maxIdx ? 'rgba(255,98,0,0.88)'
+                  : i === minIdx ? 'rgba(220,80,80,0.82)'
+                  : 'rgba(77,20,140,0.78)'
+                );
+                const bdColors = vals.map((_, i) =>
+                    i === maxIdx ? 'rgba(255,98,0,1)'
+                  : i === minIdx ? 'rgba(200,60,60,1)'
+                  : 'rgba(107,45,175,1)'
+                );
+
+                new Chart(canvas, {
+                    data: {
+                        labels: days,
+                        datasets: [
+                            {
+                                type: 'bar',
+                                label: 'Route Efficiency (%)',
+                                data: vals,
+                                backgroundColor: bgColors,
+                                borderColor: bdColors,
+                                borderWidth: 1.5,
+                                borderRadius: 5,
+                                borderSkipped: false,
+                            },
+                            {
+                                type: 'line',
+                                label: 'Target',
+                                data: days.map(() => target),
+                                borderColor: 'rgba(255,255,255,0.28)',
+                                borderWidth: 1.5,
+                                borderDash: [7, 4],
+                                pointRadius: 0,
+                                tension: 0,
+                                fill: false,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 900, easing: 'easeOutQuart' },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ctx.dataset.type === 'line'
+                                        ? ` Target: ${ctx.parsed.y}%`
+                                        : ` ${ctx.parsed.y}%`
+                                },
+                                backgroundColor: 'rgba(8,7,26,0.92)',
+                                borderColor: 'rgba(77,20,140,0.55)',
+                                borderWidth: 1,
+                                titleFont: { family: "'Barlow Condensed'", weight: '700', size: 13 },
+                                bodyFont:  { family: "'Barlow'", size: 12 },
+                                padding: 10,
+                            }
+                        },
+                        scales: {
+                            y: {
+                                min: 85, max: 100,
+                                ticks: {
+                                    callback: v => v + '%',
+                                    color: 'rgba(255,255,255,0.42)',
+                                    font: { family: "'Barlow'", size: 11 },
+                                    stepSize: 5,
+                                },
+                                grid:   { color: 'rgba(255,255,255,0.055)' },
+                                border: { display: false },
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'rgba(255,255,255,0.62)',
+                                    font: { family: "'Barlow Condensed'", weight: '700', size: 14 },
+                                },
+                                grid:   { display: false },
+                                border: { display: false },
+                            }
+                        }
+                    }
+                });
             }
 
             /* Animated number counters — trigger once per slide */
@@ -1038,7 +1282,8 @@
                     '.metric-label', '.metric-trend', '.metrics-note',
                     '.safety-statement', '.safety-sub',
                     '.safety-stat-num', '.safety-stat-title', '.safety-stat-desc',
-                    '.safety-pledge-text'
+                    '.safety-pledge-text',
+                    '.chart-stat-label', '.chart-stat-value'
                 ].join(', ');
 
                 document.querySelectorAll(sel).forEach(el => {
