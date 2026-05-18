@@ -1233,7 +1233,7 @@
         class InlineEditor {
             constructor() {
                 this.isActive  = false;
-                this.STORE_KEY = 'fedex-weekly-slides';
+                this.STORE_KEY = 'fedex-weekly-slides-v2';
                 this.toggle    = document.getElementById('editToggle');
                 this.banner    = document.getElementById('editBanner');
                 this.hotzone   = document.getElementById('editHotzone');
@@ -1337,7 +1337,7 @@
         /* ============================================
            RESTORE SAVED CONTENT, THEN INITIALIZE
            ============================================ */
-        const _saved = localStorage.getItem('fedex-weekly-slides');
+        const _saved = localStorage.getItem('fedex-weekly-slides-v2');
         if (_saved) document.body.innerHTML = _saved;
 
         const presentation = new SlidePresentation();
