@@ -1,1102 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FedEx Express — Weekly Staff Meeting</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        /* ============================================
-           CSS CUSTOM PROPERTIES — FedEx Theme
-           Edit these variables to re-theme the deck
-           ============================================ */
-        :root {
-            /* FedEx Brand */
-            --fedex-purple:       #4D148C;
-            --fedex-purple-mid:   #6B2DAF;
-            --fedex-purple-light: rgba(77, 20, 140, 0.12);
-            --fedex-orange:       #FF6200;
-            --fedex-orange-light: rgba(255, 98, 0, 0.10);
-
-            /* Backgrounds */
-            --bg-primary:  #08071A;
-            --bg-card:     rgba(77, 20, 140, 0.09);
-            --bg-card-alt: rgba(255, 98, 0, 0.06);
-
-            /* Text */
-            --text-primary:   #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.52);
-            --text-accent:    #FF6200;
-
-            /* Borders */
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-purple: rgba(77, 20, 140, 0.50);
-
-            /* Typography */
-            --font-display: 'Barlow Condensed', sans-serif;
-            --font-body:    'Barlow', sans-serif;
-
-            /* Custom size tokens (supplement viewport-base.css) */
-            --metric-size: clamp(2rem, 4.5vw, 3.75rem);
-            --label-size:  clamp(0.58rem, 1.1vw, 0.82rem);
-            --tag-size:    clamp(0.58rem, 0.95vw, 0.72rem);
-            --card-title:  clamp(0.85rem, 1.7vw, 1.2rem);
-            --card-body:   clamp(0.62rem, 1.05vw, 0.82rem);
-
-            /* Animation */
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* ============================================
-           RESET
-           ============================================ */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ============================================
-           VIEWPORT BASE CSS — FULL CONTENTS
-           Source: viewport-base.css (mandatory)
-           ============================================ */
-        html, body { height: 100%; overflow-x: hidden; }
-
-        html {
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-        }
-
-        .slide {
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .slide-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            max-height: 100%;
-            overflow: hidden;
-            padding: var(--slide-padding);
-        }
-
-        :root {
-            --title-size:    clamp(1.5rem, 5vw, 4rem);
-            --h2-size:       clamp(1.25rem, 3.5vw, 2.5rem);
-            --h3-size:       clamp(1rem, 2.5vw, 1.75rem);
-            --body-size:     clamp(0.75rem, 1.5vw, 1.125rem);
-            --small-size:    clamp(0.65rem, 1vw, 0.875rem);
-            --slide-padding: clamp(1rem, 4vw, 4rem);
-            --content-gap:   clamp(0.5rem, 2vw, 2rem);
-            --element-gap:   clamp(0.25rem, 1vw, 1rem);
-        }
-
-        .card, .container, .content-box {
-            max-width: min(90vw, 1000px);
-            max-height: min(80vh, 700px);
-        }
-
-        .feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
-        .feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.4; }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            gap: clamp(0.5rem, 1.5vw, 1rem);
-        }
-
-        img, .image-container {
-            max-width: 100%;
-            max-height: min(50vh, 400px);
-            object-fit: contain;
-        }
-
-        @media (max-height: 700px) {
-            :root {
-                --slide-padding: clamp(0.75rem, 3vw, 2rem);
-                --content-gap:   clamp(0.4rem, 1.5vw, 1rem);
-                --title-size:    clamp(1.25rem, 4.5vw, 2.5rem);
-                --h2-size:       clamp(1rem, 3vw, 1.75rem);
-            }
-        }
-
-        @media (max-height: 600px) {
-            :root {
-                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
-                --content-gap:   clamp(0.3rem, 1vw, 0.75rem);
-                --title-size:    clamp(1.1rem, 4vw, 2rem);
-                --body-size:     clamp(0.7rem, 1.2vw, 0.95rem);
-            }
-            .nav-dots, .keyboard-hint, .decorative { display: none; }
-        }
-
-        @media (max-height: 500px) {
-            :root {
-                --slide-padding: clamp(0.4rem, 2vw, 1rem);
-                --title-size:    clamp(1rem, 3.5vw, 1.5rem);
-                --h2-size:       clamp(0.9rem, 2.5vw, 1.25rem);
-                --body-size:     clamp(0.65rem, 1vw, 0.85rem);
-            }
-        }
-
-        @media (max-width: 600px) {
-            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
-            .grid { grid-template-columns: 1fr; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.2s !important;
-            }
-            html { scroll-behavior: auto; }
-        }
-
-        /* ============================================
-           PROGRESS BAR
-           ============================================ */
-        .progress-bar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
-            background: var(--fedex-orange);
-            z-index: 1000;
-            transition: width 0.4s var(--ease-out-expo);
-            width: 0%;
-            box-shadow: 0 0 8px rgba(255, 98, 0, 0.6);
-        }
-
-        /* ============================================
-           NAVIGATION DOTS
-           ============================================ */
-        .nav-dots {
-            position: fixed;
-            right: clamp(1rem, 2.5vw, 1.75rem);
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 0.55rem;
-            z-index: 100;
-        }
-
-        .nav-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            border: 1.5px solid transparent;
-            transition: all 0.28s ease;
-        }
-
-        .nav-dot.active {
-            background: var(--fedex-orange);
-            border-color: var(--fedex-orange);
-            transform: scale(1.35);
-        }
-
-        /* ============================================
-           SLIDE — SHARED STRUCTURE
-           ============================================ */
-
-        /* Geometric diagonal background shape */
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: -15%;
-            right: -8%;
-            width: 45%;
-            height: 75%;
-            background: linear-gradient(160deg,
-                rgba(77, 20, 140, 0.11) 0%,
-                rgba(77, 20, 140, 0.04) 60%,
-                transparent 100%);
-            transform: skewX(-14deg);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Subtle grid texture on all slides */
-        .slide {
-            background:
-                linear-gradient(rgba(255,255,255,0.013) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.013) 1px, transparent 1px),
-                var(--bg-primary);
-            background-size: 60px 60px, 60px 60px, 100%;
-        }
-
-        .slide-content { position: relative; z-index: 1; justify-content: flex-start; padding-top: clamp(1.5rem, 4vh, 3rem); }
-
-        /* FedEx brand mark — top right corner */
-        .brand-mark {
-            position: absolute;
-            top: clamp(0.75rem, 2vh, 1.4rem);
-            right: clamp(1rem, 2.5vw, 2rem);
-            display: flex;
-            align-items: baseline;
-            gap: 0;
-            z-index: 10;
-        }
-
-        .brand-fed {
-            font-family: var(--font-display);
-            font-size: clamp(0.9rem, 1.8vw, 1.4rem);
-            font-weight: 900;
-            color: var(--fedex-purple-mid);
-            letter-spacing: -0.01em;
-            line-height: 1;
-        }
-
-        .brand-ex {
-            font-family: var(--font-display);
-            font-size: clamp(0.9rem, 1.8vw, 1.4rem);
-            font-weight: 900;
-            color: var(--fedex-orange);
-            letter-spacing: -0.01em;
-            line-height: 1;
-        }
-
-        .brand-sub {
-            font-family: var(--font-body);
-            font-size: clamp(0.42rem, 0.75vw, 0.58rem);
-            font-weight: 600;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            margin-left: 0.45em;
-            margin-bottom: 0.05em;
-        }
-
-        /* Slide header row: label + date */
-        .slide-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: clamp(0.55rem, 1.4vh, 1rem);
-            border-bottom: 1px solid var(--border-subtle);
-            margin-bottom: clamp(0.85rem, 2.5vh, 2rem);
-        }
-
-        .slide-label {
-            font-family: var(--font-display);
-            font-size: var(--tag-size);
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--fedex-orange);
-        }
-
-        .slide-meta {
-            font-family: var(--font-body);
-            font-size: var(--tag-size);
-            color: var(--text-secondary);
-            letter-spacing: 0.06em;
-        }
-
-        /* Large slide title */
-        .slide-title {
-            font-family: var(--font-display);
-            font-size: clamp(2rem, 5.5vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: -0.01em;
-            line-height: 0.93;
-            text-transform: uppercase;
-            margin-bottom: clamp(1rem, 3vh, 2rem);
-        }
-
-        .slide-title .accent { color: var(--fedex-orange); }
-
-        /* ============================================
-           REVEAL ANIMATIONS
-           ============================================ */
-        .reveal {
-            opacity: 0;
-            transform: translateY(22px);
-            transition: opacity 0.55s var(--ease-out-expo),
-                        transform 0.55s var(--ease-out-expo);
-        }
-
-        .reveal-left {
-            opacity: 0;
-            transform: translateX(-28px);
-            transition: opacity 0.55s var(--ease-out-expo),
-                        transform 0.55s var(--ease-out-expo);
-        }
-
-        .reveal-scale {
-            opacity: 0;
-            transform: scale(0.93);
-            transition: opacity 0.55s var(--ease-out-expo),
-                        transform 0.55s var(--ease-out-expo);
-        }
-
-        .slide.visible .reveal,
-        .slide.visible .reveal-left,
-        .slide.visible .reveal-scale {
-            opacity: 1;
-            transform: none;
-        }
-
-        /* ============================================
-           SLIDE 1 — WEEKLY UPDATE
-           ============================================ */
-        .update-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(0.7rem, 1.8vw, 1.4rem);
-        }
-
-        .update-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-purple);
-            border-top: 3px solid var(--fedex-purple);
-            border-radius: 3px;
-            padding: clamp(0.85rem, 1.8vw, 1.4rem);
-        }
-
-        .update-card-label {
-            font-family: var(--font-display);
-            font-size: var(--tag-size);
-            font-weight: 700;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--fedex-orange);
-            margin-bottom: 0.35em;
-        }
-
-        .update-card-title {
-            font-family: var(--font-display);
-            font-size: var(--card-title);
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            line-height: 1.15;
-            margin-bottom: 0.4em;
-        }
-
-        .update-card-body {
-            font-family: var(--font-body);
-            font-size: var(--card-body);
-            color: var(--text-secondary);
-            line-height: 1.55;
-        }
-
-        /* ============================================
-           SLIDE 2 — PRODUCTIVITY METRICS
-           ============================================ */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: clamp(0.65rem, 1.4vw, 1.2rem);
-            margin-bottom: clamp(0.65rem, 1.8vh, 1.25rem);
-        }
-
-        .metric-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-purple);
-            border-radius: 3px;
-            padding: clamp(0.9rem, 1.8vw, 1.6rem) clamp(0.85rem, 1.6vw, 1.4rem);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animated bottom accent line */
-        .metric-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 2px;
-            background: var(--fedex-orange);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.7s var(--ease-out-expo) 0.35s;
-        }
-
-        .slide.visible .metric-card::after { transform: scaleX(1); }
-
-        .metric-value {
-            font-family: var(--font-display);
-            font-size: var(--metric-size);
-            font-weight: 900;
-            line-height: 1;
-            letter-spacing: -0.02em;
-            color: var(--text-primary);
-        }
-
-        .metric-unit {
-            font-size: 0.42em;
-            color: var(--fedex-orange);
-            font-weight: 700;
-            letter-spacing: 0;
-        }
-
-        .metric-label {
-            font-family: var(--font-body);
-            font-size: var(--label-size);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-            margin-top: 0.3em;
-            line-height: 1.3;
-        }
-
-        .metric-trend {
-            font-family: var(--font-body);
-            font-size: clamp(0.58rem, 0.88vw, 0.72rem);
-            margin-top: 0.35em;
-            font-weight: 600;
-        }
-
-        .trend-up   { color: #5EBD7A; }
-        .trend-down { color: #E05A5A; }
-        .trend-flat { color: var(--text-secondary); }
-
-        .metrics-note {
-            font-family: var(--font-body);
-            font-size: clamp(0.58rem, 0.92vw, 0.72rem);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .metrics-note::before {
-            content: '';
-            display: inline-block;
-            width: 18px; height: 1px;
-            background: var(--fedex-orange);
-            flex-shrink: 0;
-        }
-
-        /* ============================================
-           SLIDE 3 — TRANSPORTATION SAFETY
-           ============================================ */
-        .safety-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto;
-            gap: clamp(1.2rem, 3vw, 2.5rem);
-            align-items: start;
-        }
-
-        .safety-statement {
-            font-family: var(--font-display);
-            font-size: clamp(1.55rem, 3.8vw, 3.1rem);
-            font-weight: 900;
-            line-height: 1.0;
-            text-transform: uppercase;
-            letter-spacing: -0.01em;
-        }
-
-        .safety-statement .highlight { color: var(--fedex-orange); }
-
-        .safety-sub {
-            font-family: var(--font-body);
-            font-size: clamp(0.72rem, 1.25vw, 0.95rem);
-            color: var(--text-secondary);
-            line-height: 1.65;
-            margin-top: clamp(0.65rem, 1.8vh, 1.1rem);
-            max-width: 38ch;
-        }
-
-        .safety-stats {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(0.5rem, 1.3vh, 0.95rem);
-        }
-
-        .safety-stat {
-            display: flex;
-            align-items: center;
-            gap: clamp(0.7rem, 1.4vw, 1.1rem);
-            background: var(--bg-card);
-            border: 1px solid var(--border-purple);
-            border-left: 4px solid var(--fedex-purple);
-            border-radius: 3px;
-            padding: clamp(0.65rem, 1.3vw, 1rem) clamp(0.85rem, 1.6vw, 1.3rem);
-        }
-
-        .safety-stat-num {
-            font-family: var(--font-display);
-            font-size: clamp(1.4rem, 2.8vw, 2.3rem);
-            font-weight: 900;
-            color: var(--fedex-orange);
-            line-height: 1;
-            min-width: 3.8rem;
-            flex-shrink: 0;
-        }
-
-        .safety-stat-title {
-            font-family: var(--font-display);
-            font-size: clamp(0.8rem, 1.4vw, 1rem);
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            line-height: 1.2;
-        }
-
-        .safety-stat-desc {
-            font-family: var(--font-body);
-            font-size: clamp(0.58rem, 0.95vw, 0.75rem);
-            color: var(--text-secondary);
-            margin-top: 0.12em;
-        }
-
-        /* Safety pledge spans full width */
-        .safety-pledge {
-            grid-column: 1 / -1;
-            background: linear-gradient(90deg, var(--fedex-purple) 0%, var(--fedex-purple-mid) 100%);
-            border-radius: 3px;
-            padding: clamp(0.6rem, 1.4vh, 0.95rem) clamp(1rem, 2vw, 1.5rem);
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-        }
-
-        .safety-pledge-icon {
-            font-size: clamp(1rem, 1.8vw, 1.4rem);
-            flex-shrink: 0;
-        }
-
-        .safety-pledge-text {
-            font-family: var(--font-display);
-            font-size: clamp(0.75rem, 1.4vw, 1rem);
-            font-weight: 700;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            line-height: 1.2;
-        }
-
-        /* Responsive stacks */
-        @media (max-width: 800px) {
-            .update-grid   { grid-template-columns: 1fr; }
-            .metrics-grid  { grid-template-columns: repeat(2, 1fr); }
-            .safety-layout { grid-template-columns: 1fr; }
-        }
-
-        @media (max-height: 600px) {
-            .safety-pledge { display: none; }
-            .metrics-note  { display: none; }
-        }
-
-        /* ============================================
-           INLINE EDITING
-           ============================================ */
-        .edit-hotzone {
-            position: fixed;
-            top: 0; left: 0;
-            width: 80px; height: 80px;
-            z-index: 10000;
-            cursor: pointer;
-        }
-
-        .edit-toggle {
-            position: fixed;
-            top: 1rem; left: 1rem;
-            background: var(--fedex-purple);
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 0.32em 0.7em;
-            font-size: 0.78rem;
-            font-family: var(--font-body);
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.28s ease, background 0.2s ease;
-            z-index: 10001;
-        }
-
-        .edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
-        .edit-toggle.active { background: var(--fedex-orange); }
-
-        .edit-banner {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--fedex-purple);
-            color: #fff;
-            text-align: center;
-            padding: 0.38em 1em;
-            font-family: var(--font-body);
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            z-index: 10000;
-            transform: translateY(100%);
-            transition: transform 0.28s ease;
-        }
-
-        .edit-banner.active { transform: translateY(0); }
-
-        body.edit-active [contenteditable] {
-            outline: 1.5px dashed rgba(255, 98, 0, 0.55);
-            border-radius: 2px;
-            cursor: text;
-            min-width: 1ch;
-        }
-
-        /* ============================================
-           KEYBOARD HINT
-           ============================================ */
-        .keyboard-hint {
-            position: fixed;
-            bottom: clamp(0.75rem, 2vh, 1.4rem);
-            right: clamp(1.5rem, 3vw, 2.5rem);
-            font-family: var(--font-body);
-            font-size: clamp(0.52rem, 0.85vw, 0.66rem);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            opacity: 0.45;
-            z-index: 50;
-            letter-spacing: 0.04em;
-        }
-
-        kbd {
-            display: inline-block;
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.14);
-            border-radius: 3px;
-            padding: 0.1em 0.32em;
-            font-family: var(--font-body);
-            font-size: inherit;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LH MNTR Staff Meeting — FedEx Express</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #4D148C;
+      --orange: #FF6600;
+      --white:  #FFFFFF;
+      --gray:   #888888;
+      --dark:   #1A1A1A;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 0;
+      gap: 32px;
+    }
+
+    /* ── Slide shell: 16:9 at 1280×720 ── */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+
+    /* ── FedEx wordmark (CSS, bottom-left, all slides) ── */
+    .mark {
+      position: absolute;
+      bottom: 36px;
+      left:   64px;
+      line-height: 1;
+    }
+    .mark-text {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .mark-text .fed { color: var(--purple); }
+    .mark-text .ex  { color: var(--orange); }
+    .mark-exp {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      color: var(--orange);
+    }
+
+    /* ── Slide number (bottom-right) ── */
+    .num {
+      position: absolute;
+      bottom: 40px;
+      right: 64px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      opacity: 0.35;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 1 — TITLE
+    ══════════════════════════════════════ */
+    .s1 { background: var(--white); }
+
+    .s1-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 12px;
+      background: var(--purple);
+    }
+    .s1-bar::after {
+      content: '';
+      position: absolute;
+      left: 12px; top: 0; bottom: 0;
+      width: 6px;
+      background: var(--orange);
+    }
+
+    .s1-body {
+      position: absolute;
+      left: 96px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .s1-eyebrow {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .s1-headline {
+      font-size: 80px;
+      font-weight: 900;
+      color: var(--purple);
+      letter-spacing: -0.025em;
+      line-height: 1.0;
+    }
+    .s1-date {
+      margin-top: 32px;
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    .s1 .mark-text .fed { color: var(--purple); }
+    .s1 .num { color: var(--dark); }
+
+    /* ══════════════════════════════════════
+       SLIDES 2 – 6 — SECTION DIVIDERS
+    ══════════════════════════════════════ */
+    .s-sec { background: var(--purple); }
+
+    .stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background: var(--orange);
+    }
+
+    .ghost {
+      position: absolute;
+      right: 48px;
+      top: 50%;
+      transform: translateY(-55%);
+      font-size: 320px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: rgba(255,255,255,0.055);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .sec-body {
+      position: absolute;
+      left: 96px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .sec-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .sec-title {
+      font-size: 64px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .s-sec .mark-text .fed { color: rgba(255,255,255,0.9); }
+    .s-sec .mark-text .ex  { color: var(--orange); }
+    .s-sec .mark-exp        { color: var(--orange); }
+    .s-sec .num             { color: rgba(255,255,255,0.35); }
+
+    .hint {
+      color: #444;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Progress bar -->
-    <div class="progress-bar" id="progressBar"></div>
+<p class="hint">LH MNTR Staff Meeting &nbsp;·&nbsp; FedEx Express &nbsp;·&nbsp; May 2026</p>
 
-    <!-- Navigation dots -->
-    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<!-- SLIDE 1 — TITLE -->
+<div class="slide s1">
+  <div class="s1-bar"></div>
 
-    <!-- Inline editing controls -->
-    <div class="edit-hotzone" id="editHotzone" aria-hidden="true"></div>
-    <button class="edit-toggle" id="editToggle" title="Toggle edit mode (E)">✏ Edit</button>
-    <div class="edit-banner" id="editBanner">
-        ✏ EDIT MODE &nbsp;—&nbsp; Click any text to edit &nbsp;|&nbsp; <strong>Ctrl+S</strong> save file &nbsp;|&nbsp; <strong>E</strong> exit
-    </div>
+  <div class="s1-body">
+    <p class="s1-eyebrow">FedEx Express</p>
+    <h1 class="s1-headline">LH MNTR<br>Staff Meeting</h1>
+    <p class="s1-date">May 2026</p>
+  </div>
 
-    <!-- Keyboard hint -->
-    <div class="keyboard-hint" aria-hidden="true">
-        <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;<kbd>E</kbd> edit
-    </div>
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num" style="color:#888;">1 / 6</span>
+</div>
 
-    <!-- ====================================================
-         SLIDE 1 — WEEKLY UPDATE
-         ==================================================== -->
-    <section class="slide" id="slide-1" aria-label="Weekly Update">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
+<!-- SLIDE 2 — SAFETY MESSAGE -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">01</div>
 
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Weekly Update</span>
-                <span class="slide-meta">Week 20 &nbsp;·&nbsp; May 12–16, 2025</span>
-            </div>
+  <div class="sec-body">
+    <p class="sec-label">01 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Safety<br>Message</h2>
+  </div>
 
-            <h1 class="slide-title reveal" style="transition-delay:0.15s">
-                This Week<br>In <span class="accent">Operations</span>
-            </h1>
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">2 / 6</span>
+</div>
 
-            <div class="update-grid">
-                <div class="update-card reveal" style="transition-delay:0.28s">
-                    <div class="update-card-label">Operations</div>
-                    <div class="update-card-title">Hub Performance</div>
-                    <div class="update-card-body">All regional hubs at full capacity. Memphis SuperHub processed 2.1M packages — 4.2% above weekly target.</div>
-                </div>
-                <div class="update-card reveal" style="transition-delay:0.38s">
-                    <div class="update-card-label">Workforce</div>
-                    <div class="update-card-title">Team Attendance</div>
-                    <div class="update-card-body">Attendance at 97.3% across all shifts. Q2 peak season overtime approvals completed and communicated to managers.</div>
-                </div>
-                <div class="update-card reveal" style="transition-delay:0.48s">
-                    <div class="update-card-label">Upcoming</div>
-                    <div class="update-card-title">Route Optimization Pilot</div>
-                    <div class="update-card-body">Ground delivery pilot launches Monday. 8 Southwest district routes will run AI-assisted sequencing for the first time.</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- SLIDE 3 — KRONOS -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">02</div>
 
-    <!-- ====================================================
-         SLIDE 2 — PRODUCTIVITY METRICS
-         ==================================================== -->
-    <section class="slide" id="slide-2" aria-label="Productivity Metrics">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
+  <div class="sec-body">
+    <p class="sec-label">02 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Kronos<br>Time Keeping</h2>
+  </div>
 
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Productivity Metrics</span>
-                <span class="slide-meta">Week 20 &nbsp;·&nbsp; vs. Last Week</span>
-            </div>
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">3 / 6</span>
+</div>
 
-            <h2 class="slide-title reveal" style="transition-delay:0.15s">
-                Performance<br><span class="accent">At a Glance</span>
-            </h2>
+<!-- SLIDE 4 — OBJECTIVE KEY RESULTS -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">03</div>
 
-            <div class="metrics-grid">
-                <div class="metric-card reveal" style="transition-delay:0.28s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="48291">0</span>
-                    </div>
-                    <div class="metric-label">Packages Processed</div>
-                    <div class="metric-trend trend-up">↑ 3.1% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.38s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="974" data-decimal="1">0</span><span class="metric-unit">%</span>
-                    </div>
-                    <div class="metric-label">On-Time Delivery Rate</div>
-                    <div class="metric-trend trend-up">↑ 0.8% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.48s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="942" data-decimal="1">0</span><span class="metric-unit">%</span>
-                    </div>
-                    <div class="metric-label">Route Efficiency</div>
-                    <div class="metric-trend trend-down">↓ 0.4% vs last week</div>
-                </div>
-                <div class="metric-card reveal" style="transition-delay:0.58s">
-                    <div class="metric-value">
-                        <span class="counter" data-target="48" data-decimal="1">0</span><span class="metric-unit">/5</span>
-                    </div>
-                    <div class="metric-label">Customer Satisfaction</div>
-                    <div class="metric-trend trend-up">↑ 0.2 vs last week</div>
-                </div>
-            </div>
+  <div class="sec-body">
+    <p class="sec-label">03 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Objective<br>Key Results</h2>
+  </div>
 
-            <div class="metrics-note reveal" style="transition-delay:0.66s">
-                Reflects all active U.S. domestic routes. Data updated end-of-day Friday.
-            </div>
-        </div>
-    </section>
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">4 / 6</span>
+</div>
 
-    <!-- ====================================================
-         SLIDE 3 — TRANSPORTATION SAFETY
-         ==================================================== -->
-    <section class="slide" id="slide-3" aria-label="Transportation Safety">
-        <div class="brand-mark" aria-hidden="true">
-            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
-            <span class="brand-sub">Express</span>
-        </div>
+<!-- SLIDE 5 — PRODUCTIVITY -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">04</div>
 
-        <div class="slide-content">
-            <div class="slide-header reveal" style="transition-delay:0.05s">
-                <span class="slide-label">Transportation Safety</span>
-                <span class="slide-meta">Safety Commitment &nbsp;·&nbsp; Week 20</span>
-            </div>
+  <div class="sec-body">
+    <p class="sec-label">04 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">Productivity</h2>
+  </div>
 
-            <div class="safety-layout">
-                <!-- Left: statement -->
-                <div>
-                    <div class="safety-statement reveal" style="transition-delay:0.18s">
-                        Safety Is<br>Not A Choice —<br>It's Our<br><span class="highlight">Commitment</span>
-                    </div>
-                    <div class="safety-sub reveal" style="transition-delay:0.28s">
-                        Every driver, handler, and team member plays a role. Zero incidents is not a goal — it is our operating standard.
-                    </div>
-                </div>
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">5 / 6</span>
+</div>
 
-                <!-- Right: stats -->
-                <div class="safety-stats">
-                    <div class="safety-stat reveal" style="transition-delay:0.34s">
-                        <div class="safety-stat-num">14</div>
-                        <div>
-                            <div class="safety-stat-title">Days Without Incident</div>
-                            <div class="safety-stat-desc">Current streak across Southwest district</div>
-                        </div>
-                    </div>
-                    <div class="safety-stat reveal" style="transition-delay:0.44s">
-                        <div class="safety-stat-num">100%</div>
-                        <div>
-                            <div class="safety-stat-title">Pre-Trip Inspections Complete</div>
-                            <div class="safety-stat-desc">All vehicles cleared before dispatch this week</div>
-                        </div>
-                    </div>
-                    <div class="safety-stat reveal" style="transition-delay:0.54s">
-                        <div class="safety-stat-num">2</div>
-                        <div>
-                            <div class="safety-stat-title">Near Misses Reported</div>
-                            <div class="safety-stat-desc">Reported, reviewed, corrective action taken</div>
-                        </div>
-                    </div>
-                </div>
+<!-- SLIDE 6 — PEOPLE -->
+<div class="slide s-sec">
+  <div class="stripe"></div>
+  <div class="ghost">05</div>
 
-                <!-- Full-width pledge -->
-                <div class="safety-pledge reveal" style="transition-delay:0.64s">
-                    <span class="safety-pledge-icon" aria-hidden="true">🛡</span>
-                    <span class="safety-pledge-text">Zero Incidents. Zero Compromises. Every Delivery, Every Day.</span>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="sec-body">
+    <p class="sec-label">05 &nbsp;/&nbsp; Agenda</p>
+    <h2 class="sec-title">People</h2>
+  </div>
 
-    <script>
-        /* ============================================
-           SLIDE PRESENTATION CONTROLLER
-           ============================================ */
-        class SlidePresentation {
-            constructor() {
-                this.slides       = Array.from(document.querySelectorAll('.slide'));
-                this.currentIndex = 0;
-                this.wheelCooldown = false;
-                this.touchStartY   = 0;
-                this.progressBar   = document.getElementById('progressBar');
-                this.navDotsEl     = document.getElementById('navDots');
+  <div class="mark">
+    <span class="mark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+    <span class="mark-exp">Express</span>
+  </div>
+  <span class="num">6 / 6</span>
+</div>
 
-                this.buildNavDots();
-                this.observeSlides();
-                this.listenKeyboard();
-                this.listenWheel();
-                this.listenTouch();
-                this.updateProgress(0);
-            }
-
-            buildNavDots() {
-                this.navDotsEl.innerHTML = ''; // prevent duplicates after innerHTML restore
-                this.slides.forEach((_, i) => {
-                    const dot = document.createElement('button');
-                    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-                    dot.addEventListener('click', () => this.goTo(i));
-                    this.navDotsEl.appendChild(dot);
-                });
-            }
-
-            observeSlides() {
-                const io = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (!entry.isIntersecting) return;
-                        entry.target.classList.add('visible');
-                        const idx = this.slides.indexOf(entry.target);
-                        if (idx !== -1) {
-                            this.currentIndex = idx;
-                            this.updateProgress(idx);
-                            this.updateDots(idx);
-                            this.startCounters(entry.target);
-                        }
-                    });
-                }, { threshold: 0.55 });
-
-                this.slides.forEach(s => io.observe(s));
-            }
-
-            updateProgress(idx) {
-                const pct = this.slides.length <= 1 ? 100
-                    : (idx / (this.slides.length - 1)) * 100;
-                this.progressBar.style.width = pct + '%';
-            }
-
-            updateDots(idx) {
-                this.navDotsEl.querySelectorAll('.nav-dot')
-                    .forEach((d, i) => d.classList.toggle('active', i === idx));
-            }
-
-            goTo(idx) {
-                if (idx < 0 || idx >= this.slides.length) return;
-                this.slides[idx].scrollIntoView({ behavior: 'smooth' });
-            }
-
-            listenKeyboard() {
-                document.addEventListener('keydown', (e) => {
-                    if (e.target.getAttribute('contenteditable')) return;
-                    switch (e.key) {
-                        case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
-                            e.preventDefault(); this.goTo(this.currentIndex + 1); break;
-                        case 'ArrowUp': case 'ArrowLeft': case 'PageUp':
-                            e.preventDefault(); this.goTo(this.currentIndex - 1); break;
-                        case 'Home':
-                            e.preventDefault(); this.goTo(0); break;
-                        case 'End':
-                            e.preventDefault(); this.goTo(this.slides.length - 1); break;
-                    }
-                });
-            }
-
-            listenWheel() {
-                document.addEventListener('wheel', (e) => {
-                    if (this.wheelCooldown || Math.abs(e.deltaY) < 30) return;
-                    this.wheelCooldown = true;
-                    setTimeout(() => { this.wheelCooldown = false; }, 800);
-                    this.goTo(this.currentIndex + (e.deltaY > 0 ? 1 : -1));
-                }, { passive: true });
-            }
-
-            listenTouch() {
-                document.addEventListener('touchstart', (e) => {
-                    this.touchStartY = e.touches[0].clientY;
-                }, { passive: true });
-
-                document.addEventListener('touchend', (e) => {
-                    const diff = this.touchStartY - e.changedTouches[0].clientY;
-                    if (Math.abs(diff) < 48) return;
-                    this.goTo(this.currentIndex + (diff > 0 ? 1 : -1));
-                }, { passive: true });
-            }
-
-            /* Animated number counters — trigger once per slide */
-            startCounters(slide) {
-                slide.querySelectorAll('.counter').forEach(el => {
-                    if (el.dataset.counted) return;
-                    el.dataset.counted = 'true';
-
-                    const target  = parseInt(el.dataset.target, 10);
-                    const decimal = parseInt(el.dataset.decimal || '0', 10);
-                    const divisor = Math.pow(10, decimal);
-                    const start   = performance.now();
-                    const dur     = 1100;
-
-                    const step = (now) => {
-                        const t    = Math.min((now - start) / dur, 1);
-                        const ease = 1 - Math.pow(1 - t, 3); // ease out cubic
-                        const val  = target * ease;
-                        el.textContent = decimal > 0
-                            ? (val / divisor).toFixed(decimal)
-                            : Math.round(val).toLocaleString();
-                        if (t < 1) requestAnimationFrame(step);
-                    };
-                    requestAnimationFrame(step);
-                });
-            }
-        }
-
-        /* ============================================
-           INLINE EDITOR
-           ============================================ */
-        class InlineEditor {
-            constructor() {
-                this.isActive  = false;
-                this.STORE_KEY = 'fedex-weekly-slides';
-                this.toggle    = document.getElementById('editToggle');
-                this.banner    = document.getElementById('editBanner');
-                this.hotzone   = document.getElementById('editHotzone');
-
-                this.wireHotzone();
-                this.toggle.addEventListener('click',   () => this.flip());
-                this.hotzone.addEventListener('click',  () => this.flip());
-                document.addEventListener('keydown', (e) => this.onKey(e));
-            }
-
-            wireHotzone() {
-                let hideTimeout = null;
-                const show = () => { clearTimeout(hideTimeout); this.toggle.classList.add('show'); };
-                const hide = () => {
-                    hideTimeout = setTimeout(() => {
-                        if (!this.isActive) this.toggle.classList.remove('show');
-                    }, 400);
-                };
-                this.hotzone.addEventListener('mouseenter', show);
-                this.hotzone.addEventListener('mouseleave', hide);
-                this.toggle.addEventListener('mouseenter',  show);
-                this.toggle.addEventListener('mouseleave',  hide);
-            }
-
-            onKey(e) {
-                if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
-                    this.flip();
-                }
-                if (e.ctrlKey && e.key === 's' && this.isActive) {
-                    e.preventDefault();
-                    this.exportFile();
-                }
-            }
-
-            flip() {
-                this.isActive = !this.isActive;
-                document.body.classList.toggle('edit-active', this.isActive);
-                this.toggle.classList.toggle('active', this.isActive);
-                this.banner.classList.toggle('active',  this.isActive);
-                this.toggle.textContent = this.isActive ? '✓ Done' : '✏ Edit';
-
-                const sel = [
-                    'h1.slide-title', 'h2.slide-title',
-                    '.update-card-label', '.update-card-title', '.update-card-body',
-                    '.slide-label', '.slide-meta',
-                    '.metric-label', '.metric-trend', '.metrics-note',
-                    '.safety-statement', '.safety-sub',
-                    '.safety-stat-num', '.safety-stat-title', '.safety-stat-desc',
-                    '.safety-pledge-text'
-                ].join(', ');
-
-                document.querySelectorAll(sel).forEach(el => {
-                    if (this.isActive) {
-                        el.setAttribute('contenteditable', 'true');
-                        el.addEventListener('input', () => this.persist(), { passive: true });
-                    } else {
-                        el.removeAttribute('contenteditable');
-                    }
-                });
-
-                if (!this.isActive) this.persist();
-            }
-
-            /* Save body HTML with edit state stripped */
-            persist() {
-                const editables = Array.from(document.querySelectorAll('[contenteditable]'));
-                editables.forEach(el => el.removeAttribute('contenteditable'));
-                document.body.classList.remove('edit-active');
-
-                localStorage.setItem(this.STORE_KEY, document.body.innerHTML);
-
-                document.body.classList.add('edit-active');
-                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
-            }
-
-            /* Download HTML file with edit state stripped */
-            exportFile() {
-                const editables = Array.from(document.querySelectorAll('[contenteditable]'));
-                editables.forEach(el => el.removeAttribute('contenteditable'));
-                document.body.classList.remove('edit-active');
-                this.toggle.classList.remove('active', 'show');
-                this.banner.classList.remove('active');
-
-                const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-                document.body.classList.add('edit-active');
-                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
-                this.toggle.classList.add('active');
-                this.banner.classList.add('active');
-
-                const blob = new Blob([html], { type: 'text/html' });
-                const a    = document.createElement('a');
-                a.href     = URL.createObjectURL(blob);
-                a.download = 'fedex-weekly-meeting.html';
-                a.click();
-                URL.revokeObjectURL(a.href);
-            }
-        }
-
-        /* ============================================
-           RESTORE SAVED CONTENT, THEN INITIALIZE
-           ============================================ */
-        const _saved = localStorage.getItem('fedex-weekly-slides');
-        if (_saved) document.body.innerHTML = _saved;
-
-        const presentation = new SlidePresentation();
-        const editor       = new InlineEditor();
-    </script>
 </body>
 </html>
