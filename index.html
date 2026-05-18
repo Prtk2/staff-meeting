@@ -582,6 +582,75 @@
         }
 
         /* ============================================
+           SLIDE 0 — TITLE SLIDE (full-bleed image)
+           ============================================ */
+        .title-slide {
+            background:
+                linear-gradient(105deg,
+                    rgba(8,7,26,0.93) 0%,
+                    rgba(8,7,26,0.68) 42%,
+                    rgba(8,7,26,0.22) 100%),
+                url('https://images.unsplash.com/photo-1672136882892-4758ddd19826?auto=format&fit=crop&w=1920&q=85')
+                center / cover no-repeat;
+        }
+
+        /* Hide diagonal shape — image provides the atmosphere */
+        .title-slide::before { display: none; }
+
+        .title-slide .slide-content {
+            justify-content: flex-end;
+            padding-bottom: clamp(3rem, 8vh, 5.5rem);
+        }
+
+        .title-eyebrow {
+            font-family: var(--font-body);
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            font-weight: 600;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--fedex-orange);
+            margin-bottom: clamp(0.5rem, 1.2vh, 0.9rem);
+        }
+
+        .title-main {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 11vw, 9rem);
+            font-weight: 900;
+            line-height: 0.88;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            margin-bottom: clamp(0.25rem, 0.7vh, 0.5rem);
+        }
+
+        .title-sub {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 3.8vw, 3.2rem);
+            font-weight: 400;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.72);
+            line-height: 1;
+            margin-bottom: clamp(1.2rem, 3vh, 2.2rem);
+        }
+
+        .title-rule {
+            width: clamp(2.5rem, 5vw, 4rem);
+            height: 2px;
+            background: var(--fedex-orange);
+            margin-bottom: clamp(0.8rem, 2vh, 1.5rem);
+        }
+
+        .title-date {
+            font-family: var(--font-body);
+            font-size: clamp(0.6rem, 1vw, 0.78rem);
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.38);
+            text-transform: uppercase;
+        }
+
+        /* ============================================
            SLIDE 4 — EFFICIENCY BAR CHART
            ============================================ */
         #slide-4 .slide-title {
@@ -787,6 +856,24 @@
     <div class="keyboard-hint" aria-hidden="true">
         <kbd>←</kbd><kbd>→</kbd> navigate &nbsp;<kbd>E</kbd> edit
     </div>
+
+    <!-- ====================================================
+         SLIDE 0 — TITLE
+         ==================================================== -->
+    <section class="slide title-slide" id="slide-0" aria-label="Title Slide">
+        <div class="brand-mark" aria-hidden="true">
+            <span class="brand-fed">Fed</span><span class="brand-ex">Ex</span>
+            <span class="brand-sub">Express</span>
+        </div>
+
+        <div class="slide-content">
+            <div class="title-eyebrow reveal" style="transition-delay:0.1s">FedEx Express</div>
+            <h1 class="title-main reveal" style="transition-delay:0.22s">LH MNTR</h1>
+            <div class="title-sub reveal" style="transition-delay:0.34s">Staff Meeting</div>
+            <div class="title-rule reveal" style="transition-delay:0.44s"></div>
+            <div class="title-date reveal" style="transition-delay:0.52s">Week 20 &nbsp;·&nbsp; May 2025</div>
+        </div>
+    </section>
 
     <!-- ====================================================
          SLIDE 1 — WEEKLY UPDATE
@@ -1275,6 +1362,7 @@
                 this.toggle.textContent = this.isActive ? '✓ Done' : '✏ Edit';
 
                 const sel = [
+                    '.title-eyebrow', '.title-main', '.title-sub', '.title-date',
                     'h1.slide-title', 'h2.slide-title',
                     '.update-card-label', '.update-card-title', '.update-card-body',
                     '.slide-label', '.slide-meta',
