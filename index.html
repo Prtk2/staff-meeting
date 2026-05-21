@@ -1102,6 +1102,212 @@
         .s4-red .s4-card-val { color: #f87171; }
 
         /* ============================================================
+           SLIDE 07 — EFFICIENCY: TWO-PANEL DETAIL LAYOUT
+           Hub Area (win) | Mainline (gap) + PT Mismatch strip
+        ============================================================ */
+
+        /* 2-column panel grid */
+        .s7-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.7rem, 1.4vw, 1.4rem);
+            flex: 1;
+            min-height: 0;
+            max-height: min(60vh, 415px);
+        }
+
+        /* Individual panel shell */
+        .s7-panel {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.28rem, 0.55vh, 0.58rem);
+            padding: clamp(0.8rem, 1.3vw, 1.3rem);
+            border-radius: 5px;
+            border: 1px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        .s7-panel-win {
+            background: rgba(74, 222, 128, 0.045);
+            border-color: rgba(74, 222, 128, 0.18);
+        }
+        .s7-panel-win::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: #4ade80;
+            border-radius: 5px 0 0 5px;
+        }
+        .s7-panel-gap {
+            background: rgba(251, 146, 60, 0.045);
+            border-color: rgba(251, 146, 60, 0.18);
+        }
+        .s7-panel-gap::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: #fb923c;
+            border-radius: 5px 0 0 5px;
+        }
+
+        /* Panel header row */
+        .s7-panel-toprow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .s7-panel-name {
+            font-family: var(--font-display);
+            font-size: clamp(0.62rem, 0.9vw, 0.76rem);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* Big % + deviation */
+        .s7-metric-row {
+            display: flex;
+            align-items: flex-end;
+            gap: clamp(0.45rem, 0.9vw, 0.9rem);
+        }
+        .s7-big-pct {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3.8vw, 3.1rem);
+            font-weight: 900;
+            line-height: 0.88;
+            letter-spacing: -0.02em;
+        }
+        .s7-panel-win .s7-big-pct { color: #4ade80; }
+        .s7-panel-gap .s7-big-pct { color: #fb923c; }
+
+        .s7-dev-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.08em;
+            padding-bottom: 0.12em;
+        }
+        .s7-dev {
+            font-family: var(--font-display);
+            font-size: clamp(0.7rem, 1.05vw, 0.88rem);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+        .s7-dev-pos { color: #4ade80; }
+        .s7-dev-neg { color: #f87171; }
+        .s7-goal {
+            font-family: var(--font-body);
+            font-size: clamp(0.52rem, 0.74vw, 0.62rem);
+            color: var(--text-muted);
+        }
+
+        /* 3-col stats mini-grid */
+        .s7-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.16rem, 0.32vh, 0.32rem) clamp(0.18rem, 0.35vw, 0.35rem);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: clamp(0.2rem, 0.42vh, 0.42rem);
+        }
+        .s7-stat { display: flex; flex-direction: column; }
+        .s7-stat-val {
+            font-family: var(--font-display);
+            font-size: clamp(0.7rem, 1.02vw, 0.86rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .s7-stat-lbl {
+            font-family: var(--font-display);
+            font-size: clamp(0.36rem, 0.54vw, 0.44rem);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.18em;
+        }
+
+        /* Inefficiency flag chips (Bobtails / Empties / Partials / Singles) */
+        .s7-flags {
+            display: flex;
+            gap: clamp(0.2rem, 0.42vw, 0.42rem);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: clamp(0.18rem, 0.38vh, 0.38rem);
+        }
+        .s7-flag {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(0.14rem, 0.28vw, 0.28rem) 0;
+            border-radius: 3px;
+        }
+        .s7-flag-ok   { background: rgba(74,222,128,0.06);  border: 1px solid rgba(74,222,128,0.15); }
+        .s7-flag-warn { background: rgba(251,146,60,0.07);  border: 1px solid rgba(251,146,60,0.22); }
+        .s7-flag-val {
+            font-family: var(--font-display);
+            font-size: clamp(0.62rem, 0.94vw, 0.78rem);
+            font-weight: 800;
+            line-height: 1;
+        }
+        .s7-flag-ok   .s7-flag-val { color: rgba(74,222,128,0.72); }
+        .s7-flag-warn .s7-flag-val { color: #fb923c; }
+        .s7-flag-lbl {
+            font-family: var(--font-display);
+            font-size: clamp(0.32rem, 0.48vw, 0.4rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.16em;
+        }
+
+        /* PT Mismatch alert strip — bottom of slide */
+        .s7-pt-strip {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.45rem, 0.9vw, 0.9rem);
+            padding: clamp(0.26rem, 0.52vw, 0.48rem) clamp(0.6rem, 1.1vw, 1rem);
+            background: rgba(251, 146, 60, 0.07);
+            border-left: 3px solid rgba(251, 146, 60, 0.45);
+            border-radius: 0 4px 4px 0;
+            flex-shrink: 0;
+        }
+        .s7-pt-tag {
+            font-family: var(--font-display);
+            font-size: clamp(0.44rem, 0.66vw, 0.55rem);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #fb923c;
+            flex-shrink: 0;
+        }
+        .s7-pt-name {
+            font-family: var(--font-display);
+            font-size: clamp(0.5rem, 0.76vw, 0.62rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        .s7-pt-metrics {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.35rem, 0.65vw, 0.65rem);
+            margin-left: auto;
+        }
+        .s7-pt-val {
+            font-family: var(--font-display);
+            font-size: clamp(0.6rem, 0.9vw, 0.74rem);
+            font-weight: 800;
+            color: #fb923c;
+        }
+        .s7-pt-lbl {
+            font-family: var(--font-body);
+            font-size: clamp(0.48rem, 0.7vw, 0.58rem);
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
            KEYBOARD HINT
         ============================================================ */
         .keyboard-hint {
@@ -1816,32 +2022,107 @@
 
             <hr class="s4-rule reveal" aria-hidden="true">
 
-            <div class="s4-cards s4-cards-3 stagger">
+            <!-- Two-panel detail grid: Hub Area (win) | Mainline (gap) -->
+            <div class="s7-panels stagger">
 
-                <!-- WIN: Hub Area Optimal% -->
-                <div class="s4-card s4-win reveal">
-                    <p class="s4-card-label">Hub Area<br>Optimal %</p>
-                    <p class="s4-card-val">94.14<span style="font-size:0.45em;opacity:0.7">%</span></p>
-                    <p class="s4-card-goal">Goal: ≥ 90.02% &nbsp;·&nbsp; Beat by 4.12%</p>
-                    <div class="s4-badge s4-badge-win">✓ Achieved</div>
+                <!-- ── HUB AREA — WIN ── -->
+                <div class="s7-panel s7-panel-win reveal">
+                    <div class="s7-panel-toprow">
+                        <span class="s7-panel-name">Hub Area</span>
+                        <div class="s4-badge s4-badge-win">✓ Win</div>
+                    </div>
+                    <div class="s7-metric-row">
+                        <p class="s7-big-pct">94.14<span style="font-size:0.42em;opacity:0.65">%</span></p>
+                        <div class="s7-dev-col">
+                            <span class="s7-dev s7-dev-pos">+4.1%</span>
+                            <span class="s7-goal">Goal ≥ 90.02%</span>
+                        </div>
+                    </div>
+                    <div class="s7-stats">
+                        <div class="s7-stat"><span class="s7-stat-val">583</span><span class="s7-stat-lbl">Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">511</span><span class="s7-stat-lbl">Optimal</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">72</span><span class="s7-stat-lbl">OPP Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">205,924</span><span class="s7-stat-lbl">PKGS Moved</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">772</span><span class="s7-stat-lbl">Trlrs</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">$315K</span><span class="s7-stat-lbl">LH Cost</span></div>
+                    </div>
+                    <div class="s7-flags">
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">26</span>
+                            <span class="s7-flag-lbl">Bobtail</span>
+                        </div>
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">462</span>
+                            <span class="s7-flag-lbl">Empty</span>
+                        </div>
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">204</span>
+                            <span class="s7-flag-lbl">Partial</span>
+                        </div>
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">240</span>
+                            <span class="s7-flag-lbl">Single</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- GAP: Mainline Optimal% -->
-                <div class="s4-card s4-gap reveal">
-                    <p class="s4-card-label">Mainline<br>Optimal %</p>
-                    <p class="s4-card-val">95.34<span style="font-size:0.45em;opacity:0.7">%</span></p>
-                    <p class="s4-card-goal">Goal: ≥ 99.45% &nbsp;·&nbsp; Below by 4.11%</p>
-                    <div class="s4-badge s4-badge-gap">⚠ Below Target</div>
+                <!-- ── MAINLINE — GAP ── -->
+                <div class="s7-panel s7-panel-gap reveal">
+                    <div class="s7-panel-toprow">
+                        <span class="s7-panel-name">Mainline</span>
+                        <div class="s4-badge s4-badge-gap">⚠ Gap</div>
+                    </div>
+                    <div class="s7-metric-row">
+                        <p class="s7-big-pct">95.34<span style="font-size:0.42em;opacity:0.65">%</span></p>
+                        <div class="s7-dev-col">
+                            <span class="s7-dev s7-dev-neg">−4.1%</span>
+                            <span class="s7-goal">Goal ≥ 99.45%</span>
+                        </div>
+                    </div>
+                    <div class="s7-stats">
+                        <div class="s7-stat"><span class="s7-stat-val">38</span><span class="s7-stat-lbl">Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">37</span><span class="s7-stat-lbl">Optimal</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">1</span><span class="s7-stat-lbl">OPP Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">41,100</span><span class="s7-stat-lbl">PKGS Moved</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">67</span><span class="s7-stat-lbl">Trlrs</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">$114K</span><span class="s7-stat-lbl">LH Cost</span></div>
+                    </div>
+                    <div class="s7-flags">
+                        <div class="s7-flag s7-flag-ok">
+                            <span class="s7-flag-val">0</span>
+                            <span class="s7-flag-lbl">Bobtail</span>
+                        </div>
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">5</span>
+                            <span class="s7-flag-lbl">Empty</span>
+                        </div>
+                        <div class="s7-flag s7-flag-warn">
+                            <span class="s7-flag-val">16</span>
+                            <span class="s7-flag-lbl">Partial</span>
+                        </div>
+                        <div class="s7-flag s7-flag-ok">
+                            <span class="s7-flag-val">0</span>
+                            <span class="s7-flag-lbl">Single</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- GAP: PT Mismatch% -->
-                <div class="s4-card s4-gap reveal">
-                    <p class="s4-card-label">PT Mismatch %<br>&nbsp;</p>
-                    <p class="s4-card-val">100<span style="font-size:0.45em;opacity:0.7">%</span></p>
-                    <p class="s4-card-goal">Goal: ≤ 99.00% &nbsp;·&nbsp; Over threshold</p>
-                    <div class="s4-badge s4-badge-gap">⚠ Over Threshold</div>
-                </div>
+            </div>
 
+            <!-- PT Mismatch — third gap, displayed as alert strip -->
+            <div class="s7-pt-strip reveal">
+                <span class="s7-pt-tag">⚠ Third Gap</span>
+                <span class="s7-pt-name">PT Mismatch %</span>
+                <div class="s7-pt-metrics">
+                    <span class="s7-pt-lbl">Actual</span>
+                    <span class="s7-pt-val">100.00%</span>
+                    <span class="s7-pt-lbl" style="opacity:0.3">/</span>
+                    <span class="s7-pt-lbl">Goal</span>
+                    <span class="s7-pt-val" style="color:var(--text-secondary);">≤ 99.00%</span>
+                    <span class="s7-pt-lbl" style="opacity:0.3">/</span>
+                    <span class="s7-pt-lbl">Over by</span>
+                    <span class="s7-pt-val">1.00%</span>
+                </div>
             </div>
 
         </div>
