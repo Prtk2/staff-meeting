@@ -1120,16 +1120,16 @@
         .s7-panel {
             display: flex;
             flex-direction: column;
-            gap: clamp(0.28rem, 0.55vh, 0.58rem);
-            padding: clamp(0.8rem, 1.3vw, 1.3rem);
+            gap: clamp(0.35rem, 0.68vh, 0.68rem);
+            padding: clamp(0.9rem, 1.4vw, 1.4rem);
             border-radius: 5px;
             border: 1px solid;
             position: relative;
             overflow: hidden;
         }
         .s7-panel-win {
-            background: rgba(74, 222, 128, 0.045);
-            border-color: rgba(74, 222, 128, 0.18);
+            background: rgba(74, 222, 128, 0.06);
+            border-color: rgba(74, 222, 128, 0.22);
         }
         .s7-panel-win::before {
             content: ''; position: absolute;
@@ -1138,8 +1138,8 @@
             border-radius: 5px 0 0 5px;
         }
         .s7-panel-gap {
-            background: rgba(251, 146, 60, 0.045);
-            border-color: rgba(251, 146, 60, 0.18);
+            background: rgba(251, 146, 60, 0.06);
+            border-color: rgba(251, 146, 60, 0.22);
         }
         .s7-panel-gap::before {
             content: ''; position: absolute;
@@ -1156,22 +1156,22 @@
         }
         .s7-panel-name {
             font-family: var(--font-display);
-            font-size: clamp(0.62rem, 0.9vw, 0.76rem);
+            font-size: clamp(0.78rem, 1.15vw, 0.96rem);
             font-weight: 700;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.62);
         }
 
         /* Big % + deviation */
         .s7-metric-row {
             display: flex;
             align-items: flex-end;
-            gap: clamp(0.45rem, 0.9vw, 0.9rem);
+            gap: clamp(0.5rem, 1vw, 1rem);
         }
         .s7-big-pct {
             font-family: var(--font-display);
-            font-size: clamp(1.5rem, 3.8vw, 3.1rem);
+            font-size: clamp(1.7rem, 4.2vw, 3.5rem);
             font-weight: 900;
             line-height: 0.88;
             letter-spacing: -0.02em;
@@ -1182,12 +1182,12 @@
         .s7-dev-col {
             display: flex;
             flex-direction: column;
-            gap: 0.08em;
-            padding-bottom: 0.12em;
+            gap: 0.1em;
+            padding-bottom: 0.14em;
         }
         .s7-dev {
             font-family: var(--font-display);
-            font-size: clamp(0.7rem, 1.05vw, 0.88rem);
+            font-size: clamp(0.88rem, 1.32vw, 1.1rem);
             font-weight: 800;
             letter-spacing: 0.04em;
         }
@@ -1195,85 +1195,85 @@
         .s7-dev-neg { color: #f87171; }
         .s7-goal {
             font-family: var(--font-body);
-            font-size: clamp(0.52rem, 0.74vw, 0.62rem);
-            color: var(--text-muted);
+            font-size: clamp(0.68rem, 0.98vw, 0.82rem);
+            color: rgba(255,255,255,0.55);
         }
 
-        /* 3-col stats mini-grid */
+        /* 4-col stats mini-grid (Trips · Opt · OPP Trips · OPP Miles / PKGS · Trlrs · TPD · Cost) */
         .s7-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(0.16rem, 0.32vh, 0.32rem) clamp(0.18rem, 0.35vw, 0.35rem);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: clamp(0.2rem, 0.42vh, 0.42rem);
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(0.2rem, 0.4vh, 0.4rem) clamp(0.18rem, 0.34vw, 0.34rem);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: clamp(0.25rem, 0.5vh, 0.5rem);
         }
         .s7-stat { display: flex; flex-direction: column; }
         .s7-stat-val {
             font-family: var(--font-display);
-            font-size: clamp(0.7rem, 1.02vw, 0.86rem);
+            font-size: clamp(0.88rem, 1.28vw, 1.06rem);
             font-weight: 700;
-            color: var(--text-primary);
+            color: #ffffff;
             line-height: 1;
         }
         .s7-stat-lbl {
             font-family: var(--font-display);
-            font-size: clamp(0.36rem, 0.54vw, 0.44rem);
+            font-size: clamp(0.54rem, 0.76vw, 0.64rem);
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 0.18em;
+            color: rgba(255,255,255,0.55);
+            margin-top: 0.2em;
         }
 
         /* Inefficiency flag chips (Bobtails / Empties / Partials / Singles) */
         .s7-flags {
             display: flex;
-            gap: clamp(0.2rem, 0.42vw, 0.42rem);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: clamp(0.18rem, 0.38vh, 0.38rem);
+            gap: clamp(0.25rem, 0.5vw, 0.5rem);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: clamp(0.22rem, 0.44vh, 0.44rem);
         }
         .s7-flag {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: clamp(0.14rem, 0.28vw, 0.28rem) 0;
+            padding: clamp(0.2rem, 0.4vw, 0.4rem) 0;
             border-radius: 3px;
         }
-        .s7-flag-ok   { background: rgba(74,222,128,0.06);  border: 1px solid rgba(74,222,128,0.15); }
-        .s7-flag-warn { background: rgba(251,146,60,0.07);  border: 1px solid rgba(251,146,60,0.22); }
+        .s7-flag-ok   { background: rgba(74,222,128,0.09);  border: 1px solid rgba(74,222,128,0.22); }
+        .s7-flag-warn { background: rgba(251,146,60,0.10);  border: 1px solid rgba(251,146,60,0.30); }
         .s7-flag-val {
             font-family: var(--font-display);
-            font-size: clamp(0.62rem, 0.94vw, 0.78rem);
+            font-size: clamp(0.82rem, 1.2vw, 1rem);
             font-weight: 800;
             line-height: 1;
         }
-        .s7-flag-ok   .s7-flag-val { color: rgba(74,222,128,0.72); }
+        .s7-flag-ok   .s7-flag-val { color: #4ade80; }
         .s7-flag-warn .s7-flag-val { color: #fb923c; }
         .s7-flag-lbl {
             font-family: var(--font-display);
-            font-size: clamp(0.32rem, 0.48vw, 0.4rem);
+            font-size: clamp(0.5rem, 0.72vw, 0.6rem);
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 0.16em;
+            color: rgba(255,255,255,0.55);
+            margin-top: 0.18em;
         }
 
         /* PT Mismatch alert strip — bottom of slide */
         .s7-pt-strip {
             display: flex;
             align-items: center;
-            gap: clamp(0.45rem, 0.9vw, 0.9rem);
-            padding: clamp(0.26rem, 0.52vw, 0.48rem) clamp(0.6rem, 1.1vw, 1rem);
-            background: rgba(251, 146, 60, 0.07);
-            border-left: 3px solid rgba(251, 146, 60, 0.45);
+            gap: clamp(0.5rem, 1vw, 1rem);
+            padding: clamp(0.34rem, 0.66vw, 0.6rem) clamp(0.65rem, 1.2vw, 1.1rem);
+            background: rgba(251, 146, 60, 0.08);
+            border-left: 3px solid rgba(251, 146, 60, 0.5);
             border-radius: 0 4px 4px 0;
             flex-shrink: 0;
         }
         .s7-pt-tag {
             font-family: var(--font-display);
-            font-size: clamp(0.44rem, 0.66vw, 0.55rem);
+            font-size: clamp(0.56rem, 0.82vw, 0.68rem);
             font-weight: 700;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -1282,29 +1282,29 @@
         }
         .s7-pt-name {
             font-family: var(--font-display);
-            font-size: clamp(0.5rem, 0.76vw, 0.62rem);
+            font-size: clamp(0.62rem, 0.92vw, 0.76rem);
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.68);
             flex-shrink: 0;
         }
         .s7-pt-metrics {
             display: flex;
             align-items: center;
-            gap: clamp(0.35rem, 0.65vw, 0.65rem);
+            gap: clamp(0.4rem, 0.75vw, 0.72rem);
             margin-left: auto;
         }
         .s7-pt-val {
             font-family: var(--font-display);
-            font-size: clamp(0.6rem, 0.9vw, 0.74rem);
+            font-size: clamp(0.72rem, 1.08vw, 0.9rem);
             font-weight: 800;
             color: #fb923c;
         }
         .s7-pt-lbl {
             font-family: var(--font-body);
-            font-size: clamp(0.48rem, 0.7vw, 0.58rem);
-            color: var(--text-muted);
+            font-size: clamp(0.6rem, 0.86vw, 0.72rem);
+            color: rgba(255,255,255,0.55);
         }
 
         /* ============================================================
@@ -2042,8 +2042,10 @@
                         <div class="s7-stat"><span class="s7-stat-val">583</span><span class="s7-stat-lbl">Trips</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">511</span><span class="s7-stat-lbl">Optimal</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">72</span><span class="s7-stat-lbl">OPP Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">4,806</span><span class="s7-stat-lbl">OPP Miles</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">205,924</span><span class="s7-stat-lbl">PKGS Moved</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">772</span><span class="s7-stat-lbl">Trlrs</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">1.50</span><span class="s7-stat-lbl">TPD</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">$315K</span><span class="s7-stat-lbl">LH Cost</span></div>
                     </div>
                     <div class="s7-flags">
@@ -2083,8 +2085,10 @@
                         <div class="s7-stat"><span class="s7-stat-val">38</span><span class="s7-stat-lbl">Trips</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">37</span><span class="s7-stat-lbl">Optimal</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">1</span><span class="s7-stat-lbl">OPP Trips</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">1,465</span><span class="s7-stat-lbl">OPP Miles</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">41,100</span><span class="s7-stat-lbl">PKGS Moved</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">67</span><span class="s7-stat-lbl">Trlrs</span></div>
+                        <div class="s7-stat"><span class="s7-stat-val">2.00</span><span class="s7-stat-lbl">TPD</span></div>
                         <div class="s7-stat"><span class="s7-stat-val">$114K</span><span class="s7-stat-lbl">LH Cost</span></div>
                     </div>
                     <div class="s7-flags">
