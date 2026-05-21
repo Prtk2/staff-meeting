@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1629,55 +1629,35 @@
         }
         .s11-panels {
             display: grid; grid-template-columns: 1fr 1fr;
-            gap: clamp(1rem, 2vw, 2.2rem);
-            flex: 1; min-height: 0; max-height: min(60vh, 420px);
+            gap: clamp(0.8rem, 1.6vw, 1.8rem);
+            flex: 1; min-height: 0; max-height: min(62vh, 430px);
         }
         .s11-panel {
             display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: clamp(0.5rem, 0.9vh, 1rem);
-            padding: clamp(1.4rem, 2.6vh, 2.4rem) clamp(1.4rem, 2.2vw, 2.2rem);
+            gap: clamp(0.3rem, 0.5vh, 0.6rem);
+            padding: clamp(0.6rem, 1.1vh, 1rem) clamp(0.7rem, 1.1vw, 1.1rem);
             border-radius: 6px;
-            border: 1px dashed rgba(255,255,255,0.14);
-            background: rgba(255,255,255,0.02);
-            text-align: center; position: relative; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.03);
+            position: relative; overflow: hidden;
         }
         .s11-panel::before {
             content: ''; position: absolute; inset: 0; pointer-events: none;
-            background: repeating-linear-gradient(
-                45deg, transparent, transparent 18px,
-                rgba(255,255,255,0.013) 18px, rgba(255,255,255,0.013) 19px
-            );
+            background: linear-gradient(180deg, rgba(77,20,140,0.08) 0%, transparent 40%);
         }
-        .s11-panel-icon {
-            width: clamp(38px, 5vw, 58px);
-            height: clamp(38px, 5vw, 58px);
-            color: rgba(255,255,255,0.26);
-        }
-        .s11-panel-title {
+        .s11-img-label {
             font-family: var(--font-display);
-            font-size: clamp(1.8rem, 4vw, 3.4rem);
-            font-weight: 900; letter-spacing: -0.01em;
-            color: #ffffff; text-transform: uppercase; line-height: 1;
+            font-size: clamp(0.58rem, 0.84vw, 0.74rem);
+            font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--fedex-orange); flex-shrink: 0;
         }
-        .s11-panel-subtitle {
-            font-family: var(--font-display);
-            font-size: clamp(0.6rem, 0.88vw, 0.76rem);
-            font-weight: 700; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--fedex-orange);
-        }
-        .s11-pending-badge {
-            font-family: var(--font-display);
-            font-size: clamp(0.54rem, 0.78vw, 0.68rem);
-            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-            color: rgba(255,255,255,0.32);
-            border: 1px dashed rgba(255,255,255,0.16); border-radius: 3px;
-            padding: 3px 10px;
-        }
-        .s11-panel-desc {
-            font-family: var(--font-body);
-            font-size: clamp(0.64rem, 0.94vw, 0.8rem);
-            color: rgba(255,255,255,0.28); line-height: 1.55; max-width: 320px;
+        .s11-screenshot {
+            width: 100%; flex: 1; min-height: 0;
+            max-height: min(52vh, 370px);
+            object-fit: contain; object-position: top left;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
         }
 
         /* ============================================================
