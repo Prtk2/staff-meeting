@@ -1308,6 +1308,120 @@
         }
 
         /* ============================================================
+           SLIDES 08 & 09 — LANE BREAKDOWN TABLES
+        ============================================================ */
+
+        .slide-s8 { background: var(--bg); }
+        .slide-s8::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 90% 50%, rgba(77,20,140,0.22) 0%, transparent 48%),
+                radial-gradient(ellipse at 10% 50%, rgba(74,222,128,0.05) 0%, transparent 40%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .slide-s9 { background: var(--bg); }
+        .slide-s9::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 90% 50%, rgba(77,20,140,0.22) 0%, transparent 48%),
+                radial-gradient(ellipse at 10% 50%, rgba(251,146,60,0.06) 0%, transparent 40%);
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Shared inner wrapper */
+        .lane-inner {
+            position: relative; z-index: 2;
+            display: flex; flex-direction: column;
+            gap: clamp(0.4rem, 0.8vh, 0.85rem);
+            padding: clamp(1rem, 2.2vw, 2.4rem);
+            padding-left: calc(clamp(1rem, 2.2vw, 2.4rem) + clamp(8px, 1.2vw, 16px));
+            padding-bottom: calc(clamp(1rem, 2.2vw, 2.4rem) + var(--footer-h));
+            height: 100%; max-height: 100%; overflow: hidden;
+        }
+
+        /* Slide header */
+        .lane-hdr {
+            display: flex; align-items: flex-end;
+            justify-content: space-between; gap: 1rem; flex-shrink: 0;
+        }
+        .lane-hdr-left { display: flex; flex-direction: column; gap: clamp(0.18rem, 0.35vh, 0.4rem); }
+        .lane-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 3.5vw, 3rem);
+            font-weight: 900; letter-spacing: -0.01em;
+            text-transform: uppercase; line-height: 0.92;
+            color: var(--text-primary);
+        }
+        .lane-title .orange { color: var(--fedex-orange); }
+        .lane-sub {
+            font-family: var(--font-display);
+            font-size: clamp(0.56rem, 0.82vw, 0.68rem);
+            font-weight: 600; letter-spacing: 0.17em;
+            text-transform: uppercase; color: rgba(255,255,255,0.4);
+        }
+        .lane-hdr-right {
+            font-family: var(--font-display);
+            font-size: clamp(0.54rem, 0.78vw, 0.64rem);
+            font-weight: 600; letter-spacing: 0.1em;
+            text-transform: uppercase; color: rgba(255,255,255,0.35);
+            text-align: right; flex-shrink: 0;
+        }
+
+        /* Table fills remaining height */
+        .lane-tbl-wrap { flex: 1; min-height: 0; overflow: hidden; }
+
+        /* Data table */
+        .lane-tbl {
+            width: 100%; border-collapse: collapse;
+            font-family: var(--font-display); table-layout: fixed;
+        }
+        .lane-tbl thead th {
+            font-size: clamp(0.44rem, 0.63vw, 0.54rem);
+            font-weight: 700; letter-spacing: 0.07em;
+            text-transform: uppercase; color: rgba(255,255,255,0.42);
+            padding: clamp(0.2rem, 0.38vh, 0.42rem) clamp(0.2rem, 0.32vw, 0.36rem);
+            text-align: right; border-bottom: 1px solid rgba(255,255,255,0.08);
+            white-space: nowrap; overflow: hidden;
+        }
+        .lane-tbl thead th.th-l { text-align: left; }
+
+        .lane-tbl tbody td {
+            font-size: clamp(0.54rem, 0.77vw, 0.65rem);
+            font-weight: 500;
+            padding: clamp(0.16rem, 0.3vh, 0.32rem) clamp(0.2rem, 0.32vw, 0.36rem);
+            text-align: right; color: rgba(255,255,255,0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            white-space: nowrap; overflow: hidden;
+        }
+        .lane-tbl tbody td.td-l {
+            text-align: left; font-weight: 700;
+            color: #ffffff; letter-spacing: 0.04em;
+        }
+
+        /* Mainline variant — fewer rows so larger font */
+        .lane-tbl-lg thead th {
+            font-size: clamp(0.58rem, 0.84vw, 0.7rem);
+            padding: clamp(0.3rem, 0.58vh, 0.58rem) clamp(0.28rem, 0.44vw, 0.48rem);
+        }
+        .lane-tbl-lg tbody td {
+            font-size: clamp(0.7rem, 1.02vw, 0.86rem);
+            padding: clamp(0.32rem, 0.64vh, 0.62rem) clamp(0.28rem, 0.44vw, 0.48rem);
+        }
+
+        /* Opt % Mile colour scale (lane table) */
+        .opt-s { color: #f87171; font-weight: 700; }   /* 0-59%   */
+        .opt-d { color: #fb923c; font-weight: 700; }   /* 60-69%  */
+        .opt-c { color: #fbbf24; font-weight: 700; }   /* 70-79%  */
+        .opt-b { color: #a3e635; font-weight: 700; }   /* 80-89%  */
+        .opt-a { color: #4ade80; font-weight: 700; }   /* 90-100% */
+
+        /* Flag % colour helpers */
+        .f0  { color: rgba(74,222,128,0.58); }          /* 0% — good */
+        .f1  { color: #fb923c; font-weight: 600; }     /* 1-49%     */
+        .f2  { color: #f87171; font-weight: 700; }     /* 50%+      */
+
+        /* ============================================================
            KEYBOARD HINT
         ============================================================ */
         .keyboard-hint {
@@ -2139,6 +2253,223 @@
                 <span class="fedex-wordmark-exp">Express</span>
             </div>
             <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">07 / 07</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 08 — EFFICIENCY: HUB AREA LANE BREAKDOWN
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • 21 lanes sorted by Optimal % ascending — bottom of list
+             is where cost efficiency starts to break down
+           • Immediate focus lanes (< 70%):
+               6105-6110 / 6113-6111: 0% optimal — pure deadhead,
+               one trip each. Low volume but 100% bobtail.
+               6103-6081 / 6110-6103: 53-56% — significant OPP miles
+               relative to volume. Ask: are these lanes being
+               combined or are they running underloaded?
+               6103-6075 / 6075-6103: 66-70% — paired round-trip
+               with 1,077 OPP miles each. Combined they represent
+               the single largest OPP mile contributor.
+           • High-cost concern: 6075-6103 at $15,149 and 6103-6075
+             at $13,667 — both below 70% optimal. These two lanes
+             alone account for over $28K at suboptimal efficiency.
+           • Positive: lanes at 90%+ represent solid volume and
+             efficiency — protect those operational patterns.
+           • Action: "Who can review lane consolidation options for
+             the 53-70% optimal range before Thursday?"
+    ============================================================== -->
+    <section class="slide slide-s8" id="s08" aria-label="Efficiency: Hub Area Lane Breakdown">
+        <div class="s4-accent" aria-hidden="true"></div>
+        <div class="lane-inner">
+
+            <div class="lane-hdr reveal-left">
+                <div class="lane-hdr-left">
+                    <div class="okr-tag">
+                        <svg viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
+                            <rect x="0" y="5" width="3" height="7" rx="0.5"/>
+                            <rect x="4" y="2.5" width="3" height="9.5" rx="0.5"/>
+                            <rect x="8" y="0" width="3" height="12" rx="0.5"/>
+                            <rect x="12" y="3.5" width="2" height="8.5" rx="0.5"/>
+                        </svg>
+                        Efficiency · Hub Area
+                    </div>
+                    <h2 class="lane-title">Hub Area <span class="orange">Lane Breakdown</span></h2>
+                    <p class="lane-sub">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026 &nbsp;·&nbsp; Sorted by Opt % ascending</p>
+                </div>
+                <div class="lane-hdr-right">21 lanes &nbsp;·&nbsp; $315,376 total LH cost</div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="lane-tbl-wrap">
+                <table class="lane-tbl" aria-label="Hub Area lane efficiency breakdown">
+                    <thead>
+                        <tr>
+                            <th class="th-l">Lane</th>
+                            <th>Opt %</th>
+                            <th>OPP Mi</th>
+                            <th>Trips</th>
+                            <th>Opt</th>
+                            <th>OPP</th>
+                            <th>PKGS</th>
+                            <th>Btail%</th>
+                            <th>Sngl%</th>
+                            <th>Empty%</th>
+                            <th>Part%</th>
+                            <th>LH Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="td-l">6105-6110</td><td><span class="opt-s">0.00%</span></td><td>48</td><td>1</td><td>0</td><td>1</td><td>0</td><td><span class="f2">100%</span></td><td><span class="f2">100%</span></td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td>$245</td></tr>
+                        <tr><td class="td-l">6113-6111</td><td><span class="opt-s">0.00%</span></td><td>3</td><td>1</td><td>0</td><td>1</td><td>0</td><td><span class="f2">100%</span></td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td>$49</td></tr>
+                        <tr><td class="td-l">6103-6081</td><td><span class="opt-d">53.33%</span></td><td>133</td><td>15</td><td>8</td><td>7</td><td>6,200</td><td><span class="f1">13%</span></td><td><span class="f2">80%</span></td><td><span class="f1">7%</span></td><td><span class="f1">17%</span></td><td>$2,505</td></tr>
+                        <tr><td class="td-l">6110-6103</td><td><span class="opt-d">55.56%</span></td><td>224</td><td>18</td><td>10</td><td>8</td><td>2,500</td><td><span class="f1">11%</span></td><td><span class="f0">0%</span></td><td><span class="f2">61%</span></td><td><span class="f0">0%</span></td><td>$3,926</td></tr>
+                        <tr><td class="td-l">6103-6075</td><td><span class="opt-d">66.67%</span></td><td>1,077</td><td>9</td><td>6</td><td>3</td><td>5,076</td><td><span class="f0">0%</span></td><td><span class="f2">100%</span></td><td><span class="f0">0%</span></td><td><span class="f1">17%</span></td><td>$13,667</td></tr>
+                        <tr><td class="td-l">6103-6110</td><td><span class="opt-d">66.67%</span></td><td>116</td><td>12</td><td>8</td><td>4</td><td>4,926</td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td><span class="f1">33%</span></td><td><span class="f1">33%</span></td><td>$3,073</td></tr>
+                        <tr><td class="td-l">6103-6085</td><td><span class="opt-d">68.00%</span></td><td>32</td><td>25</td><td>17</td><td>8</td><td>10,142</td><td><span class="f1">16%</span></td><td><span class="f2">84%</span></td><td><span class="f1">8%</span></td><td><span class="f1">18%</span></td><td>$1,448</td></tr>
+                        <tr><td class="td-l">6075-6103</td><td><span class="opt-c">70.00%</span></td><td>1,077</td><td>10</td><td>7</td><td>3</td><td>717</td><td><span class="f1">10%</span></td><td><span class="f2">80%</span></td><td><span class="f1">25%</span></td><td><span class="f1">25%</span></td><td>$15,150</td></tr>
+                        <tr><td class="td-l">6081-6103</td><td><span class="opt-c">71.43%</span></td><td>120</td><td>21</td><td>15</td><td>6</td><td>4,341</td><td><span class="f1">5%</span></td><td><span class="f2">57%</span></td><td><span class="f1">45%</span></td><td><span class="f1">19%</span></td><td>$3,532</td></tr>
+                        <tr><td class="td-l">6109-6103</td><td><span class="opt-c">72.73%</span></td><td>138</td><td>22</td><td>16</td><td>6</td><td>4,449</td><td><span class="f0">0%</span></td><td><span class="f2">73%</span></td><td><span class="f1">43%</span></td><td><span class="f1">11%</span></td><td>$4,043</td></tr>
+                        <tr><td class="td-l">6103-6105</td><td><span class="opt-c">75.00%</span></td><td>58</td><td>8</td><td>6</td><td>2</td><td>6,375</td><td><span class="f1">25%</span></td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td><span class="f1">38%</span></td><td>$1,872</td></tr>
+                        <tr><td class="td-l">6103-6084</td><td><span class="opt-c">77.42%</span></td><td>42</td><td>31</td><td>24</td><td>7</td><td>14,734</td><td><span class="f1">10%</span></td><td><span class="f2">87%</span></td><td><span class="f1">8%</span></td><td><span class="f1">15%</span></td><td>$2,377</td></tr>
+                        <tr><td class="td-l">6111-6124</td><td><span class="opt-b">81.82%</span></td><td>572</td><td>11</td><td>9</td><td>2</td><td>3,753</td><td><span class="f0">0%</span></td><td><span class="f2">64%</span></td><td><span class="f1">36%</span></td><td><span class="f1">32%</span></td><td>$7,550</td></tr>
+                        <tr><td class="td-l">6112-6124</td><td><span class="opt-b">87.50%</span></td><td>556</td><td>16</td><td>14</td><td>2</td><td>3,316</td><td><span class="f0">0%</span></td><td><span class="f1">25%</span></td><td><span class="f2">69%</span></td><td><span class="f1">19%</span></td><td>$10,987</td></tr>
+                        <tr><td class="td-l">6085-6103</td><td><span class="opt-b">88.00%</span></td><td>18</td><td>25</td><td>22</td><td>3</td><td>5,404</td><td><span class="f1">12%</span></td><td><span class="f2">88%</span></td><td><span class="f1">30%</span></td><td><span class="f1">8%</span></td><td>$1,878</td></tr>
+                        <tr><td class="td-l">6084-6103</td><td><span class="opt-b">89.66%</span></td><td>18</td><td>29</td><td>26</td><td>3</td><td>4,970</td><td><span class="f1">10%</span></td><td><span class="f2">90%</span></td><td><span class="f1">31%</span></td><td><span class="f1">14%</span></td><td>$2,272</td></tr>
+                        <tr><td class="td-l">6105-6103</td><td><span class="opt-a">90.48%</span></td><td>58</td><td>21</td><td>19</td><td>2</td><td>6,009</td><td><span class="f0">0%</span></td><td><span class="f1">5%</span></td><td><span class="f2">71%</span></td><td><span class="f1">17%</span></td><td>$4,568</td></tr>
+                        <tr><td class="td-l">6077-6103</td><td><span class="opt-a">90.91%</span></td><td>294</td><td>11</td><td>10</td><td>1</td><td>1,157</td><td><span class="f1">9%</span></td><td><span class="f1">9%</span></td><td><span class="f2">64%</span></td><td><span class="f1">23%</span></td><td>$14,424</td></tr>
+                        <tr><td class="td-l">6103-6109</td><td><span class="opt-a">90.91%</span></td><td>22</td><td>11</td><td>10</td><td>1</td><td>4,371</td><td><span class="f0">0%</span></td><td><span class="f2">100%</span></td><td><span class="f1">18%</span></td><td><span class="f1">9%</span></td><td>$2,101</td></tr>
+                        <tr><td class="td-l">6111-6103</td><td><span class="opt-a">90.91%</span></td><td>106</td><td>11</td><td>10</td><td>1</td><td>4,857</td><td><span class="f1">9%</span></td><td><span class="f1">36%</span></td><td><span class="f1">18%</span></td><td><span class="f1">32%</span></td><td>$4,069</td></tr>
+                        <tr><td class="td-l">6102-6103</td><td><span class="opt-a">94.12%</span></td><td>94</td><td>17</td><td>16</td><td>1</td><td>1,986</td><td><span class="f1">6%</span></td><td><span class="f0">0%</span></td><td><span class="f2">65%</span></td><td><span class="f1">29%</span></td><td>$6,951</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">08 / 09</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 09 — EFFICIENCY: MAINLINE LANE BREAKDOWN
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • 4 mainline lanes — much tighter operation than hub area
+           • Key gap: 6103-6183 at 88.89% — the only mainline lane
+             not running at 100% optimal. OPP Miles: 1,465.
+             This lane also has a 6% Partial rate. Ask: "Is the
+             load plan on the 6183 lane being maximised, or are
+             we dispatching partial trailers?"
+           • Three lanes at 100% optimal — excellent mainline
+             discipline. 6103-6050 especially strong: 19 trips,
+             22,634 packages, $49K cost at full optimal efficiency.
+           • Note the Partial% on 6076-6124 (50%) and 6103-6023
+             (60%) — these are 100% optimal mile-wise but sending
+             partially-loaded trailers. Cost per package is higher.
+           • Close: "Mainline is nearly clean. One lane needs
+             attention — 6103-6183. Who's reviewing that load plan?"
+    ============================================================== -->
+    <section class="slide slide-s9" id="s09" aria-label="Efficiency: Mainline Lane Breakdown">
+        <div class="s4-accent" aria-hidden="true"></div>
+        <div class="lane-inner">
+
+            <div class="lane-hdr reveal-left">
+                <div class="lane-hdr-left">
+                    <div class="okr-tag">
+                        <svg viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
+                            <rect x="0" y="5" width="3" height="7" rx="0.5"/>
+                            <rect x="4" y="2.5" width="3" height="9.5" rx="0.5"/>
+                            <rect x="8" y="0" width="3" height="12" rx="0.5"/>
+                            <rect x="12" y="3.5" width="2" height="8.5" rx="0.5"/>
+                        </svg>
+                        Efficiency · Mainline
+                    </div>
+                    <h2 class="lane-title">Mainline <span class="orange">Lane Breakdown</span></h2>
+                    <p class="lane-sub">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026 &nbsp;·&nbsp; 4 active lanes</p>
+                </div>
+                <div class="lane-hdr-right">4 lanes &nbsp;·&nbsp; $113,972 total LH cost</div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="lane-tbl-wrap">
+                <table class="lane-tbl lane-tbl-lg" aria-label="Mainline lane efficiency breakdown">
+                    <thead>
+                        <tr>
+                            <th class="th-l">Lane</th>
+                            <th>Opt %</th>
+                            <th>OPP Miles</th>
+                            <th>Trips</th>
+                            <th>Opt Trips</th>
+                            <th>OPP Trips</th>
+                            <th>PKGS Moved</th>
+                            <th>Bobtail%</th>
+                            <th>Singles%</th>
+                            <th>Empty%</th>
+                            <th>Partial%</th>
+                            <th>LH Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-l">6103-6183</td>
+                            <td><span class="opt-b">88.89%</span></td>
+                            <td>1,465</td><td>9</td><td>8</td><td>1</td><td>11,688</td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f1">6%</span></td>
+                            <td>$53,004</td>
+                        </tr>
+                        <tr>
+                            <td class="td-l">6076-6124</td>
+                            <td><span class="opt-a">100.00%</span></td>
+                            <td><span class="f0">0</span></td><td>5</td><td>5</td><td><span class="f0">0</span></td><td>2,547</td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f2">50%</span></td>
+                            <td><span class="f2">50%</span></td>
+                            <td>$4,550</td>
+                        </tr>
+                        <tr>
+                            <td class="td-l">6103-6023</td>
+                            <td><span class="opt-a">100.00%</span></td>
+                            <td><span class="f0">0</span></td><td>5</td><td>5</td><td><span class="f0">0</span></td><td>4,231</td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f2">60%</span></td>
+                            <td>$7,071</td>
+                        </tr>
+                        <tr>
+                            <td class="td-l">6103-6050</td>
+                            <td><span class="opt-a">100.00%</span></td>
+                            <td><span class="f0">0</span></td><td>19</td><td>19</td><td><span class="f0">0</span></td><td>22,634</td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f0">0%</span></td>
+                            <td><span class="f1">11%</span></td>
+                            <td>$49,348</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">09 / 09</span></span>
         </footer>
     </section>
 
