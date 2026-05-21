@@ -1031,6 +1031,77 @@
         }
 
         /* ============================================================
+           SLIDES 05 – 07 — BACKGROUND GRADIENTS
+           Reuse all .s4-* layout / card CSS — only gradient differs
+        ============================================================ */
+
+        /* People — green glow bottom-right */
+        .slide-s5 { background: var(--bg); }
+        .slide-s5::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 88% 85%, rgba(74, 222, 128, 0.08) 0%, transparent 44%),
+                radial-gradient(ellipse at 12% 12%, rgba(77, 20, 140, 0.30) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Service — red glow top-right (all misses) */
+        .slide-s6 { background: var(--bg); }
+        .slide-s6::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 86% 14%, rgba(239, 68, 68, 0.09) 0%, transparent 44%),
+                radial-gradient(ellipse at 10% 82%, rgba(77, 20, 140, 0.28) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Efficiency — amber glow bottom-left */
+        .slide-s7 { background: var(--bg); }
+        .slide-s7::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 80% 78%, rgba(251, 146, 60, 0.07) 0%, transparent 44%),
+                radial-gradient(ellipse at 16% 14%, rgba(77, 20, 140, 0.30) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 3-column card grid variant (People / Service / Efficiency have 3 metrics) */
+        .s4-cards-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* Red badge — Service slide (all misses, needs urgency) */
+        .s4-badge-fail {
+            background: rgba(248, 113, 113, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.28);
+        }
+
+        /* Red gap card variant — Service */
+        .s4-red {
+            background: rgba(239, 68, 68, 0.04);
+            border-color: rgba(239, 68, 68, 0.18);
+        }
+        .s4-red::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: #f87171;
+            border-radius: 5px 0 0 5px;
+        }
+        .s4-red .s4-card-val { color: #f87171; }
+
+        /* ============================================================
            KEYBOARD HINT
         ============================================================ */
         .keyboard-hint {
@@ -1494,6 +1565,295 @@
                 <span class="fedex-wordmark-exp">Express</span>
             </div>
             <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">04 / 04</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 05 — OKR BREAKDOWN: PEOPLE PERFORMANCE
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • People OKR at 100.00% — 14 of 14 points — PERFECT week.
+             Open with genuine recognition: this is a rare result.
+           • Walk through each metric:
+               ✓ FLC Compliance: 0 violations — zero fatigue/log
+                 compliance failures. This protects every driver on
+                 the road and keeps MNTR out of DOT scrutiny.
+               ✓ LHRA Error Compliance: 100.00% — all hours-of-service
+                 records are accurate and properly reported. Precision
+                 in documentation prevents costly audit exposure.
+               ✓ MIR Compliance: 0 incidents — clean sheet on
+                 mandatory incident reporting. Zero means we had
+                 nothing to report — keep that standard.
+           • Close: "100% in People means our team did everything
+             right administratively this week. That discipline is
+             what keeps every driver protected and every route legal.
+             Let's carry this into next week and every week."
+           • Recognize the dispatcher and driver teams by name if
+             possible — specificity reinforces the behaviour.
+    ============================================================== -->
+    <section class="slide slide-s5" id="s05" aria-label="OKR Breakdown: People Performance">
+
+        <div class="s4-accent" aria-hidden="true"></div>
+
+        <div class="s4-inner">
+
+            <div class="s4-header">
+                <div class="s4-header-left">
+                    <div class="okr-tag reveal-left">
+                        <!-- People / group icon -->
+                        <svg viewBox="0 0 16 13" fill="currentColor" aria-hidden="true">
+                            <circle cx="5.5" cy="2.8" r="2.5"/>
+                            <circle cx="11.5" cy="2.8" r="2"/>
+                            <path d="M0 12c0-3 2.5-5.2 5.5-5.2S11 9 11 12H0z"/>
+                            <path d="M9.2 7.2C10.1 6.9 10.8 6.8 11.5 6.8c2.8 0 4.5 1.9 4.5 5.2h-4c0-2.1-.9-3.6-2.8-4.8z" opacity="0.65"/>
+                        </svg>
+                        OKR · People
+                    </div>
+                    <h2 class="s4-title reveal">People <span class="orange">Performance</span></h2>
+                    <p class="s4-sub reveal">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026</p>
+                </div>
+                <div class="s4-header-right">
+                    <p class="s4-hero-pct reveal" style="color:#4ade80;">100.00<span>%</span></p>
+                    <p class="s4-hero-sub reveal" style="color:rgba(74,222,128,0.65);">14 / 14 pts &nbsp;·&nbsp; People OKR</p>
+                </div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="s4-cards s4-cards-3 stagger">
+
+                <!-- WIN: FLC Compliance -->
+                <div class="s4-card s4-win reveal">
+                    <p class="s4-card-label">FLC<br>Compliance</p>
+                    <p class="s4-card-val">0</p>
+                    <p class="s4-card-goal">Goal: 0 &nbsp;·&nbsp; Zero violations</p>
+                    <div class="s4-badge s4-badge-win">✓ Achieved</div>
+                </div>
+
+                <!-- WIN: LHRA Error Compliance -->
+                <div class="s4-card s4-win reveal">
+                    <p class="s4-card-label">LHRA Error<br>Compliance</p>
+                    <p class="s4-card-val">100<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: 100.00% &nbsp;·&nbsp; Perfect</p>
+                    <div class="s4-badge s4-badge-win">✓ Achieved</div>
+                </div>
+
+                <!-- WIN: MIR Compliance -->
+                <div class="s4-card s4-win reveal">
+                    <p class="s4-card-label">MIR<br>Compliance</p>
+                    <p class="s4-card-val">0</p>
+                    <p class="s4-card-goal">Goal: 0 &nbsp;·&nbsp; Zero incidents</p>
+                    <div class="s4-badge s4-badge-win">✓ Achieved</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text">
+                    <span class="fed">Fed</span><span class="ex">Ex</span>
+                </span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">05 / 07</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 06 — OKR BREAKDOWN: SERVICE PERFORMANCE
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • Service OKR at 0.00% — 0 of 12 points. This is a
+             difficult result. Be direct, not punitive. Frame this
+             as a problem we own and are going to solve together.
+           • Walk through each gap:
+               ⚠ OTS%: 93.17% vs 97.20% goal — we are 4.03 points
+                 below threshold. Ask: "What routes are hitting late?
+                 Is this a sort delay, a departure hold, or a driver
+                 availability issue?" Assign ownership of the analysis.
+               ⚠ OVN OTS%: 94.11% vs 97.90% — our overnight priority
+                 service is missing target. This directly affects
+                 customer satisfaction on time-critical shipments.
+                 Overnight is the premium promise — we cannot let
+                 this slide.
+               ⚠ LH Service Failure%: 0.76% vs ≤ 0.20% — we are
+                 3.8× above the failure threshold. Every failure
+                 here is a package that missed a connection or hub
+                 sort. Ask: "What drove these failures — was it
+                 late trailers, mis-sorts, or missed pulls?"
+           • Action plan prompt: "Before we leave today I want one
+             owner named for each of these three gaps, with an
+             initial plan by Thursday. Who's taking OTS analysis?
+             Who's owning the failure investigation?"
+           • Close: "Zero points in Service means our customer felt
+             it this week. That's not acceptable. We fix this now."
+    ============================================================== -->
+    <section class="slide slide-s6" id="s06" aria-label="OKR Breakdown: Service Performance">
+
+        <div class="s4-accent" aria-hidden="true"></div>
+
+        <div class="s4-inner">
+
+            <div class="s4-header">
+                <div class="s4-header-left">
+                    <div class="okr-tag reveal-left">
+                        <!-- Target / service icon -->
+                        <svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+                            <circle cx="7" cy="7" r="6.2" stroke="currentColor" stroke-width="1.6" fill="none"/>
+                            <circle cx="7" cy="7" r="3.6" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                            <circle cx="7" cy="7" r="1.5"/>
+                        </svg>
+                        OKR · Service
+                    </div>
+                    <h2 class="s4-title reveal">Service <span class="orange">Performance</span></h2>
+                    <p class="s4-sub reveal">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026</p>
+                </div>
+                <div class="s4-header-right">
+                    <p class="s4-hero-pct reveal" style="color:#f87171;">0.00<span>%</span></p>
+                    <p class="s4-hero-sub reveal" style="color:rgba(248,113,113,0.65);">0 / 12 pts &nbsp;·&nbsp; Service OKR</p>
+                </div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="s4-cards s4-cards-3 stagger">
+
+                <!-- GAP: OTS% -->
+                <div class="s4-card s4-red reveal">
+                    <p class="s4-card-label">OTS %<br>(On-Time Service)</p>
+                    <p class="s4-card-val">93.17<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≥ 97.20% &nbsp;·&nbsp; Below by 4.03%</p>
+                    <div class="s4-badge s4-badge-fail">⚠ Focus Area</div>
+                </div>
+
+                <!-- GAP: OVN OTS% -->
+                <div class="s4-card s4-red reveal">
+                    <p class="s4-card-label">OVN OTS %<br>(Overnight)</p>
+                    <p class="s4-card-val">94.11<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≥ 97.90% &nbsp;·&nbsp; Below by 3.79%</p>
+                    <div class="s4-badge s4-badge-fail">⚠ Focus Area</div>
+                </div>
+
+                <!-- GAP: LH Service Failure% -->
+                <div class="s4-card s4-red reveal">
+                    <p class="s4-card-label">LH Service<br>Failure %</p>
+                    <p class="s4-card-val">0.76<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≤ 0.20% &nbsp;·&nbsp; Over by 0.56%</p>
+                    <div class="s4-badge s4-badge-fail">⚠ Focus Area</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text">
+                    <span class="fed">Fed</span><span class="ex">Ex</span>
+                </span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">06 / 07</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 07 — OKR BREAKDOWN: EFFICIENCY PERFORMANCE
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • Efficiency OKR at 57.14% — 8 of 14 points. A mixed week —
+             one strong win and two gaps that need focused attention.
+           • Celebrate the win first:
+               ✓ Hub Area Optimal%: 94.14% vs 90.02% goal — we beat
+                 this target by 4.12 points. Our dock utilisation and
+                 trailer staging are running efficiently. Acknowledge
+                 the team that manages hub-area flow.
+           • Address the gaps:
+               ⚠ Mainline Optimal%: 95.34% vs 99.45% — we are 4.11
+                 points below target. Ask: "Are we seeing equipment
+                 availability issues on mainline departures? Are runs
+                 leaving with suboptimal power units?" This could be
+                 a scheduling, maintenance, or driver-availability
+                 issue. Assign someone to pull the run-level data.
+               ⚠ PT Mismatch%: 100.00% vs ≤ 99.00% threshold —
+                 we crossed the maximum threshold for power-to-trailer
+                 mismatches. Even a single incorrect pairing ripples
+                 through the sort. Ask: "What drove the mismatch —
+                 was it a last-minute swap or a planning error?"
+                 This needs a root-cause conversation before next sort.
+           • Close: "One win, two gaps. Hub Area is solid — protect
+             it. Mainline and PT Mismatch are actionable. Let's have
+             corrective plans before the next sort cycle."
+    ============================================================== -->
+    <section class="slide slide-s7" id="s07" aria-label="OKR Breakdown: Efficiency Performance">
+
+        <div class="s4-accent" aria-hidden="true"></div>
+
+        <div class="s4-inner">
+
+            <div class="s4-header">
+                <div class="s4-header-left">
+                    <div class="okr-tag reveal-left">
+                        <!-- Lightning bolt / efficiency icon -->
+                        <svg viewBox="0 0 10 16" fill="currentColor" aria-hidden="true">
+                            <path d="M9.2 0.5L0.5 9H5.2L1.8 15.5 10.5 6H5.8L9.2 0.5Z"/>
+                        </svg>
+                        OKR · Efficiency
+                    </div>
+                    <h2 class="s4-title reveal">Efficiency <span class="orange">Performance</span></h2>
+                    <p class="s4-sub reveal">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026</p>
+                </div>
+                <div class="s4-header-right">
+                    <p class="s4-hero-pct reveal" style="color:#fb923c;">57.14<span>%</span></p>
+                    <p class="s4-hero-sub reveal" style="color:rgba(251,146,60,0.65);">8 / 14 pts &nbsp;·&nbsp; Efficiency OKR</p>
+                </div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="s4-cards s4-cards-3 stagger">
+
+                <!-- WIN: Hub Area Optimal% -->
+                <div class="s4-card s4-win reveal">
+                    <p class="s4-card-label">Hub Area<br>Optimal %</p>
+                    <p class="s4-card-val">94.14<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≥ 90.02% &nbsp;·&nbsp; Beat by 4.12%</p>
+                    <div class="s4-badge s4-badge-win">✓ Achieved</div>
+                </div>
+
+                <!-- GAP: Mainline Optimal% -->
+                <div class="s4-card s4-gap reveal">
+                    <p class="s4-card-label">Mainline<br>Optimal %</p>
+                    <p class="s4-card-val">95.34<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≥ 99.45% &nbsp;·&nbsp; Below by 4.11%</p>
+                    <div class="s4-badge s4-badge-gap">⚠ Below Target</div>
+                </div>
+
+                <!-- GAP: PT Mismatch% -->
+                <div class="s4-card s4-gap reveal">
+                    <p class="s4-card-label">PT Mismatch %<br>&nbsp;</p>
+                    <p class="s4-card-val">100<span style="font-size:0.45em;opacity:0.7">%</span></p>
+                    <p class="s4-card-goal">Goal: ≤ 99.00% &nbsp;·&nbsp; Over threshold</p>
+                    <div class="s4-badge s4-badge-gap">⚠ Over Threshold</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text">
+                    <span class="fed">Fed</span><span class="ex">Ex</span>
+                </span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">07 / 07</span></span>
         </footer>
     </section>
 
