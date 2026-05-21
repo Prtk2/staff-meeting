@@ -607,6 +607,220 @@
         }
 
         /* ============================================================
+           SLIDE 03 — OBJECTIVE KEY RESULTS
+        ============================================================ */
+        .slide-okr { background: var(--bg); }
+        .slide-okr::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 72%, rgba(77, 20, 140, 0.26) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 18%, rgba(18, 4, 46, 0.55) 0%, transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .okr-accent {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: clamp(5px, 0.6vw, 8px);
+            background: linear-gradient(180deg, var(--fedex-orange) 0%, rgba(255,98,0,0.2) 100%);
+            z-index: 5;
+        }
+
+        .okr-layout {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: clamp(1.5rem, 3.5vw, 4rem);
+            padding: var(--slide-pad);
+            padding-left: calc(var(--slide-pad) + clamp(8px, 1.2vw, 16px));
+            padding-bottom: calc(var(--slide-pad) + var(--footer-h));
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        /* Left column — MNTR spotlight */
+        .okr-left {
+            width: clamp(170px, 28%, 265px);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(0.32rem, 0.65vh, 0.72rem);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding-right: clamp(1.5rem, 3vw, 3rem);
+        }
+
+        /* Right column — comparison table */
+        .okr-right {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(0.4rem, 0.75vh, 0.8rem);
+            overflow: hidden;
+        }
+
+        .okr-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            background: rgba(255, 98, 0, 0.10);
+            border: 1px solid rgba(255, 98, 0, 0.30);
+            padding: clamp(0.15rem, 0.35vw, 0.28rem) clamp(0.5rem, 0.9vw, 0.8rem);
+            border-radius: 2px;
+            font-family: var(--font-display);
+            font-size: clamp(0.5rem, 0.72vw, 0.6rem);
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--fedex-orange);
+            width: fit-content;
+        }
+        .okr-tag svg { width: clamp(8px, 0.95vw, 11px); height: auto; }
+
+        .okr-hub-id {
+            font-family: var(--font-display);
+            font-size: clamp(0.6rem, 1vw, 0.84rem);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .okr-hero-pct {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 8.5vw, 7rem);
+            font-weight: 900;
+            line-height: 0.88;
+            letter-spacing: -0.02em;
+            color: var(--fedex-orange);
+        }
+
+        .okr-pts {
+            font-family: var(--font-display);
+            font-size: clamp(0.78rem, 1.5vw, 1.2rem);
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.06em;
+        }
+        .okr-pts strong { color: var(--text-primary); font-weight: 700; }
+
+        .okr-rule {
+            width: clamp(24px, 4vw, 50px);
+            height: 2px;
+            background: var(--fedex-orange);
+            border: none;
+            border-radius: 1px;
+        }
+
+        .okr-week {
+            font-family: var(--font-display);
+            font-size: clamp(0.48rem, 0.76vw, 0.62rem);
+            font-weight: 600;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* VEDR KI action-item callout */
+        .okr-alert {
+            background: rgba(251, 146, 60, 0.07);
+            border-left: 2px solid rgba(251, 146, 60, 0.5);
+            padding: clamp(0.28rem, 0.55vw, 0.5rem) clamp(0.5rem, 0.9vw, 0.8rem);
+            border-radius: 0 3px 3px 0;
+        }
+        .okr-alert-title {
+            font-family: var(--font-display);
+            font-size: clamp(0.48rem, 0.75vw, 0.62rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #fb923c;
+        }
+        .okr-alert-body {
+            font-family: var(--font-body);
+            font-size: clamp(0.56rem, 0.86vw, 0.7rem);
+            color: var(--text-secondary);
+            margin-top: 0.1em;
+            line-height: 1.35;
+        }
+
+        .okr-table-label {
+            font-family: var(--font-display);
+            font-size: clamp(0.5rem, 0.78vw, 0.65rem);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* Scorecard table */
+        .okr-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-display);
+        }
+        .okr-table thead th {
+            font-size: clamp(0.44rem, 0.68vw, 0.56rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: clamp(0.2rem, 0.4vh, 0.42rem) clamp(0.32rem, 0.55vw, 0.58rem);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            white-space: nowrap;
+        }
+        .okr-table thead th.th-hub { text-align: left; }
+
+        .okr-table tbody td {
+            padding: clamp(0.26rem, 0.52vh, 0.52rem) clamp(0.32rem, 0.55vw, 0.58rem);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+            font-size: clamp(0.56rem, 0.86vw, 0.7rem);
+            font-weight: 500;
+        }
+        .okr-table tbody td.td-hub {
+            text-align: left;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+            font-size: clamp(0.58rem, 0.9vw, 0.74rem);
+            white-space: nowrap;
+        }
+
+        /* MNTR highlighted row */
+        .row-mntr { background: rgba(255, 98, 0, 0.065); }
+        .row-mntr td {
+            color: var(--text-primary) !important;
+            border-top: 1px solid rgba(255,98,0,0.10);
+            border-bottom: 1px solid rgba(255,98,0,0.10) !important;
+        }
+        .row-mntr td.td-hub {
+            color: var(--fedex-orange) !important;
+            border-left: 2px solid var(--fedex-orange);
+            font-weight: 800;
+        }
+
+        /* OKR% colour scale */
+        .pct-a { color: #4ade80; font-weight: 700; }   /* ≥ 80%  green  */
+        .pct-b { color: #a3e635; font-weight: 700; }   /* 70–79% lime   */
+        .pct-c { color: #facc15; font-weight: 700; }   /* 65–69% yellow */
+        .pct-d { color: #fb923c; font-weight: 700; }   /* 60–64% amber  */
+
+        /* Metric cell states */
+        .v-fail { color: #f87171 !important; background: rgba(239,68,68,0.10); border-radius: 2px; }
+        .v-warn { color: #fb923c !important; background: rgba(251,146,60,0.10); border-radius: 2px; }
+
+        /* ============================================================
            KEYBOARD HINT
         ============================================================ */
         .keyboard-hint {
@@ -803,6 +1017,162 @@
                 <span class="fedex-wordmark-exp">Express</span>
             </div>
             <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">02 / 02</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 03 — OBJECTIVE KEY RESULTS (OKR)
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • MNTR is currently ranked 3rd of 5 hubs at 66.07% — 37 of
+             56 possible points for the week of May 16, 2026
+           • Acknowledge the team's strengths:
+               ✓ LH Preventable Accident Rate = 5 (zero incidents)
+               ✓ Trailer Pull Offs, FLC, LHRA all maxed at 5
+               ✓ CSA Inspections = 4 (solid compliance posture)
+           • Flag the key gap: VEDR KI Pass% = 1
+               — This is the lowest in the district outside of VANC
+               — Action needed: review VEDR event coaching completion,
+                 confirm all drivers have reviewed their KI events
+               — Target: bring VEDR KI to 3+ by next reporting cycle
+           • Closing OKR message: "66% means we're leaving points on
+             the table. Every metric we max is a reflection of the
+             standard we hold ourselves to — let's close that gap."
+           • Ask: "Who owns the VEDR KI coaching plan this week?"
+    ============================================================== -->
+    <section class="slide slide-okr" id="s03" aria-label="Objective Key Results">
+
+        <div class="okr-accent" aria-hidden="true"></div>
+
+        <div class="okr-layout">
+
+            <!-- ── Left panel: MNTR spotlight ── -->
+            <div class="okr-left">
+
+                <div class="okr-tag reveal-left">
+                    <!-- Bar chart icon -->
+                    <svg viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
+                        <rect x="0" y="6" width="3" height="6" rx="0.5"/>
+                        <rect x="4" y="3" width="3" height="9" rx="0.5"/>
+                        <rect x="8" y="0" width="3" height="12" rx="0.5"/>
+                        <rect x="12" y="4" width="2" height="8" rx="0.5"/>
+                    </svg>
+                    OKR Performance
+                </div>
+
+                <p class="okr-hub-id reveal">6103 &nbsp;/&nbsp; MNTR</p>
+
+                <p class="okr-hero-pct reveal">66.07<span style="font-size:0.45em;opacity:0.7">%</span></p>
+
+                <p class="okr-pts reveal"><strong>37</strong> / 56 &nbsp;pts &nbsp;·&nbsp; Rank 3 of 5</p>
+
+                <hr class="okr-rule reveal" aria-hidden="true">
+
+                <p class="okr-week reveal">Week of May 16, 2026</p>
+
+                <div class="okr-alert reveal">
+                    <p class="okr-alert-title">⚠ Action Item</p>
+                    <p class="okr-alert-body">VEDR KI Pass%: <strong style="color:#fb923c;">1</strong> — lowest in district. Review coaching completion &amp; driver KI events.</p>
+                </div>
+
+            </div>
+
+            <!-- ── Right panel: district comparison table ── -->
+            <div class="okr-right">
+
+                <p class="okr-table-label reveal">District Comparison &nbsp;·&nbsp; Week of 5/16/2026</p>
+
+                <table class="okr-table" aria-label="District OKR scorecard week of May 16 2026">
+                    <thead>
+                        <tr>
+                            <th class="th-hub">Hub</th>
+                            <th title="Overall OKR %">OKR %</th>
+                            <th title="Points Achieved / Possible">Pts</th>
+                            <th title="LH Preventable Accident Rate">LH Acc</th>
+                            <th title="VEDR Key Indicators Pass %">VEDR KI</th>
+                            <th title="Mock CSA Inspections">CSA</th>
+                            <th title="Trailer Pull Offs">T.Pull</th>
+                            <th title="FLC Compliance">FLC</th>
+                            <th title="LHRA Error Compliance">LHRA</th>
+                            <th title="MIR Compliance">MIR</th>
+                        </tr>
+                    </thead>
+                    <tbody class="stagger">
+                        <tr class="reveal">
+                            <td class="td-hub">6212 / NCGY</td>
+                            <td><span class="pct-a">83.33%</span></td>
+                            <td>45/54</td>
+                            <td>5</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>4</td>
+                        </tr>
+                        <tr class="reveal">
+                            <td class="td-hub">6183 / WINN</td>
+                            <td><span class="pct-b">70.37%</span></td>
+                            <td>38/54</td>
+                            <td class="v-fail">0</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>4</td>
+                        </tr>
+                        <tr class="row-mntr reveal">
+                            <td class="td-hub">6103 / MNTR</td>
+                            <td><span class="pct-c">66.07%</span></td>
+                            <td>37/56</td>
+                            <td>5</td>
+                            <td class="v-warn">1</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>4</td>
+                        </tr>
+                        <tr class="reveal">
+                            <td class="td-hub">6226 / VANC</td>
+                            <td><span class="pct-d">62.96%</span></td>
+                            <td>34/54</td>
+                            <td>5</td>
+                            <td class="v-fail">0</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>4</td>
+                        </tr>
+                        <tr class="reveal">
+                            <td class="td-hub">6124 / TORO</td>
+                            <td><span class="pct-d">62.50%</span></td>
+                            <td>35/56</td>
+                            <td class="v-fail">0</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text">
+                    <span class="fed">Fed</span><span class="ex">Ex</span>
+                </span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">03 / 03</span></span>
         </footer>
     </section>
 
