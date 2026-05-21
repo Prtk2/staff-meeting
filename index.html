@@ -1320,6 +1320,15 @@
             pointer-events: none; z-index: 0;
         }
 
+        .slide-s8b { background: var(--bg); }
+        .slide-s8b::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 90% 50%, rgba(77,20,140,0.22) 0%, transparent 48%),
+                radial-gradient(ellipse at 10% 50%, rgba(74,222,128,0.05) 0%, transparent 40%);
+            pointer-events: none; z-index: 0;
+        }
+
         .slide-s9 { background: var(--bg); }
         .slide-s9::before {
             content: ''; position: absolute; inset: 0;
@@ -1377,21 +1386,21 @@
             font-family: var(--font-display); table-layout: fixed;
         }
         .lane-tbl thead th {
-            font-size: clamp(0.44rem, 0.63vw, 0.54rem);
+            font-size: clamp(0.64rem, 0.9vw, 0.78rem);
             font-weight: 700; letter-spacing: 0.07em;
-            text-transform: uppercase; color: rgba(255,255,255,0.42);
-            padding: clamp(0.2rem, 0.38vh, 0.42rem) clamp(0.2rem, 0.32vw, 0.36rem);
-            text-align: right; border-bottom: 1px solid rgba(255,255,255,0.08);
+            text-transform: uppercase; color: rgba(255,255,255,0.55);
+            padding: clamp(0.3rem, 0.52vh, 0.54rem) clamp(0.26rem, 0.4vw, 0.44rem);
+            text-align: right; border-bottom: 1px solid rgba(255,255,255,0.12);
             white-space: nowrap; overflow: hidden;
         }
         .lane-tbl thead th.th-l { text-align: left; }
 
         .lane-tbl tbody td {
-            font-size: clamp(0.54rem, 0.77vw, 0.65rem);
+            font-size: clamp(0.76rem, 1.06vw, 0.92rem);
             font-weight: 500;
-            padding: clamp(0.16rem, 0.3vh, 0.32rem) clamp(0.2rem, 0.32vw, 0.36rem);
-            text-align: right; color: rgba(255,255,255,0.7);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: clamp(0.28rem, 0.48vh, 0.5rem) clamp(0.26rem, 0.4vw, 0.44rem);
+            text-align: right; color: rgba(255,255,255,0.82);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
             white-space: nowrap; overflow: hidden;
         }
         .lane-tbl tbody td.td-l {
@@ -1399,14 +1408,14 @@
             color: #ffffff; letter-spacing: 0.04em;
         }
 
-        /* Mainline variant — fewer rows so larger font */
+        /* Mainline variant — 4 rows, generous sizing */
         .lane-tbl-lg thead th {
-            font-size: clamp(0.58rem, 0.84vw, 0.7rem);
-            padding: clamp(0.3rem, 0.58vh, 0.58rem) clamp(0.28rem, 0.44vw, 0.48rem);
+            font-size: clamp(0.72rem, 1.02vw, 0.9rem);
+            padding: clamp(0.38rem, 0.66vh, 0.7rem) clamp(0.3rem, 0.48vw, 0.52rem);
         }
         .lane-tbl-lg tbody td {
-            font-size: clamp(0.7rem, 1.02vw, 0.86rem);
-            padding: clamp(0.32rem, 0.64vh, 0.62rem) clamp(0.28rem, 0.44vw, 0.48rem);
+            font-size: clamp(0.9rem, 1.28vw, 1.1rem);
+            padding: clamp(0.42rem, 0.74vh, 0.78rem) clamp(0.3rem, 0.48vw, 0.52rem);
         }
 
         /* Opt % Mile colour scale (lane table) */
@@ -2298,13 +2307,13 @@
                     <h2 class="lane-title">Hub Area <span class="orange">Lane Breakdown</span></h2>
                     <p class="lane-sub">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026 &nbsp;·&nbsp; Sorted by Opt % ascending</p>
                 </div>
-                <div class="lane-hdr-right">21 lanes &nbsp;·&nbsp; $315,376 total LH cost</div>
+                <div class="lane-hdr-right">Lanes 1–10 of 21 &nbsp;·&nbsp; Focus: 0–73% Opt</div>
             </div>
 
             <hr class="s4-rule reveal" aria-hidden="true">
 
             <div class="lane-tbl-wrap">
-                <table class="lane-tbl" aria-label="Hub Area lane efficiency breakdown">
+                <table class="lane-tbl" aria-label="Hub Area lane efficiency breakdown part 1">
                     <thead>
                         <tr>
                             <th class="th-l">Lane</th>
@@ -2332,6 +2341,79 @@
                         <tr><td class="td-l">6075-6103</td><td><span class="opt-c">70.00%</span></td><td>1,077</td><td>10</td><td>7</td><td>3</td><td>717</td><td><span class="f1">10%</span></td><td><span class="f2">80%</span></td><td><span class="f1">25%</span></td><td><span class="f1">25%</span></td><td>$15,150</td></tr>
                         <tr><td class="td-l">6081-6103</td><td><span class="opt-c">71.43%</span></td><td>120</td><td>21</td><td>15</td><td>6</td><td>4,341</td><td><span class="f1">5%</span></td><td><span class="f2">57%</span></td><td><span class="f1">45%</span></td><td><span class="f1">19%</span></td><td>$3,532</td></tr>
                         <tr><td class="td-l">6109-6103</td><td><span class="opt-c">72.73%</span></td><td>138</td><td>22</td><td>16</td><td>6</td><td>4,449</td><td><span class="f0">0%</span></td><td><span class="f2">73%</span></td><td><span class="f1">43%</span></td><td><span class="f1">11%</span></td><td>$4,043</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">08 / 10</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 09 — EFFICIENCY: HUB AREA LANE BREAKDOWN (PART 2)
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • Lanes 11–21 of 21 Hub Area lanes — 75% to 94% optimal
+           • 6103-6084 at 77% with 14,734 packages is a high-volume
+             lane still leaving room for improvement — 7 OPP trips.
+           • Lanes at 80-89%: 6111-6124 and 6112-6124 both show
+             significant OPP miles (572 and 556) — paired lanes
+             that may benefit from consolidation review.
+           • Lanes 90%+: excellent efficiency — 6105-6103, 6077-6103,
+             6103-6109, 6111-6103 all performing well.
+           • Top performer: 6102-6103 at 94.12%.
+           • Action: "For the 75-89% range here — are we reviewing
+             load plans on the 6111 and 6112 to 6124 corridor?"
+    ============================================================== -->
+    <section class="slide slide-s8b" id="s08b" aria-label="Efficiency: Hub Area Lane Breakdown Part 2">
+        <div class="s4-accent" aria-hidden="true"></div>
+        <div class="lane-inner">
+
+            <div class="lane-hdr reveal-left">
+                <div class="lane-hdr-left">
+                    <div class="okr-tag">
+                        <svg viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
+                            <rect x="0" y="5" width="3" height="7" rx="0.5"/>
+                            <rect x="4" y="2.5" width="3" height="9.5" rx="0.5"/>
+                            <rect x="8" y="0" width="3" height="12" rx="0.5"/>
+                            <rect x="12" y="3.5" width="2" height="8.5" rx="0.5"/>
+                        </svg>
+                        Efficiency · Hub Area
+                    </div>
+                    <h2 class="lane-title">Hub Area <span class="orange">Lane Breakdown</span></h2>
+                    <p class="lane-sub">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026 &nbsp;·&nbsp; Sorted by Opt % ascending</p>
+                </div>
+                <div class="lane-hdr-right">Lanes 11–21 of 21 &nbsp;·&nbsp; Performance: 75–94% Opt</div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="lane-tbl-wrap">
+                <table class="lane-tbl" aria-label="Hub Area lane efficiency breakdown part 2">
+                    <thead>
+                        <tr>
+                            <th class="th-l">Lane</th>
+                            <th>Opt %</th>
+                            <th>OPP Mi</th>
+                            <th>Trips</th>
+                            <th>Opt</th>
+                            <th>OPP</th>
+                            <th>PKGS</th>
+                            <th>Btail%</th>
+                            <th>Sngl%</th>
+                            <th>Empty%</th>
+                            <th>Part%</th>
+                            <th>LH Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <tr><td class="td-l">6103-6105</td><td><span class="opt-c">75.00%</span></td><td>58</td><td>8</td><td>6</td><td>2</td><td>6,375</td><td><span class="f1">25%</span></td><td><span class="f0">0%</span></td><td><span class="f0">0%</span></td><td><span class="f1">38%</span></td><td>$1,872</td></tr>
                         <tr><td class="td-l">6103-6084</td><td><span class="opt-c">77.42%</span></td><td>42</td><td>31</td><td>24</td><td>7</td><td>14,734</td><td><span class="f1">10%</span></td><td><span class="f2">87%</span></td><td><span class="f1">8%</span></td><td><span class="f1">15%</span></td><td>$2,377</td></tr>
                         <tr><td class="td-l">6111-6124</td><td><span class="opt-b">81.82%</span></td><td>572</td><td>11</td><td>9</td><td>2</td><td>3,753</td><td><span class="f0">0%</span></td><td><span class="f2">64%</span></td><td><span class="f1">36%</span></td><td><span class="f1">32%</span></td><td>$7,550</td></tr>
@@ -2353,7 +2435,7 @@
                 <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
                 <span class="fedex-wordmark-exp">Express</span>
             </div>
-            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">08 / 09</span></span>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">09 / 10</span></span>
         </footer>
     </section>
 
