@@ -1431,6 +1431,172 @@
         .f2  { color: #f87171; font-weight: 700; }     /* 50%+      */
 
         /* ============================================================
+           SLIDE 11 — TOM & DIMENSIONS
+        ============================================================ */
+        .slide-s11 { background: var(--bg); }
+        .slide-s11::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 80% 20%, rgba(77,20,140,0.22) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(255,98,0,0.09) 0%, transparent 45%);
+            pointer-events: none; z-index: 0;
+        }
+        .s11-panels {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2vw, 2.2rem);
+            flex: 1; min-height: 0; max-height: min(60vh, 420px);
+        }
+        .s11-panel {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: clamp(0.5rem, 0.9vh, 1rem);
+            padding: clamp(1.4rem, 2.6vh, 2.4rem) clamp(1.4rem, 2.2vw, 2.2rem);
+            border-radius: 6px;
+            border: 1px dashed rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.02);
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .s11-panel::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(
+                45deg, transparent, transparent 18px,
+                rgba(255,255,255,0.013) 18px, rgba(255,255,255,0.013) 19px
+            );
+        }
+        .s11-panel-icon {
+            width: clamp(38px, 5vw, 58px);
+            height: clamp(38px, 5vw, 58px);
+            color: rgba(255,255,255,0.26);
+        }
+        .s11-panel-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 3.4rem);
+            font-weight: 900; letter-spacing: -0.01em;
+            color: #ffffff; text-transform: uppercase; line-height: 1;
+        }
+        .s11-panel-subtitle {
+            font-family: var(--font-display);
+            font-size: clamp(0.6rem, 0.88vw, 0.76rem);
+            font-weight: 700; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--fedex-orange);
+        }
+        .s11-pending-badge {
+            font-family: var(--font-display);
+            font-size: clamp(0.54rem, 0.78vw, 0.68rem);
+            font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+            color: rgba(255,255,255,0.32);
+            border: 1px dashed rgba(255,255,255,0.16); border-radius: 3px;
+            padding: 3px 10px;
+        }
+        .s11-panel-desc {
+            font-family: var(--font-body);
+            font-size: clamp(0.64rem, 0.94vw, 0.8rem);
+            color: rgba(255,255,255,0.28); line-height: 1.55; max-width: 320px;
+        }
+
+        /* ============================================================
+           SLIDE 12 — QUESTIONS
+        ============================================================ */
+        .slide-s12 { background: var(--bg); }
+        .slide-s12::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(77,20,140,0.40) 0%, transparent 62%);
+            pointer-events: none; z-index: 0;
+        }
+        .s12-ghost {
+            position: absolute; right: clamp(1rem, 5vw, 6rem);
+            top: 50%; transform: translateY(-54%);
+            font-family: var(--font-display);
+            font-size: clamp(240px, 38vw, 500px);
+            font-weight: 900; line-height: 1;
+            color: rgba(77,20,140,0.24);
+            user-select: none; pointer-events: none; z-index: 0;
+        }
+        @keyframes s12-pulse {
+            0%, 100% { opacity: 0.9; }
+            50%       { opacity: 1.45; }
+        }
+        .s12-ghost { animation: s12-pulse 4s ease-in-out infinite; }
+        .s12-body {
+            position: relative; z-index: 2;
+            display: flex; flex-direction: column; justify-content: center;
+            height: 100%;
+            padding: clamp(2rem, 5vw, 5rem);
+            padding-bottom: calc(clamp(2rem, 5vw, 5rem) + var(--footer-h));
+            gap: clamp(0.5rem, 1vh, 1.1rem);
+        }
+        .s12-eyebrow {
+            font-family: var(--font-display);
+            font-size: clamp(0.68rem, 0.96vw, 0.84rem);
+            font-weight: 700; letter-spacing: 0.2em;
+            text-transform: uppercase; color: var(--fedex-orange);
+        }
+        .s12-headline {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 12vw, 10rem);
+            font-weight: 900; letter-spacing: -0.025em;
+            line-height: 0.9; color: #ffffff;
+        }
+        .s12-sub {
+            font-family: var(--font-body);
+            font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+            color: rgba(255,255,255,0.42); font-weight: 400;
+            letter-spacing: 0.04em; margin-top: 0.4rem;
+        }
+
+        /* ============================================================
+           SLIDE 13 — THANK YOU
+        ============================================================ */
+        .slide-s13 { background: var(--bg); }
+        #tyCanvas {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%; z-index: 0;
+        }
+        .s13-body {
+            position: relative; z-index: 2;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100%;
+            padding-bottom: var(--footer-h);
+            gap: clamp(0.5rem, 1vh, 1.2rem);
+            text-align: center;
+        }
+        .s13-eyebrow {
+            font-family: var(--font-display);
+            font-size: clamp(0.68rem, 0.96vw, 0.84rem);
+            font-weight: 700; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--fedex-orange);
+        }
+        .s13-headline {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 14vw, 12rem);
+            font-weight: 900; letter-spacing: -0.025em;
+            line-height: 0.88; color: #ffffff;
+            text-shadow: 0 0 80px rgba(140,60,255,0.55), 0 0 200px rgba(77,20,140,0.38);
+        }
+        .s13-sub {
+            font-family: var(--font-body);
+            font-size: clamp(0.82rem, 1.4vw, 1.1rem);
+            color: rgba(255,255,255,0.45);
+            font-weight: 300; letter-spacing: 0.1em; margin-top: 0.2rem;
+        }
+        .s13-wm {
+            margin-top: clamp(0.8rem, 1.6vh, 1.8rem);
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+        }
+        .s13-wm-text {
+            font-size: clamp(18px, 2.2vw, 26px);
+            font-weight: 900; letter-spacing: -0.02em;
+        }
+        .s13-wm-text .fed { color: rgba(255,255,255,0.82); }
+        .s13-wm-text .ex  { color: var(--fedex-orange); }
+        .s13-wm-exp {
+            font-size: clamp(7px, 0.82vw, 10px);
+            font-weight: 700; letter-spacing: 0.20em;
+            text-transform: uppercase; color: var(--fedex-orange);
+        }
+
+        /* ============================================================
            KEYBOARD HINT
         ============================================================ */
         .keyboard-hint {
@@ -2551,7 +2717,138 @@
                 <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
                 <span class="fedex-wordmark-exp">Express</span>
             </div>
-            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">09 / 09</span></span>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">10 / 13</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 11 — TOM & DIMENSIONS (PLACEHOLDER)
+         ──────────────────────────────────────────────────────────────
+         SPEAKER NOTES:
+           • TOM (Time Off Manager): review pending vacation requests,
+             approved absences for the week, and any coverage gaps.
+             Ask: "Are all positions covered for the upcoming weekend?"
+           • Dimensions: punch-in/out compliance. Flag any employees
+             with missed punches — timekeeping accuracy affects payroll
+             and compliance audits.
+           • This slide will be updated with live data each week.
+    ============================================================== -->
+    <section class="slide slide-s11" id="s11" aria-label="TOM and Dimensions">
+        <div class="s4-accent" aria-hidden="true"></div>
+        <div class="s4-inner">
+
+            <div class="s4-header">
+                <div class="s4-header-left">
+                    <div class="okr-tag reveal-left">
+                        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                            <circle cx="7" cy="7" r="5.5"/>
+                            <polyline points="7,3.5 7,7 9.5,9.2"/>
+                        </svg>
+                        Workforce &nbsp;·&nbsp; Time Management
+                    </div>
+                    <h2 class="s4-title reveal">TOM &amp; <span class="orange">Dimensions</span></h2>
+                    <p class="s4-sub reveal">6103 / MNTR &nbsp;·&nbsp; Week of May 16, 2026</p>
+                </div>
+            </div>
+
+            <hr class="s4-rule reveal" aria-hidden="true">
+
+            <div class="s11-panels stagger">
+
+                <!-- TOM Panel -->
+                <div class="s11-panel reveal">
+                    <div class="s11-panel-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="17" rx="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                            <circle cx="8"  cy="15" r="1" fill="currentColor"/>
+                            <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                            <circle cx="16" cy="15" r="1" fill="currentColor"/>
+                            <circle cx="8"  cy="19" r="1" fill="currentColor"/>
+                            <circle cx="12" cy="19" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="s11-panel-title">TOM</h3>
+                    <p class="s11-panel-subtitle">Time Off Manager</p>
+                    <div class="s11-pending-badge">Content Pending</div>
+                    <p class="s11-panel-desc">Vacation requests, approvals, absence tracking and schedule coverage data will be added here.</p>
+                </div>
+
+                <!-- Dimensions Panel -->
+                <div class="s11-panel reveal">
+                    <div class="s11-panel-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                            <rect x="7" y="2" width="10" height="20" rx="2"/>
+                            <line x1="10" y1="7"  x2="14" y2="7"/>
+                            <line x1="10" y1="11" x2="14" y2="11"/>
+                            <line x1="11" y1="15" x2="13" y2="15"/>
+                            <line x1="2"  y1="8"  x2="7"  y2="8"/>
+                            <line x1="17" y1="8"  x2="22" y2="8"/>
+                            <line x1="2"  y1="16" x2="7"  y2="16"/>
+                            <line x1="17" y1="16" x2="22" y2="16"/>
+                        </svg>
+                    </div>
+                    <h3 class="s11-panel-title">Dimensions</h3>
+                    <p class="s11-panel-subtitle">Employee Punch In / Out</p>
+                    <div class="s11-pending-badge">Content Pending</div>
+                    <p class="s11-panel-desc">Punch-in/out compliance, missed punches and schedule adherence metrics will be added here.</p>
+                </div>
+
+            </div>
+
+        </div>
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">11 / 13</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 12 — QUESTIONS
+    ============================================================== -->
+    <section class="slide slide-s12" id="s12" aria-label="Questions">
+        <div class="s12-ghost" aria-hidden="true">?</div>
+        <div class="s12-body">
+            <p class="s12-eyebrow reveal-left">Open Floor</p>
+            <h2 class="s12-headline reveal">Questions?</h2>
+            <p class="s12-sub reveal">6103 / MNTR &nbsp;·&nbsp; May 2026</p>
+        </div>
+        <footer class="slide-footer">
+            <div class="fedex-wordmark">
+                <span class="fedex-wordmark-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="fedex-wordmark-exp">Express</span>
+            </div>
+            <span class="footer-label">Confidential &nbsp;·&nbsp; <span class="slide-num">12 / 13</span></span>
+        </footer>
+    </section>
+
+
+    <!-- ==============================================================
+         SLIDE 13 — THANK YOU
+         Dual-ring orbital particle canvas: purple ring (clockwise) +
+         orange ring (counter-clockwise) with motion trails.
+    ============================================================== -->
+    <section class="slide slide-s13" id="s13" aria-label="Thank You">
+        <canvas id="tyCanvas" aria-hidden="true"></canvas>
+        <div class="s13-body">
+            <p class="s13-eyebrow">FedEx Express &nbsp;·&nbsp; 6103 / MNTR</p>
+            <h2 class="s13-headline">Thank<br>You</h2>
+            <p class="s13-sub">Stay safe &nbsp;·&nbsp; Deliver excellence &nbsp;·&nbsp; Lead with purpose</p>
+            <div class="s13-wm">
+                <span class="s13-wm-text"><span class="fed">Fed</span><span class="ex">Ex</span></span>
+                <span class="s13-wm-exp">Express</span>
+            </div>
+        </div>
+        <footer class="slide-footer" style="background: transparent;">
+            <span></span>
+            <span class="footer-label"><span class="slide-num">13 / 13</span></span>
         </footer>
     </section>
 
@@ -2581,6 +2878,7 @@
             this.updateUI();
             this.fadeHint();
             this.initNetwork();
+            this.initThankYouCanvas();
         }
 
         buildDots() {
@@ -2754,6 +3052,180 @@
                     else { cancelAnimationFrame(raf); raf = null; }
                 });
             }, { threshold: 0.1 }).observe(document.getElementById('s01'));
+        }
+
+        /* ── Dual-ring orbital particle canvas (Thank You slide) ── */
+        initThankYouCanvas() {
+            const canvas = document.getElementById('tyCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let W, H, cx, cy, raf = null;
+            let orbitA = [], orbitB = [], floaters = [];
+
+            const resize = () => {
+                W = canvas.width  = canvas.offsetWidth;
+                H = canvas.height = canvas.offsetHeight;
+                cx = W / 2; cy = H / 2;
+            };
+
+            const init = () => {
+                const R = Math.min(W, H);
+                orbitA = []; orbitB = []; floaters = [];
+
+                /* Purple ring — 58 particles, clockwise, outer orbit */
+                for (let i = 0; i < 58; i++) {
+                    orbitA.push({
+                        angle: (i / 58) * Math.PI * 2,
+                        r:     R * 0.30 + (Math.random() - 0.5) * R * 0.06,
+                        speed: 0.0028 + Math.random() * 0.0018,
+                        size:  Math.random() * 2.2 + 0.9
+                    });
+                }
+
+                /* Orange ring — 44 particles, counter-clockwise, inner orbit */
+                for (let i = 0; i < 44; i++) {
+                    orbitB.push({
+                        angle: (i / 44) * Math.PI * 2,
+                        r:     R * 0.19 + (Math.random() - 0.5) * R * 0.05,
+                        speed: -(0.0045 + Math.random() * 0.0025),
+                        size:  Math.random() * 1.8 + 0.7
+                    });
+                }
+
+                /* Background floaters */
+                for (let i = 0; i < 72; i++) {
+                    floaters.push({
+                        x: Math.random() * W, y: Math.random() * H,
+                        vx: (Math.random() - 0.5) * 0.38,
+                        vy: (Math.random() - 0.5) * 0.38,
+                        size:   Math.random() * 1.1 + 0.3,
+                        alpha:  Math.random() * 0.22 + 0.07,
+                        purple: Math.random() > 0.5
+                    });
+                }
+            };
+
+            const frame = () => {
+                /* Motion-trail: semi-transparent overlay instead of clearRect */
+                ctx.fillStyle = 'rgba(8, 7, 26, 0.20)';
+                ctx.fillRect(0, 0, W, H);
+
+                /* Radial glow at centre */
+                const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(W, H) * 0.40);
+                g.addColorStop(0,   'rgba(77, 20, 140, 0.20)');
+                g.addColorStop(0.4, 'rgba(77, 20, 140, 0.07)');
+                g.addColorStop(1,   'rgba(8,  7,  26,  0)');
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, W, H);
+
+                /* ── Purple orbit A ── */
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = 'rgba(160, 80, 255, 0.9)';
+                orbitA.forEach(p => {
+                    p.angle += p.speed;
+                    const x = cx + Math.cos(p.angle) * p.r;
+                    const y = cy + Math.sin(p.angle) * p.r;
+                    ctx.beginPath();
+                    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(170, 90, 255, 0.88)';
+                    ctx.fill();
+                });
+
+                /* Lines between nearby orbit-A particles */
+                ctx.shadowBlur = 0;
+                ctx.lineWidth = 0.4;
+                for (let i = 0; i < orbitA.length; i++) {
+                    const ax = cx + Math.cos(orbitA[i].angle) * orbitA[i].r;
+                    const ay = cy + Math.sin(orbitA[i].angle) * orbitA[i].r;
+                    for (let j = i + 1; j < orbitA.length; j++) {
+                        const d = Math.hypot(
+                            ax - (cx + Math.cos(orbitA[j].angle) * orbitA[j].r),
+                            ay - (cy + Math.sin(orbitA[j].angle) * orbitA[j].r)
+                        );
+                        if (d < 75) {
+                            ctx.beginPath();
+                            ctx.moveTo(ax, ay);
+                            ctx.lineTo(
+                                cx + Math.cos(orbitA[j].angle) * orbitA[j].r,
+                                cy + Math.sin(orbitA[j].angle) * orbitA[j].r
+                            );
+                            ctx.strokeStyle = `rgba(150, 60, 255, ${(1 - d / 75) * 0.18})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                /* ── Orange orbit B ── */
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = 'rgba(255, 110, 0, 0.9)';
+                orbitB.forEach(p => {
+                    p.angle += p.speed;
+                    const x = cx + Math.cos(p.angle) * p.r;
+                    const y = cy + Math.sin(p.angle) * p.r;
+                    ctx.beginPath();
+                    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 125, 20, 0.92)';
+                    ctx.fill();
+                });
+
+                /* Lines between nearby orbit-B particles */
+                ctx.shadowBlur = 0;
+                for (let i = 0; i < orbitB.length; i++) {
+                    const ax = cx + Math.cos(orbitB[i].angle) * orbitB[i].r;
+                    const ay = cy + Math.sin(orbitB[i].angle) * orbitB[i].r;
+                    for (let j = i + 1; j < orbitB.length; j++) {
+                        const d = Math.hypot(
+                            ax - (cx + Math.cos(orbitB[j].angle) * orbitB[j].r),
+                            ay - (cy + Math.sin(orbitB[j].angle) * orbitB[j].r)
+                        );
+                        if (d < 62) {
+                            ctx.beginPath();
+                            ctx.moveTo(ax, ay);
+                            ctx.lineTo(
+                                cx + Math.cos(orbitB[j].angle) * orbitB[j].r,
+                                cy + Math.sin(orbitB[j].angle) * orbitB[j].r
+                            );
+                            ctx.strokeStyle = `rgba(255, 100, 0, ${(1 - d / 62) * 0.20})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                /* ── Background floaters ── */
+                ctx.shadowBlur = 5;
+                floaters.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+                    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+                    ctx.shadowColor = p.purple
+                        ? 'rgba(140, 60, 255, 0.5)'
+                        : 'rgba(255, 100, 0,  0.5)';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.purple
+                        ? `rgba(190, 110, 255, ${p.alpha})`
+                        : `rgba(255, 140,  40, ${p.alpha})`;
+                    ctx.fill();
+                });
+
+                ctx.shadowBlur = 0;
+                raf = requestAnimationFrame(frame);
+            };
+
+            /* Start/stop with visibility — saves GPU when off-screen */
+            new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        resize(); init();
+                        cancelAnimationFrame(raf); frame();
+                    } else {
+                        cancelAnimationFrame(raf); raf = null;
+                    }
+                });
+            }, { threshold: 0.3 }).observe(document.getElementById('s13'));
+
+            new ResizeObserver(() => { resize(); init(); })
+                .observe(canvas.parentElement);
         }
     }
 
