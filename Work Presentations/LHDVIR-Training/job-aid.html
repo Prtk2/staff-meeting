@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHDVIR Daily Review — 9-Point Job Aid (M-100CB)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================================
+   LHDVIR DAILY REVIEW JOB AID
+   One page, portrait, designed to be printed and pinned at the drop point.
+   Print with: Ctrl+P → Letter or A4 portrait → margins "Default" →
+   "Background graphics" ON (otherwise the purple header prints white).
+   =========================================================================== */
+:root{
+  --purple:#4D148C; --orange:#FF6600; --ink:#141118;
+  --ink-soft:#4E4857; --line:#CFCBD6; --off:#F4F3F6;
+  --font-display:'Big Shoulders Display',sans-serif;
+  --font-body:'Public Sans',sans-serif;
+  --font-mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#8E8A96;font-family:var(--font-body);color:var(--ink);
+  padding:24px 12px;-webkit-font-smoothing:antialiased}
+
+.page{
+  width:8.5in;min-height:11in;margin:0 auto;background:#fff;
+  padding:0.5in 0.55in 0.45in;display:flex;flex-direction:column;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
+
+/* --- Header --- */
+header{background:var(--purple);color:#fff;padding:11px 14px;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:14px}
+header .ttl{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:34px;line-height:.9;letter-spacing:.01em}
+header .ttl mark{background:none;color:var(--orange)}
+header .sub{font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.72);line-height:1.7;text-align:right;flex:none}
+header .sub b{color:var(--orange)}
+
+.strap{display:flex;gap:7px;margin-top:8px}
+.strap div{flex:1;border:1.5px solid var(--line);background:var(--off);padding:5px 8px;
+  font-family:var(--font-mono);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-soft);line-height:1.5}
+.strap b{color:var(--purple);font-weight:700}
+
+/* --- The nine points --- */
+.list{margin-top:9px;display:flex;flex-direction:column;gap:4px;flex:1}
+.item{display:grid;grid-template-columns:auto auto 1fr;gap:11px;align-items:start;
+  border:1.5px solid var(--line);border-left:5px solid var(--purple);padding:6px 10px}
+.item:nth-child(even){border-left-color:var(--orange)}
+.item .box{width:19px;height:19px;border:2px solid var(--purple);flex:none;margin-top:1px}
+.item .n{font-family:var(--font-display);font-weight:900;font-size:26px;line-height:.8;
+  color:var(--orange);min-width:1.1ch;margin-top:1px}
+.item .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:17px;line-height:1;color:var(--purple);letter-spacing:.01em}
+.item .d{font-size:10px;line-height:1.38;color:var(--ink-soft);font-weight:300;margin-top:2px}
+.item .d em{font-style:normal;font-weight:700;color:#C24A00}
+
+/* --- Fail / escalate footer --- */
+.fail{margin-top:11px;border:2px solid var(--orange);background:rgba(255,102,0,.07);
+  padding:10px 12px}
+.fail .h{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:16px;line-height:1;color:var(--purple);margin-bottom:5px}
+.fail .h mark{background:none;color:var(--orange)}
+.fail ol{list-style:none;counter-reset:f;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+.fail li{counter-increment:f;position:relative;padding-left:17px;
+  font-size:10px;line-height:1.4;color:var(--ink-soft);font-weight:300}
+.fail li::before{content:counter(f);position:absolute;left:0;top:0;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--orange)}
+.fail li b{color:var(--ink);font-weight:600}
+
+footer{margin-top:8px;display:flex;justify-content:space-between;gap:12px;
+  border-top:1.5px solid var(--purple);padding-top:7px;
+  font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);line-height:1.7}
+footer b{color:var(--purple);font-weight:700}
+.cf{color:#C24A00;border:1px dashed var(--orange);padding:0 4px;background:rgba(255,102,0,.08)}
+
+/* --- Print --- */
+@page{size:letter portrait;margin:0.4in}
+@media print{
+  body{background:#fff;padding:0}
+  .page{width:auto;min-height:auto;box-shadow:none;padding:0}
+  .printhint{display:none}
+  header,.item,.fail{break-inside:avoid}
+}
+.printhint{max-width:8.5in;margin:0 auto 12px;color:#fff;font-family:var(--font-mono);
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-align:center;opacity:.85}
+</style>
+</head>
+<body>
+
+<p class="printhint">Ctrl+P → Letter portrait → enable “Background graphics” → print one per drop point</p>
+
+<div class="page">
+  <header>
+    <div class="ttl">Daily Review<br><mark>9-Point</mark> Check</div>
+    <div class="sub">
+      Form <b>M-100CB</b> · LHDVIR<br>
+      Linehaul only<br>
+      Check every form, every day
+    </div>
+  </header>
+
+  <div class="strap">
+    <div><b>One report</b> per power unit, per day of operation</div>
+    <div>Standard <b>M-100CB booklet</b> only</div>
+    <div>Completed <b>by hand</b> — no electronic edits</div>
+    <div>File same day · retain <b>6 months</b></div>
+  </div>
+
+  <div class="list">
+    <div class="item"><span class="box"></span><span class="n">1</span>
+      <div><span class="t">Real Form</span>
+        <p class="d">Standard M-100CB booklet, completed by hand. <em>No electronic edits, no photocopied substitutes.</em></p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">2</span>
+      <div><span class="t">City of Inspection</span>
+        <p class="d">Full city, town or village name. Ditto marks are acceptable <em>only</em> where the location is unchanged from the entry directly above.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">3</span>
+      <div><span class="t">Defect Box — Yes or No</span>
+        <p class="d">Ticked for <em>every unit listed</em> — tractor, every trailer, dolly. <em>Blank, or both boxes ticked, is non-compliant.</em></p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">4</span>
+      <div><span class="t">Time</span>
+        <p class="d">Exact time of inspection, clearly marked am/pm or written in military time.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">5</span>
+      <div><span class="t">Date</span>
+        <p class="d">Full month, day and year. Not just the day number.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">6</span>
+      <div><span class="t">Inspector’s Printed Name</span>
+        <p class="d">Printed in full and legible. A signature alone does not satisfy this point.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">7</span>
+      <div><span class="t">Inspector’s Signature</span>
+        <p class="d">Present and matching the printed name above.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">8</span>
+      <div><span class="t">Driver’s Declaration</span>
+        <p class="d">Signed whenever <em>someone other than the driver</em> performed the inspection. May be left blank when the driver inspected.</p></div></div>
+
+    <div class="item"><span class="box"></span><span class="n">9</span>
+      <div><span class="t">Co-Driver Signature</span>
+        <p class="d">Required on <em>team operations only</em>. Not applicable to single-driver runs.</p></div></div>
+  </div>
+
+  <div class="fail">
+    <div class="h">If a form fails any point — or <mark>doesn’t arrive at all</mark></div>
+    <ol>
+      <li><b>Contact the TSP the same day.</b> Do not hold errors for a weekly batch.</li>
+      <li><b>Return the form for correction</b> and track it until the corrected copy is physically in the file. Found is not fixed.</li>
+      <li><b>Missing hand-in?</b> Flag it to the LH Manager the same day — the TSP conversation is theirs to have.</li>
+      <li><b>Persistent non-compliance</b> escalates to a Business Discussion, recorded in TRACS.</li>
+      <li><b>Defect box says “Yes”?</b> <b>Major</b> → unit does not roll, contact FleetNet immediately. <b>Minor</b> → road-legal, flag and prioritise return to MNTR. <b>Trailers and dollies only</b> — tractor defects are the TSP’s to action.<br><em style="font-style:normal;color:#C24A00">Telling them apart: Schedule&nbsp;1 — major is bold on grey, number ends in <b>M</b> (1.3M). List&nbsp;1 (QC) — major is shaded, number ends in a <b>letter</b> (1.A). Plain on white = minor.</em></li>
+      <li><b>Log every chase:</b> date · driver · issue · resolution. The log is the station’s proof the process was worked.</li>
+    </ol>
+  </div>
+
+  <footer>
+    <span>Defect standard: <b>Schedule 1</b> · List 1 in Quebec<br>Process support: <b>District Fleet Maintenance Specialist</b></span>
+    <span>Reference: <b>“Daily Vehicle Inspections, Canada”</b> · KB000396060<br>Filing: smaller stations <b>by driver, monthly</b> · larger operations <b>by TSP, then week</b></span>
+  </footer>
+</div>
+
+</body>
+</html>

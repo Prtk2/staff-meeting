@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Every Log, Every Day — Processing LH Daily Vehicle Inspection Reports (M-100CB)</title>
+
+<!-- Typography: Big Shoulders Display (condensed industrial display),
+     Space Mono (data/labels), Public Sans (body). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Public+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================================================
+   THEME TOKENS — "DISPATCH BOARD"
+   Change these to restyle the entire deck.
+   Palette is FedEx purple (#4D148C) + orange (#FF6600) on white/near-white.
+   =========================================================================== */
+:root{
+  /* --- Colour --- */
+  --purple:#4D148C;
+  --purple-dk:#330A5E;
+  --purple-dp:#1F0540;
+  --orange:#FF6600;
+  --orange-dk:#D65400;
+  --white:#FFFFFF;
+  --off:#F3F2F5;
+  --line:#DCDAE2;
+  --ink:#141118;
+  --ink-soft:#5B5566;
+  --ink-faint:#8B8497;
+  --cream-dim:rgba(255,255,255,.62);
+
+  /* --- Type --- */
+  --font-display:'Big Shoulders Display', sans-serif;
+  --font-body:'Public Sans', sans-serif;
+  --font-mono:'Space Mono', monospace;
+
+  --title-size:clamp(1.5rem, 5vw, 4rem);
+  --h2-size:clamp(1.6rem, 4.6vw, 3.6rem);
+  --h3-size:clamp(1rem, 2.5vw, 1.75rem);
+  --body-size:clamp(.75rem, 1.35vw, 1.05rem);
+  --small-size:clamp(.62rem, 1vw, .82rem);
+  --mono-size:clamp(.5rem, .88vw, .7rem);
+
+  /* --- Spacing --- */
+  --slide-padding:clamp(1rem, 3.4vw, 3.2rem);
+  --content-gap:clamp(.5rem, 2vw, 2rem);
+  --element-gap:clamp(.25rem, 1vw, 1rem);
+
+  /* --- Motion --- */
+  --ease:cubic-bezier(.16,1,.3,1);
+  --dur:.7s;
+}
+
+/* ===========================================================================
+   VIEWPORT FITTING: MANDATORY BASE STYLES
+   Every slide fits exactly in 100vh. Nothing scrolls inside a slide, ever.
+   =========================================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow-x:hidden}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+body{background:var(--off);font-family:var(--font-body);color:var(--ink);
+  -webkit-font-smoothing:antialiased}
+
+.slide{
+  width:100vw;height:100vh;height:100dvh;
+  overflow:hidden;                 /* CRITICAL: prevent ANY overflow */
+  scroll-snap-align:start;
+  display:flex;flex-direction:column;position:relative;
+}
+.slide-content{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  max-height:100%;overflow:hidden;padding:var(--slide-padding);
+}
+img,.image-container{max-width:100%;max-height:min(50vh,400px);object-fit:contain}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));
+  gap:clamp(.5rem,1.5vw,1rem)}
+
+/* Short-viewport scaling */
+@media (max-height:700px){
+  :root{--slide-padding:clamp(.75rem,2.6vw,2rem);--content-gap:clamp(.4rem,1.5vw,1rem);
+        --title-size:clamp(1.25rem,4.5vw,2.5rem);--h2-size:clamp(1.3rem,3.6vw,2.4rem)}
+}
+@media (max-height:600px){
+  :root{--slide-padding:clamp(.5rem,2.2vw,1.4rem);--content-gap:clamp(.3rem,1vw,.75rem);
+        --title-size:clamp(1.1rem,4vw,2rem);--body-size:clamp(.68rem,1.15vw,.9rem)}
+  .nav-dots,.keyboard-hint,.decorative{display:none}
+}
+@media (max-height:500px){
+  :root{--slide-padding:clamp(.4rem,1.8vw,1rem);--title-size:clamp(1rem,3.5vw,1.5rem);
+        --h2-size:clamp(1rem,2.6vw,1.4rem);--body-size:clamp(.62rem,1vw,.82rem)}
+}
+@media (max-width:600px){
+  :root{--title-size:clamp(1.25rem,7vw,2.5rem)}
+  .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}
+  html{scroll-behavior:auto}
+}
+
+/* ===========================================================================
+   REVEAL SYSTEM
+   Elements animate in when their slide gains .visible (set by IntersectionObserver).
+   Stagger with inline style="--d:.25s".
+   =========================================================================== */
+.reveal{opacity:0;transform:translateY(22px);
+  transition:opacity var(--dur) var(--ease) var(--d,0s), transform var(--dur) var(--ease) var(--d,0s)}
+.slide.visible .reveal{opacity:1;transform:none}
+
+.reveal-x{opacity:0;transform:translateX(-18px);
+  transition:opacity var(--dur) var(--ease) var(--d,0s), transform var(--dur) var(--ease) var(--d,0s)}
+.slide.visible .reveal-x{opacity:1;transform:none}
+
+.reveal-f{opacity:0;transition:opacity var(--dur) ease var(--d,0s)}
+.slide.visible .reveal-f{opacity:1}
+
+/* Fill utility — lets the main content block of a slide absorb the free
+   vertical space instead of leaving a dead band top and bottom.
+   `flex:1 0 auto` grows but never shrinks below its content, so short
+   viewports fall back to the natural height rather than clipping. */
+.fill{flex:1 0 auto;min-height:0}
+
+/* Spread utility — for slides whose main block is a single row of nodes.
+   Stretching those to full height strands the text at the top of very tall
+   cards, so distribute the blocks down the frame instead. */
+.spread,.board.spread{justify-content:space-between}
+
+/* Masked line reveal — display type slides up from behind its own baseline */
+.mask{display:block;overflow:hidden}
+.mask > span{display:block;transform:translateY(106%);
+  transition:transform .85s var(--ease) var(--d,0s)}
+.slide.visible .mask > span{transform:none}
+
+/* Horizontal wipe — used for rules and hazard bands */
+.wipe{transform:scaleX(0);transform-origin:left;
+  transition:transform .7s var(--ease) var(--d,0s)}
+.slide.visible .wipe{transform:scaleX(1)}
+
+/* ===========================================================================
+   SLIDE ARCHETYPE 1 — SPLIT (purple data rail + white board)
+   Used on the title slide and on the five process-step slides (5–9),
+   where the rail also carries the step-progress marker.
+   =========================================================================== */
+.split{display:grid;grid-template-columns:minmax(0,30fr) minmax(0,70fr)}
+.split.wide-rail{grid-template-columns:minmax(0,34fr) minmax(0,66fr)}
+
+.rail{
+  background:var(--purple);color:var(--white);position:relative;overflow:hidden;
+  padding:clamp(1rem,2.4vw,2.2rem);
+  display:flex;flex-direction:column;justify-content:space-between;gap:.75rem;
+}
+/* Plate-grid texture: gives the purple structure so it never reads as flat gloss */
+.rail::before{
+  content:"";position:absolute;inset:0;opacity:.13;pointer-events:none;
+  background-image:linear-gradient(var(--white) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--white) 1px,transparent 1px);
+  background-size:clamp(20px,2.4vw,36px) clamp(20px,2.4vw,36px);
+}
+.rail > *{position:relative;z-index:2}
+.rail-top{font-family:var(--font-mono);font-size:var(--mono-size);
+  letter-spacing:.18em;text-transform:uppercase;line-height:1.7}
+.rail-top .hl{color:var(--orange)}
+.rail-foot{font-family:var(--font-mono);font-size:var(--mono-size);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--cream-dim);line-height:1.8}
+
+.board{
+  background:var(--white);position:relative;overflow:hidden;
+  padding:clamp(1rem,3vw,3rem);
+  display:flex;flex-direction:column;justify-content:center;gap:clamp(.4rem,1.1vh,1rem);
+}
+
+/* ---- Title-slide rail data rows ---- */
+.datalist{display:flex;flex-direction:column;gap:clamp(.45rem,1.3vh,.95rem)}
+.datalist .row{display:flex;flex-direction:column;gap:.15em;
+  border-left:3px solid var(--orange);padding-left:.75em}
+.datalist .k{font-family:var(--font-mono);font-size:var(--mono-size);
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.datalist .v{font-family:var(--font-display);font-weight:800;
+  font-size:clamp(.95rem,2vw,1.6rem);line-height:1;letter-spacing:.01em}
+
+/* ---- Step-progress marker (slides 5–9) ---- */
+.stepmark{display:flex;flex-direction:column;gap:clamp(.3rem,.9vh,.6rem)}
+.stepmark .sm-lbl{font-family:var(--font-mono);font-size:var(--mono-size);
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.3em}
+.sm-item{display:flex;align-items:center;gap:.6em;
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.42);transition:color .4s ease}
+.sm-item i{width:.62em;height:.62em;border:1.5px solid rgba(255,255,255,.42);
+  flex:none;transition:all .4s ease}
+.sm-item.done{color:rgba(255,255,255,.62)}
+.sm-item.done i{background:rgba(255,255,255,.62);border-color:rgba(255,255,255,.62)}
+.sm-item.on{color:var(--white);font-weight:700}
+.sm-item.on i{background:var(--orange);border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(255,102,0,.28)}
+
+/* Oversized step numeral anchoring the rail */
+.stepnum{font-family:var(--font-display);font-weight:900;line-height:.8;
+  font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.02em;color:rgba(255,255,255,.16)}
+.stepnum b{color:var(--orange)}
+
+/* ===========================================================================
+   SLIDE ARCHETYPE 2 — FULL BOARD (light) and FULL FIELD (purple)
+   =========================================================================== */
+.full-light{background:var(--white)}
+.full-off{background:var(--off)}
+.full-field{
+  color:var(--white);
+  background:
+    radial-gradient(115% 85% at 82% 6%, rgba(255,102,0,.15) 0%, transparent 54%),
+    linear-gradient(166deg,#2B0757 0%, #4D148C 52%, #1F0540 100%);
+}
+.full-field::after{        /* grain, so large purple areas keep texture */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;
+  background-image:radial-gradient(rgba(255,255,255,.15) .5px, transparent .5px);
+  background-size:3px 3px;mix-blend-mode:overlay;
+}
+.full-field .slide-content{position:relative;z-index:2}
+
+/* --- Particle field (closing slide) -----------------------------------
+   Canvas sits above the grain layer and below the content. Drifting
+   square embers rather than round dots — squares match the hazard-band
+   and plate-grid geometry the rest of the deck is built from. */
+.particles{position:absolute;inset:0;width:100%;height:100%;
+  z-index:1;pointer-events:none;display:block}
+.slide-content.thanks{align-items:center;justify-content:center;text-align:center}
+.slide-content.thanks h1{line-height:.86}
+
+/* ===========================================================================
+   SHARED TYPOGRAPHY COMPONENTS
+   =========================================================================== */
+.kicker{font-family:var(--font-mono);font-size:var(--mono-size);font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--orange)}
+.kicker .sep{color:var(--ink-faint);margin:0 .55em}
+.full-field .kicker .sep{color:rgba(255,255,255,.42)}
+
+h1{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2.6rem,10.5vw,9rem);line-height:.82;letter-spacing:-.005em;color:var(--purple)}
+h1 mark{background:none;color:var(--orange)}
+.full-field h1{color:var(--white)}
+
+h2{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:var(--h2-size);line-height:.88;letter-spacing:.002em;color:var(--purple)}
+.full-field h2{color:var(--white)}
+h2 mark{background:none;color:var(--orange)}
+
+.lede{font-size:var(--body-size);font-weight:300;line-height:1.5;color:var(--ink-soft);
+  max-width:62ch}
+.full-field .lede{color:rgba(255,255,255,.72)}
+.lede b{font-weight:600;color:var(--ink)}
+.full-field .lede b{color:var(--white)}
+
+/* Hero statement — the line the room should remember */
+.statement{font-family:var(--font-display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.05rem,2.9vw,2.3rem);line-height:1;letter-spacing:.005em;color:var(--ink)}
+.full-field .statement{color:var(--white)}
+.statement mark{background:none;color:var(--orange)}
+
+/* [CONFIRM] placeholder — deliberately conspicuous so nothing ships unfilled */
+.cf{display:inline-flex;align-items:center;gap:.4em;
+  font-family:var(--font-mono);font-size:.88em;font-weight:700;letter-spacing:.08em;
+  color:var(--orange-dk);background:rgba(255,102,0,.09);
+  border:1.5px dashed var(--orange);border-radius:3px;padding:.12em .5em;white-space:nowrap}
+.full-field .cf{color:#FFB27A;background:rgba(255,102,0,.14)}
+
+/* Small mono chips used for rule bars and closing loops */
+.chips{display:flex;flex-wrap:wrap;gap:clamp(.3rem,.8vw,.6rem)}
+.chip{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-soft);border:1.5px solid var(--line);
+  background:var(--off);padding:.42em .75em;line-height:1.3}
+.chip b{color:var(--purple);font-weight:700}
+.full-field .chip{color:rgba(255,255,255,.78);border-color:rgba(255,255,255,.24);
+  background:rgba(255,255,255,.05)}
+.full-field .chip b{color:var(--orange)}
+
+/* ===========================================================================
+   SLIDE 1 — TITLE
+   =========================================================================== */
+/* Hazard chevron band: brand signature, used only on the opening and closing
+   slides so it never becomes a decorative stripe on content slides. */
+.hazard{position:absolute;top:0;right:0;
+  width:clamp(90px,17vw,240px);height:clamp(11px,1.6vh,19px);
+  background:repeating-linear-gradient(115deg,var(--orange) 0 12px,transparent 12px 24px);
+  transform-origin:right}
+.stepstrip{display:flex;align-items:center;gap:clamp(.28rem,.75vw,.55rem);flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.stepstrip .n{color:var(--purple);font-weight:700}
+.stepstrip .ar{color:var(--orange)}
+.byline{display:flex;align-items:center;gap:clamp(.5rem,1.4vw,1rem);flex-wrap:wrap;
+  font-size:var(--small-size);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.byline .bar{width:1px;height:1.05em;background:var(--line)}
+
+/* ===========================================================================
+   SLIDE 2 — WHY THIS MATTERS
+   Failure chain + two-panel cost contrast.
+   =========================================================================== */
+.chain{display:flex;align-items:stretch;gap:clamp(.25rem,.7vw,.55rem);flex-wrap:nowrap}
+.chain .node{flex:1 1 0;min-width:0;
+  border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);
+  padding:clamp(.4rem,1vw,.75rem);
+  font-family:var(--font-mono);font-size:var(--mono-size);line-height:1.45;
+  letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.chain .node .i{display:block;color:var(--orange);font-weight:700;margin-bottom:.3em}
+.chain .node:last-child{border-color:var(--orange);background:rgba(255,102,0,.13);
+  color:#fff}
+.chain .ar{display:flex;align-items:center;color:var(--orange);
+  font-size:clamp(.7rem,1.3vw,1.05rem);flex:none}
+
+.contrast{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,1.5vw,1.2rem)}
+.panel{padding:clamp(.65rem,1.6vw,1.3rem);display:flex;flex-direction:column;
+  gap:clamp(.2rem,.6vh,.5rem);min-width:0}
+.panel.cheap{background:rgba(255,255,255,.94);color:var(--ink)}
+.panel.dear{background:var(--orange);color:#fff}
+.panel .big{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(1.6rem,5.2vw,4.2rem);line-height:.82;letter-spacing:-.01em}
+.panel.cheap .big{color:var(--purple)}
+.panel .cap{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.2em;
+  text-transform:uppercase;opacity:.7}
+.panel .det{font-size:clamp(.66rem,1.15vw,.9rem);line-height:1.45;font-weight:300}
+.panel.dear .det{color:rgba(255,255,255,.92)}
+
+/* ===========================================================================
+   SLIDE 3 — ANATOMY OF THE M-100CB
+   Left: form image (drops in when supplied) or a schematic stand-in.
+   Right: numbered zone descriptions.
+   =========================================================================== */
+.anatomy{display:grid;grid-template-columns:minmax(0,44fr) minmax(0,56fr);
+  gap:clamp(.7rem,2vw,1.8rem);align-items:center;min-height:0}
+
+.formframe{position:relative;border:2px solid var(--purple);background:var(--white);
+  height:100%;max-height:min(70vh,600px);display:flex;flex-direction:column;overflow:hidden}
+
+/* --- Real form image state --------------------------------------------
+   Set by the img's onload handler. The left padding opens a gutter for the
+   numbered pins so they sit beside the form instead of covering it. */
+.formframe.has-img{
+  flex-direction:row;align-items:center;justify-content:center;
+  padding:clamp(.45rem,1.1vw,.8rem) clamp(.45rem,1.1vw,.8rem)
+          clamp(.45rem,1.1vw,.8rem) clamp(1.3rem,2.8vw,2rem);
+}
+.formframe.has-img .formph{display:none}          /* schematic steps aside */
+.imgwrap{position:relative;display:inline-block;height:100%}
+/* max-height/max-width must be cleared: the global img rule caps every image
+   at min(50vh,400px), which would letterbox the form inside the wrapper and
+   throw every pin percentage off, since pins measure against the wrapper. */
+.imgwrap img{height:100%;width:auto;max-height:none;max-width:none;display:block}
+
+/* Zone pins, positioned as a percentage of the form's own height */
+.pin{position:absolute;left:0;top:var(--y);transform:translate(-50%,-50%);
+  width:clamp(1rem,2.1vw,1.45rem);height:clamp(1rem,2.1vw,1.45rem);
+  background:var(--orange);color:#fff;box-shadow:0 0 0 2px var(--white);
+  font-family:var(--font-display);font-weight:900;font-size:clamp(.6rem,1.25vw,.9rem);
+  display:flex;align-items:center;justify-content:center;line-height:1}
+.formframe:not(.has-img) .imgwrap{display:none}   /* no image → no pins */
+
+/* Schematic stand-in — mirrors the real form's zones so the callouts read
+   correctly even before the photo is supplied. Replaced automatically once
+   assets/m100cb-form.png exists. */
+.formph{flex:1;display:flex;flex-direction:column;justify-content:space-between;
+  gap:clamp(.25rem,.7vh,.5rem);padding:clamp(.5rem,1.2vw,.9rem);font-family:var(--font-mono)}
+.formph .ph-hd{background:var(--purple);color:#fff;padding:.45em .6em;
+  font-size:var(--mono-size);letter-spacing:.14em;text-transform:uppercase;
+  display:flex;justify-content:space-between;gap:.5em}
+.zone{position:relative;border:1.5px solid var(--line);padding:clamp(.3rem,.8vw,.55rem);
+  padding-left:clamp(1.35rem,3vw,2rem);background:var(--off)}
+.zone .badge{position:absolute;left:clamp(.25rem,.6vw,.4rem);top:clamp(.25rem,.6vw,.4rem);
+  width:clamp(1rem,2.1vw,1.45rem);height:clamp(1rem,2.1vw,1.45rem);
+  background:var(--orange);color:#fff;font-family:var(--font-display);font-weight:900;
+  font-size:clamp(.6rem,1.25vw,.9rem);display:flex;align-items:center;justify-content:center;line-height:1}
+.zrow{display:flex;gap:2px;margin-bottom:2px}
+.zrow:last-child{margin-bottom:0}
+.zcell{height:clamp(.5rem,1.15vh,.8rem);background:#fff;border:1px solid var(--line);flex:1}
+.zcell.lbl{flex:0 0 22%;background:#E7E4EC}
+.zcell.sm{flex:0 0 9%}
+.zcell.ck{flex:0 0 6%;background:#fff}
+.zline{height:clamp(.5rem,1.15vh,.8rem);background:#fff;border:1px solid var(--line);
+  border-bottom:1.5px solid var(--ink-faint)}
+.ph-note{font-size:var(--mono-size);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--orange-dk);text-align:center;border:1.5px dashed var(--orange);
+  padding:.4em;background:rgba(255,102,0,.07);line-height:1.5}
+
+.zones{display:flex;flex-direction:column;gap:clamp(.35rem,1vh,.8rem);min-width:0}
+.zoneitem{display:grid;grid-template-columns:auto 1fr;gap:clamp(.45rem,1.1vw,.85rem);
+  align-items:start}
+.zoneitem .num{font-family:var(--font-display);font-weight:900;line-height:.85;
+  font-size:clamp(1.1rem,2.6vw,2rem);color:var(--orange);min-width:1.2ch}
+.zoneitem .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.85rem,1.75vw,1.35rem);line-height:1;color:var(--purple);letter-spacing:.01em}
+.zoneitem .d{font-size:clamp(.64rem,1.12vw,.88rem);line-height:1.42;color:var(--ink-soft);
+  font-weight:300;margin-top:.2em}
+
+/* ===========================================================================
+   SLIDE 4 — LIFE OF AN LHDVIR (anchor flow diagram)
+   =========================================================================== */
+.flow{display:flex;align-items:stretch;gap:clamp(.2rem,.6vw,.5rem)}
+.fnode{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.25em;
+  border-top:4px solid var(--purple);padding:clamp(.45rem,1.1vw,.9rem) clamp(.35rem,.9vw,.7rem)}
+.fnode:last-of-type{border-top-color:var(--orange)}
+.fnode .n{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.2em;
+  color:var(--orange);font-weight:700}
+.fnode .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.82rem,1.7vw,1.3rem);line-height:1;color:var(--purple)}
+.fnode .d{font-size:clamp(.62rem,1.08vw,.85rem);line-height:1.4;color:var(--ink-soft);font-weight:300}
+.farrow{display:flex;align-items:center;color:var(--orange);flex:none;
+  font-size:clamp(.7rem,1.3vw,1.1rem);padding-top:clamp(.6rem,1.6vw,1.3rem)}
+
+/* Auto-flow columns so the strip stays balanced whatever the count */
+.owners{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);
+  gap:clamp(.3rem,.9vw,.7rem);background:var(--purple);padding:clamp(.6rem,1.5vw,1.15rem)}
+/* Flex column, not a bare div — otherwise the inline spans inside collide
+   onto one line and the role name overlaps its duty. */
+.owner{min-width:0;color:#fff;padding-left:.7em;border-left:3px solid var(--orange);
+  display:flex;flex-direction:column;gap:.28em;justify-content:center}
+.owner .r{display:block;font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.72rem,1.45vw,1.05rem);line-height:1.05}
+.owner .j{display:block;font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.62);line-height:1.5}
+.owner .cf{align-self:flex-start;font-size:calc(var(--mono-size) * .95)}
+
+/* ===========================================================================
+   SLIDE 5 — DROP POINT
+   =========================================================================== */
+.dropgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.4rem,1.1vw,.9rem)}
+.dcard{border:1.5px solid var(--line);padding:clamp(.55rem,1.4vw,1.1rem);
+  display:flex;flex-direction:column;gap:.3em;min-width:0}
+.dcard.hero{background:var(--purple);border-color:var(--purple);color:#fff}
+.dcard .h{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.8rem,1.65vw,1.25rem);line-height:1;color:var(--purple)}
+.dcard.hero .h{color:#fff}
+.dcard .p{font-size:clamp(.64rem,1.1vw,.86rem);line-height:1.42;color:var(--ink-soft);font-weight:300}
+.dcard.hero .p{color:rgba(255,255,255,.8)}
+.dcard .tag{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--orange);font-weight:700}
+
+/* ===========================================================================
+   SLIDE 6 — THE 9-POINT CHECK
+   =========================================================================== */
+.checkgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.3rem,.85vw,.7rem)}
+.chk{border:1.5px solid var(--line);padding:clamp(.4rem,1vw,.75rem);
+  display:grid;grid-template-columns:auto 1fr;gap:clamp(.35rem,.9vw,.65rem);
+  align-items:start;min-width:0}
+.chk .box{width:clamp(.95rem,1.9vw,1.35rem);height:clamp(.95rem,1.9vw,1.35rem);
+  border:2px solid var(--purple);position:relative;flex:none}
+.chk .box::after{content:"";position:absolute;inset:2px;background:var(--orange);
+  transform:scale(0);transition:transform .4s var(--ease) var(--d,0s)}
+.slide.visible .chk .box::after{transform:scale(1)}
+.chk .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.75rem,1.5vw,1.12rem);line-height:1;color:var(--purple)}
+.chk .d{font-size:clamp(.6rem,1.04vw,.8rem);line-height:1.38;color:var(--ink-soft);
+  font-weight:300;margin-top:.22em}
+.chk .d em{font-style:normal;color:var(--orange-dk);font-weight:600}
+
+/* ===========================================================================
+   SLIDE 7 — DEFECTS: MAJOR VS MINOR (decision tree)
+   =========================================================================== */
+.trigger{display:flex;align-items:center;gap:clamp(.5rem,1.3vw,1rem);
+  border:2px solid var(--purple);padding:clamp(.45rem,1.1vw,.85rem) clamp(.6rem,1.5vw,1.1rem);
+  background:var(--off)}
+.trigger .yes{font-family:var(--font-display);font-weight:900;color:#fff;background:var(--orange);
+  padding:.1em .55em;font-size:clamp(.9rem,2vw,1.5rem);line-height:1.15;text-transform:uppercase;flex:none}
+.trigger .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.8rem,1.7vw,1.3rem);line-height:1.05;color:var(--purple)}
+
+.branches{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,1.4vw,1.1rem)}
+.branch{padding:clamp(.55rem,1.4vw,1.1rem);display:flex;flex-direction:column;
+  gap:clamp(.2rem,.6vh,.45rem);min-width:0}
+.branch.major{background:var(--purple);color:#fff}
+.branch.minor{background:var(--off);border:1.5px solid var(--line)}
+.branch .lv{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.22em;
+  text-transform:uppercase;font-weight:700}
+.branch.major .lv{color:var(--orange)}
+.branch.minor .lv{color:var(--ink-faint)}
+.branch .hd{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(1rem,2.3vw,1.8rem);line-height:.95}
+.branch.minor .hd{color:var(--purple)}
+.branch ul{list-style:none;display:flex;flex-direction:column;gap:.25em;margin-top:.15em}
+.branch li{font-size:clamp(.63rem,1.1vw,.86rem);line-height:1.4;font-weight:300;
+  padding-left:.95em;position:relative}
+.branch.major li{color:rgba(255,255,255,.85)}
+.branch.minor li{color:var(--ink-soft)}
+.branch li::before{content:"";position:absolute;left:0;top:.55em;
+  width:.35em;height:.35em;background:var(--orange)}
+
+/* ===========================================================================
+   SLIDE 8 — FILING & RETENTION
+   =========================================================================== */
+.retain{display:grid;grid-template-columns:minmax(0,38fr) minmax(0,62fr);
+  gap:clamp(.8rem,2.4vw,2.4rem);align-items:center}
+.bignum{font-family:var(--font-display);font-weight:900;line-height:.72;
+  font-size:clamp(5rem,17vw,15rem);letter-spacing:-.03em;color:var(--purple)}
+.bignum .u{display:block;font-size:clamp(1rem,2.6vw,2.2rem);letter-spacing:.14em;
+  color:var(--orange);line-height:1;margin-top:.1em}
+.rlist{display:flex;flex-direction:column;gap:clamp(.45rem,1.3vh,1rem)}
+.ritem{border-left:3px solid var(--orange);padding-left:clamp(.55rem,1.3vw,1rem)}
+.ritem .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.85rem,1.8vw,1.4rem);line-height:1;color:var(--purple)}
+.ritem .d{font-size:clamp(.66rem,1.15vw,.9rem);line-height:1.45;color:var(--ink-soft);
+  font-weight:300;margin-top:.25em}
+
+/* ===========================================================================
+   SLIDE 9 — CORRECTION LOOP + ESCALATION LADDER
+   =========================================================================== */
+.loopwrap{display:grid;grid-template-columns:minmax(0,61fr) minmax(0,39fr);
+  gap:clamp(.7rem,2vw,1.6rem);align-items:start}
+.loop{position:relative;padding-bottom:clamp(2rem,5vh,3.2rem);
+  display:flex;flex-direction:column}
+.loop .track{display:flex;align-items:stretch;gap:clamp(.2rem,.6vw,.45rem)}
+.lnode{flex:1 1 0;min-width:0;border:1.5px solid var(--line);background:var(--white);
+  padding:clamp(.4rem,1vw,.75rem);display:flex;flex-direction:column;gap:.2em}
+.lnode .n{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.18em;
+  color:var(--orange);font-weight:700}
+.lnode .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.7rem,1.42vw,1.05rem);line-height:1;color:var(--purple)}
+.lnode .d{font-size:clamp(.58rem,1vw,.78rem);line-height:1.35;color:var(--ink-soft);font-weight:300}
+.larrow{display:flex;align-items:center;color:var(--orange);flex:none;font-size:clamp(.65rem,1.2vw,1rem)}
+/* Return arc closing the loop back to the start. The label sits on the
+   bottom edge with its own white ground so the rule reads as passing behind it. */
+.loop .arc{position:absolute;left:7%;right:7%;bottom:clamp(.5rem,1.4vh,1rem);
+  height:clamp(1.2rem,3vh,2rem);
+  border:2px solid var(--orange);border-top:none;
+  border-radius:0 0 clamp(.7rem,1.9vh,1.3rem) clamp(.7rem,1.9vh,1.3rem)}
+.loop .arclabel{position:absolute;left:50%;transform:translate(-50%,50%);
+  bottom:0;background:var(--white);padding:0 .7em;
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--orange);font-weight:700;white-space:nowrap}
+
+.ladderwrap{display:flex;flex-direction:column;min-height:0}
+.ladder{display:flex;flex-direction:column;gap:2px}
+.rung{display:flex;align-items:center;gap:clamp(.4rem,1vw,.75rem);
+  padding:clamp(.5rem,1.25vw,.95rem);min-width:0}
+.rung.r1{background:rgba(77,20,140,.08)}
+.rung.r2{background:rgba(77,20,140,.16)}
+.rung.r3{background:var(--purple);color:#fff}
+.rung .lv{font-family:var(--font-display);font-weight:900;font-size:clamp(.85rem,1.8vw,1.4rem);
+  line-height:1;color:var(--orange);flex:none}
+.rung .tx{font-size:clamp(.6rem,1.05vw,.82rem);line-height:1.35;color:var(--ink-soft);font-weight:400}
+.rung.r3 .tx{color:rgba(255,255,255,.86)}
+.rung .tx b{display:block;font-family:var(--font-display);font-weight:800;
+  text-transform:uppercase;font-size:clamp(.72rem,1.42vw,1.05rem);color:var(--purple);line-height:1.05}
+.rung.r3 .tx b{color:#fff}
+.laddertitle{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:.5em}
+
+/* ===========================================================================
+   SLIDE 10 — CADENCE TABLE
+   =========================================================================== */
+.cadence{width:100%;border-collapse:collapse}
+.cadence th{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-faint);text-align:left;font-weight:400;
+  padding:0 clamp(.4rem,1vw,.9rem) .55em;border-bottom:2px solid var(--purple)}
+.cadence td{padding:clamp(.45rem,1.25vh,1rem) clamp(.4rem,1vw,.9rem);
+  border-bottom:1px solid var(--line);vertical-align:middle}
+.cadence tr:last-child td{border-bottom:none}
+.cadence .when{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(1rem,2.4vw,1.9rem);line-height:1;color:var(--orange);white-space:nowrap}
+.cadence .who{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.78rem,1.55vw,1.18rem);line-height:1.05;color:var(--purple)}
+.cadence .what{font-size:clamp(.65rem,1.12vw,.88rem);line-height:1.4;color:var(--ink-soft);font-weight:300}
+
+.band{background:var(--purple);color:#fff;padding:clamp(.6rem,1.6vw,1.2rem) clamp(.7rem,1.8vw,1.4rem);
+  display:flex;align-items:center;gap:clamp(.5rem,1.4vw,1rem);flex-wrap:wrap}
+.band .q{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(.95rem,2.3vw,1.85rem);line-height:1;flex:1 1 20ch;min-width:0}
+.band .q mark{background:none;color:var(--orange)}
+.band .s{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.6)}
+
+/* ===========================================================================
+   SLIDES 11 & 12 — NUMBERED CARD SETS
+   =========================================================================== */
+.cards4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.4rem,1.1vw,.9rem)}
+.cards6{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(.4rem,1.1vw,.9rem)}
+.qcard{display:flex;flex-direction:column;gap:.3em;min-width:0;
+  padding:clamp(.5rem,1.3vw,1rem);
+  border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.qcard .n{font-family:var(--font-display);font-weight:900;line-height:.85;
+  font-size:clamp(1.3rem,3.2vw,2.6rem);color:var(--orange)}
+.qcard .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.78rem,1.55vw,1.18rem);line-height:1;color:#fff}
+.qcard .d{font-size:clamp(.6rem,1.05vw,.82rem);line-height:1.4;
+  color:rgba(255,255,255,.72);font-weight:300}
+.qcard .d em{font-style:normal;color:var(--orange);font-weight:600}
+
+.ccard{display:flex;flex-direction:column;gap:.28em;min-width:0;
+  padding:clamp(.5rem,1.3vw,1rem);border:1.5px solid var(--line);background:var(--white);
+  border-top:4px solid var(--purple)}
+.ccard:nth-child(even){border-top-color:var(--orange)}
+.ccard .n{font-family:var(--font-display);font-weight:900;line-height:.85;
+  font-size:clamp(1.2rem,2.9vw,2.3rem);color:var(--orange)}
+.ccard .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(.76rem,1.5vw,1.15rem);line-height:1;color:var(--purple)}
+.ccard .d{font-size:clamp(.6rem,1.05vw,.82rem);line-height:1.4;color:var(--ink-soft);font-weight:300}
+
+.support{display:flex;gap:clamp(.5rem,1.5vw,1.2rem);flex-wrap:wrap;align-items:center;
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.62)}
+.support b{color:var(--orange);font-weight:700}
+
+/* ===========================================================================
+   PRESENTATION CHROME — progress bar, nav dots, hints
+   =========================================================================== */
+.progress-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--orange);
+  z-index:9000;transition:width .18s linear}
+.nav-dots{position:fixed;right:clamp(.5rem,1.3vw,1.1rem);top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:clamp(.3rem,.8vh,.55rem);z-index:9000}
+.nav-dots button{width:9px;height:9px;border:1.5px solid var(--purple);background:transparent;
+  padding:0;cursor:pointer;transition:all .3s ease;border-radius:0}
+.nav-dots button:hover{border-color:var(--orange)}
+.nav-dots button.active{background:var(--orange);border-color:var(--orange);transform:scale(1.25)}
+/* Dots sit over purple slides too — invert for contrast */
+.nav-dots.on-dark button{border-color:rgba(255,255,255,.55)}
+.nav-dots.on-dark button.active{background:var(--orange);border-color:var(--orange)}
+
+.slidenum{position:absolute;bottom:clamp(.5rem,1.3vw,1.1rem);right:clamp(.6rem,1.6vw,1.4rem);
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.2em;
+  color:var(--ink-faint);z-index:5}
+.full-field .slidenum{color:rgba(255,255,255,.42)}
+.split .slidenum{color:var(--ink-faint)}
+
+/* Pill background: the hint sits over the purple rail on split slides and
+   over white on full slides, so it needs its own ground to stay legible. */
+.keyboard-hint{position:fixed;bottom:clamp(.5rem,1.3vw,1.1rem);left:50%;
+  transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.9);z-index:9000;
+  background:rgba(20,17,24,.62);padding:.4em .7em;white-space:nowrap;
+  opacity:.9;transition:opacity .4s ease;pointer-events:none}
+.keyboard-hint.dim{opacity:0}
+
+/* ===========================================================================
+   SPEAKER NOTES DRAWER  (press N)
+   Notes live in the DOM per slide but are never rendered on the slide itself.
+   =========================================================================== */
+.notes{display:none}
+.notes-drawer{position:fixed;left:0;right:0;bottom:0;z-index:9500;
+  background:#14111A;color:#E9E6EE;border-top:3px solid var(--orange);
+  max-height:42vh;overflow-y:auto;padding:clamp(.7rem,1.8vw,1.4rem) clamp(.9rem,2.4vw,2rem);
+  transform:translateY(101%);transition:transform .38s var(--ease)}
+.notes-drawer.open{transform:translateY(0)}
+.notes-drawer h4{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--orange);margin-bottom:.6em;font-weight:700}
+.notes-drawer .nbody{font-size:clamp(.72rem,1.15vw,.92rem);line-height:1.6;
+  font-weight:300;color:#CFC9DA;max-width:110ch}
+.notes-drawer .nbody p + p{margin-top:.6em}
+/* Delivery cue — timing and staging, distinct from the words you say */
+.notes-drawer .nbody .cue{font-family:var(--font-mono);font-size:.78em;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--orange);border-left:3px solid var(--orange);
+  padding-left:.7em;margin-bottom:1em}
+.notes-drawer .nbody b{color:#fff;font-weight:600}
+.notes-drawer .nbody .cf{background:rgba(255,102,0,.16);color:#FFB27A}
+
+/* ===========================================================================
+   INLINE EDITING  (press E, or hover the top-left corner)
+   Visibility of the toggle is driven by JS classes only — never a CSS
+   sibling selector, which breaks the hover chain via pointer-events.
+   =========================================================================== */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:12px;left:12px;z-index:10001;
+  width:38px;height:38px;border:none;background:var(--purple);color:#fff;
+  font-size:16px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
+.edit-toggle.active{background:var(--orange)}
+.edit-banner{position:fixed;top:0;left:0;right:0;z-index:10000;
+  background:var(--orange);color:#fff;text-align:center;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  padding:6px 60px;transform:translateY(-101%);transition:transform .3s var(--ease)}
+.edit-banner.active{transform:translateY(0)}
+body.edit-active [contenteditable]{outline:1px dashed rgba(255,102,0,.75);outline-offset:2px}
+body.edit-active [contenteditable]:focus{outline:2px solid var(--orange);background:rgba(255,102,0,.06)}
+body.edit-active{scroll-snap-type:none}
+body.edit-active html{scroll-snap-type:none}
+</style>
+</head>
+
+<body>
+
+<!-- =========================== CHROME =========================== -->
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="keyboard-hint" id="kbHint">← → navigate · P presenter view · N notes · E edit</div>
+
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Toggle edit mode">✎</button>
+<div class="edit-banner" id="editBanner">Edit mode — click any text · Ctrl+S exports a copy · Esc exits</div>
+
+<aside class="notes-drawer" id="notesDrawer" aria-live="polite">
+  <h4 id="notesTitle">Speaker notes</h4>
+  <div class="nbody" id="notesBody"></div>
+</aside>
+
+<main id="deck">
+
+<!-- ===================================================================
+     SLIDE 1 — TITLE
+     =================================================================== -->
+<section class="slide split wide-rail" data-theme="light">
+  <aside class="rail">
+    <div class="rail-top reveal-f" style="--d:.05s">
+      Form <span class="hl">M-100CB</span><br>LHDVIR
+    </div>
+    <div class="datalist">
+      <div class="row reveal-x" style="--d:.55s"><span class="k">Retention</span><span class="v">6 Months</span></div>
+      <div class="row reveal-x" style="--d:.65s"><span class="k">Cadence</span><span class="v">Daily</span></div>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.95s">Internal Training<br>30 Minutes</div>
+  </aside>
+
+  <div class="board">
+    <div class="hazard wipe" style="--d:.15s"></div>
+    <div class="kicker reveal-f" style="--d:.25s">Station Process Briefing</div>
+    <h1>
+      <span class="mask" style="--d:.35s"><span>Every Log,</span></span>
+      <span class="mask" style="--d:.47s"><span>Every <mark>Day</mark></span></span>
+    </h1>
+    <p class="lede reveal" style="--d:.8s">
+      Processing LH Daily Vehicle Inspection Reports. <b>The station process starts at the drop point.</b>
+    </p>
+    <div class="byline reveal" style="--d:.92s">
+      <span>Pratik Patel</span><span class="bar"></span>
+      <span>Linehaul Manager</span><span class="bar"></span>
+      <span>August 11, 2026</span>
+    </div>
+    <div class="stepstrip reveal-f" style="--d:1.05s">
+      <span><b class="n">01</b> Inspect</span><span class="ar">→</span>
+      <span><b class="n">02</b> Hand In</span><span class="ar">→</span>
+      <span><b class="n">03</b> Review</span><span class="ar">→</span>
+      <span><b class="n">04</b> Action</span><span class="ar">→</span>
+      <span><b class="n">05</b> File</span>
+    </div>
+  </div>
+  <div class="slidenum">01 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 1 · 0:45 · Warm open, then move briskly — the stakes land on slide 2, not here.</p>
+    <p>Good morning, everyone — thanks for making the time.</p>
+    <p>The next half hour is about one piece of paper. It's called the <b>M-100CB</b>. You'll also hear it called the LHDVIR — the Linehaul Daily Vehicle Inspection Report. Same document, two names.</p>
+    <p>Before we start, one thing I want to say plainly: this is proactive training. Every station is getting this same session, so we all walk out running the process the same way. Nothing in here is aimed at anybody.</p>
+    <p>Let's talk about why it matters.</p>
+    <p><b>Acronyms, if anyone needs them:</b> TSP = Transportation Service Provider · LHDVIR = Linehaul Daily Vehicle Inspection Report · FCSA = Fleet Compliance Self Assessment · DFMS = District Fleet Maintenance Specialist · TRACS = the record system for documented discussions · BD = Business Discussion · SOM = Senior Operations Manager.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 2 — WHY THIS MATTERS
+     Failure pattern (generic, non-attributed) + cost contrast.
+     =================================================================== -->
+<section class="slide full-field" data-theme="dark">
+  <div class="slide-content" style="gap:clamp(.5rem,1.6vh,1.3rem)">
+    <div class="kicker reveal-f" style="--d:.05s">02 <span class="sep">/</span> Why This Matters</div>
+
+    <h2 class="reveal" style="--d:.15s">
+      An inspection you <mark>can't produce</mark><br>is an inspection that didn't happen.
+    </h2>
+
+    <div>
+      <div class="kicker reveal-f" style="--d:.3s">How it goes wrong</div>
+      <div class="chain" style="margin-top:clamp(.35rem,1vh,.7rem)">
+        <div class="node reveal" style="--d:.38s"><span class="i">01</span>Forms land in a folder</div>
+        <div class="ar reveal-f" style="--d:.44s">→</div>
+        <div class="node reveal" style="--d:.46s"><span class="i">02</span>No daily verification</div>
+        <div class="ar reveal-f" style="--d:.52s">→</div>
+        <div class="node reveal" style="--d:.54s"><span class="i">03</span>No follow-up</div>
+        <div class="ar reveal-f" style="--d:.6s">→</div>
+        <div class="node reveal" style="--d:.62s"><span class="i">04</span>At test time, required DVIRs can't be found</div>
+      </div>
+    </div>
+
+    <div class="contrast">
+      <div class="panel cheap reveal" style="--d:.75s">
+        <span class="cap">The daily rhythm</span>
+        <span class="big">Minutes<br>A Day</span>
+        <span class="det">Receive at the drop point · review against the 9 points · action defects · file.</span>
+      </div>
+      <div class="panel dear reveal" style="--d:.85s">
+        <span class="cap">The recovery</span>
+        <span class="big">Months<br>To Close</span>
+        <span class="det">Corrective action plan · refresher training · weekly audits · a minimum of six weeks of validated logs · a passing retest.</span>
+      </div>
+    </div>
+  </div>
+  <div class="slidenum">02 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 2 · 2:30 · Land the big line and pause. Walk the chain left to right, then hold on the two panels.</p>
+    <p>Let me start with the one sentence everything else hangs off.</p>
+    <p>In compliance terms, <b>an inspection you can't produce is an inspection that didn't happen.</b> It doesn't matter that the driver walked the trailer. It doesn't matter that the inspection was thorough. If we can't put the paper in a tester's hand, then on paper it never happened. That's the standard we're held to.</p>
+    <p>So how does a station actually get into trouble here? It's never dramatic. It goes like this.</p>
+    <p>Step one — drivers hand their forms in. Good. The paper is in the building.</p>
+    <p>Step two — nobody verifies them daily. They go into a folder, or a tray, or a drawer, and they sit.</p>
+    <p>Step three — because nobody's looking, nobody follows up. A missing form is never noticed. An unsigned form is never sent back.</p>
+    <p>Step four — months later, a tester asks for one driver's DVIRs across a date range, and we can't produce them. Not because anybody was careless. Because there was no daily check.</p>
+    <p>That's the whole pattern. Four quiet steps — and every one of them is preventable at step two.</p>
+    <p>Now look at the trade along the bottom. The daily rhythm costs <b>minutes</b>. Collect from the drop point, review against the nine points, action any defects, file. On a normal day that's a few minutes of one person's time.</p>
+    <p>The recovery costs <b>months</b>. Once a corrective action plan opens, you're looking at refresher training, weekly audits, and a minimum of six weeks of clean validated logs plus a passing retest before it closes. And during those six weeks the daily work still has to happen — you just do it under scrutiny.</p>
+    <p>So the real choice isn't "do the process" or "skip the process." It's minutes a day — or months of recovery, and the minutes a day anyway.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 3 — ANATOMY OF THE M-100CB
+     Left panel auto-swaps to the real form photo when
+     assets/m100cb-form.png is present.
+     =================================================================== -->
+<section class="slide full-light" data-theme="light">
+  <div class="slide-content" style="gap:clamp(.45rem,1.4vh,1.1rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">03 <span class="sep">/</span> Know the Form</div>
+      <h2 class="reveal" style="--d:.12s">Anatomy of the <mark>M-100CB</mark></h2>
+    </div>
+
+    <div class="anatomy fill">
+      <!-- Form panel -->
+      <figure class="formframe reveal" style="--d:.25s">
+        <!-- Pin percentages are measured down the form's own height.
+             If the scan is ever recropped, these are the five numbers to retune. -->
+        <div class="imgwrap">
+          <img src="assets/m100cb-form.png" alt="Blank M-100CB Daily Vehicle Inspection Report"
+               onload="this.closest('.formframe').classList.add('has-img')"
+               onerror="this.closest('.imgwrap').remove()">
+          <span class="pin" style="--y:16%">1</span>
+          <span class="pin" style="--y:36%">2</span>
+          <span class="pin" style="--y:58%">3</span>
+          <span class="pin" style="--y:66.5%">4</span>
+          <span class="pin" style="--y:82%">5</span>
+        </div>
+        <figcaption class="formph">
+          <div class="ph-hd"><span>M-100CB</span><span>Daily Vehicle Inspection Report</span></div>
+
+          <!-- Zone 1: company + name of person conducting the inspection -->
+          <div class="zone"><span class="badge">1</span>
+            <div class="zrow"><span class="zline" style="flex:1"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zline" style="flex:1"></span></div>
+          </div>
+
+          <!-- Zone 2: the ten equipment rows -->
+          <div class="zone"><span class="badge">2</span>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell sm"></span><span class="zcell"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell sm"></span><span class="zcell"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell sm"></span><span class="zcell"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell sm"></span><span class="zcell"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell sm"></span><span class="zcell"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell sm"></span><span class="zcell"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell sm"></span><span class="zcell"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell sm"></span><span class="zcell"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell sm"></span><span class="zcell"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell sm"></span><span class="zcell"></span></div>
+          </div>
+
+          <!-- Zone 3: defect detail table -->
+          <div class="zone"><span class="badge">3</span>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell"></span></div>
+            <div class="zrow"><span class="zcell lbl"></span><span class="zcell sm"></span><span class="zcell ck"></span><span class="zcell ck"></span><span class="zcell"></span></div>
+          </div>
+
+          <!-- Zone 4: no-defects checkbox -->
+          <div class="zone"><span class="badge">4</span>
+            <div class="zrow"><span class="zcell ck"></span><span class="zcell"></span></div>
+          </div>
+
+          <!-- Zone 5: declaration + driver's declaration -->
+          <div class="zone"><span class="badge">5</span>
+            <div class="zrow"><span class="zline" style="flex:1"></span></div>
+            <div class="zrow"><span class="zline" style="flex:1"></span></div>
+            <div class="zrow"><span class="zline" style="flex:1"></span></div>
+          </div>
+
+          <div class="ph-note">Schematic — drop the real scan at<br>assets/m100cb-form.png to replace it</div>
+        </figcaption>
+      </figure>
+
+      <!-- Zone descriptions -->
+      <div class="zones">
+        <div class="zoneitem reveal-x" style="--d:.32s">
+          <span class="num">1</span>
+          <div><span class="t">Header block</span>
+            <p class="d">Company, and the printed name of the person conducting the inspection. Two fields that get skipped more than any others.</p></div>
+        </div>
+        <div class="zoneitem reveal-x" style="--d:.4s">
+          <span class="num">2</span>
+          <div><span class="t">Ten equipment rows</span>
+            <p class="d">Truck, Trailers 1–8 and the Dolly — the dolly sits fourth, between Trailer 2 and Trailer 3. Unit #, Prov., plate, odometer, defect No/Yes, time with am/pm, and city of inspection.</p></div>
+        </div>
+        <div class="zoneitem reveal-x" style="--d:.48s">
+          <span class="num">3</span>
+          <div><span class="t">Defect detail table</span>
+            <p class="d">Five rows: vehicle, Defect No. from Schedule 1 or List 1 (QC), status — Repaired or Not a defect — and the Authorized Person's Signature.</p></div>
+        </div>
+        <div class="zoneitem reveal-x" style="--d:.56s">
+          <span class="num">4</span>
+          <div><span class="t">"No defects identified"</span>
+            <p class="d">The clean-inspection checkbox. It does not replace the per-unit No/Yes boxes above.</p></div>
+        </div>
+        <div class="zoneitem reveal-x" style="--d:.64s">
+          <span class="num">5</span>
+          <div><span class="t">Declaration &amp; driver's declaration</span>
+            <p class="d">Inspector's printed name, signature and date — then the second block, signed by the current driver whenever someone else conducted the inspection.</p></div>
+        </div>
+
+        <div class="chips reveal-f" style="--d:.78s">
+          <span class="chip"><b>One report</b> per power unit, per day of operation</span>
+          <span class="chip"><b>Bilingual</b> EN / FR</span>
+          <span class="chip">Completed <b>by hand</b> — no electronic edits</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slidenum">03 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 3 · 2:00 · Orientation only. Point at zones, don't read fields aloud. Resist teaching the 9-point check — that's slide 6.</p>
+    <p>Before we talk process, everybody in this room should be able to read this form fluently. Not fill it out — <b>read</b> it. Because your job is to verify it, and you can't verify what you can't read.</p>
+    <p>Five zones.</p>
+    <p><b>Zone one, the header.</b> Company, and the printed name of the person conducting the inspection. These two get skipped more than anything else on the page — they sit above the table, and people's eyes go straight to the grid.</p>
+    <p><b>Zone two is the main event</b> — ten equipment rows. Truck, Trailers one through eight, and the Dolly. Watch the order: the dolly sits fourth, between Trailer 2 and Trailer 3, not at the bottom where you'd expect it. For each unit there's a unit number, province, licence plate, odometer, the defect No/Yes boxes, the time with am or pm, and the city of inspection.</p>
+    <p><b>Zone three, the defect detail table</b> — five rows. If a defect was found, this is where it gets described: which vehicle, the defect number from Schedule 1 or List 1, whether it was repaired or found not to be a defect, and the authorized person's signature.</p>
+    <p><b>Zone four is the "no defects identified" checkbox.</b> Important — that box does not replace the per-unit No/Yes boxes up in zone two. Both get completed.</p>
+    <p><b>Zone five, the declarations.</b> The inspector prints their name, signs, and dates. Then there's a second block — the driver's declaration — signed by the current driver whenever somebody other than them conducted the inspection.</p>
+    <p>Every field on this form is a test point. Every one.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 4 — THE LIFE OF AN LHDVIR (anchor graphic)
+     =================================================================== -->
+<section class="slide full-light" data-theme="light">
+  <div class="slide-content spread" style="gap:clamp(.55rem,1.8vh,1.5rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">04 <span class="sep">/</span> The Whole Process</div>
+      <h2 class="reveal" style="--d:.12s">The Life of an <mark>LHDVIR</mark></h2>
+    </div>
+
+    <div class="flow">
+      <div class="fnode reveal" style="--d:.25s"><span class="n">01</span>
+        <span class="t">Inspect &amp; Complete</span>
+        <span class="d">TSP driver inspects and fills the M-100CB by hand.</span></div>
+      <div class="farrow reveal-f" style="--d:.32s">→</div>
+      <div class="fnode reveal" style="--d:.35s"><span class="n">02</span>
+        <span class="t">Hand In Daily</span>
+        <span class="d">Delivered to the station's designated drop point every operating day.</span></div>
+      <div class="farrow reveal-f" style="--d:.42s">→</div>
+      <div class="fnode reveal" style="--d:.45s"><span class="n">03</span>
+        <span class="t">Review Daily</span>
+        <span class="d">Station checks every form against the 9 completion points.</span></div>
+      <div class="farrow reveal-f" style="--d:.52s">→</div>
+      <div class="fnode reveal" style="--d:.55s"><span class="n">04</span>
+        <span class="t">Action Defects</span>
+        <span class="d">Major to FleetNet, minor prioritised to MNTR. Paper loop closed.</span></div>
+      <div class="farrow reveal-f" style="--d:.62s">→</div>
+      <div class="fnode reveal" style="--d:.65s"><span class="n">05</span>
+        <span class="t">File &amp; Retain</span>
+        <span class="d">Filed the same day, retained 6 months, retrievable on demand.</span></div>
+    </div>
+
+    <div class="owners reveal" style="--d:.8s">
+      <div class="owner"><span class="r">TSP Driver</span><span class="j">Complete &amp; hand in<br>every operating day</span></div>
+      <div class="owner"><span class="r">The Station</span><span class="j">Collect · review · action<br>file · audit</span></div>
+      <div class="owner"><span class="r">LH Manager</span><span class="j">TSP accountability<br>&amp; escalation</span></div>
+    </div>
+  </div>
+  <div class="slidenum">04 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 4 · 2:00 · This is the map, not the detail. Spend your time on the ownership strip along the bottom.</p>
+    <p>Here's the whole process on one slide. Five steps — we'll spend a couple of minutes on each of them after this.</p>
+    <p>The driver inspects and completes the form. They hand it in daily at our drop point. We review it daily. We action any defects. We file it and keep it six months.</p>
+    <p>Now — the important part of this slide is the strip along the bottom, because that's where ownership lives.</p>
+    <p>Think of it as two halves. <b>Getting the paper into the building is the TSP's obligation.</b> That's their contractual responsibility, and holding them to it is my job as Linehaul Manager. If a TSP driver isn't handing forms in, that conversation is mine to have.</p>
+    <p><b>Everything after the drop point is ours.</b> Collect, review, action, file, audit — that's the station's side of the line.</p>
+    <p>Now, I'm deliberately not telling you who does what inside your building. You know your operation better than I do — who has the desk, who has the capacity, who your backups should be. That's station management's call, and it should be, because a structure I impose from outside won't survive a vacation week.</p>
+    <p>What I am telling you is that every one of those five things has to have a name against it, and a trained backup behind that name. Not a role in the abstract — a person, and a second person.</p>
+    <p>Notice that nobody in this room is on the hook for filling out forms. You're on the hook for verifying that the process runs.</p>
+    <p>The next five slides zoom into one step each. The purple rail on the left will tell you where we are.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 5 — STEP 1 · DAILY HAND-IN (rail step 1 active)
+     =================================================================== -->
+<section class="slide split" data-theme="light">
+  <aside class="rail">
+    <div class="stepnum reveal-f" style="--d:.1s">0<b>1</b></div>
+    <div class="stepmark">
+      <span class="sm-lbl">Step 1 of 5</span>
+      <span class="sm-item on reveal-x" style="--d:.3s"><i></i>Hand In</span>
+      <span class="sm-item reveal-x" style="--d:.36s"><i></i>Review</span>
+      <span class="sm-item reveal-x" style="--d:.42s"><i></i>Defects</span>
+      <span class="sm-item reveal-x" style="--d:.48s"><i></i>File</span>
+      <span class="sm-item reveal-x" style="--d:.54s"><i></i>Correct</span>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.7s">Owner<br>TSP Driver → Station</div>
+  </aside>
+
+  <div class="board">
+    <div class="kicker reveal-f" style="--d:.15s">Step 1 <span class="sep">/</span> The Drop Point</div>
+    <h2 class="reveal" style="--d:.22s">Daily Hand-In</h2>
+    <p class="statement reveal" style="--d:.32s">Daily means daily — <mark>not weekly bundles.</mark></p>
+
+    <div class="dropgrid" style="margin-top:clamp(.3rem,1vh,.7rem)">
+      <div class="dcard hero reveal" style="--d:.45s">
+        <span class="tag">Non-negotiable</span>
+        <span class="h">One Drop Point</span>
+        <span class="p">The station provides ONE designated, clearly labelled place — folder, mailbox or area — known to every TSP driver. A labelled mailbox outside the operations office works well.</span>
+      </div>
+      <div class="dcard reveal" style="--d:.55s">
+        <span class="tag">Every operating day</span>
+        <span class="h">Hand In On Return</span>
+        <span class="p">TSP drivers hand in the M-100CB every day they operate. The form does not leave the building in the truck.</span>
+      </div>
+      <div class="dcard reveal" style="--d:.65s">
+        <span class="tag">Same day</span>
+        <span class="h">Flag The Miss</span>
+        <span class="p">A missed hand-in is flagged the same day and goes to the LH Manager, who takes it up with the TSP.</span>
+      </div>
+    </div>
+
+    <div class="chips reveal-f" style="--d:.8s;margin-top:clamp(.3rem,1vh,.7rem)">
+      <span class="chip">Label it so a <b>new driver</b> finds it unaided</span>
+      <span class="chip">Same place, <b>every day</b> — no rotating locations</span>
+    </div>
+  </div>
+  <div class="slidenum">05 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 5 · 2:00 · The single most important slide in the deck. Slow down. Make eye contact on the "same day" ask.</p>
+    <p>Step one — and honestly, this is the most important slide in the deck.</p>
+    <p>The M-100CB gets handed in <b>every single day the driver operates</b>. Daily means daily. Not a stack on Friday. Not whenever they remember. Every operating day.</p>
+    <p>Here's why that matters so much. If a driver walks out of this building with yesterday's DVIR still sitting in the truck, that is the exact moment the process starts to break. That form is now outside our control. It might come back tomorrow. It might come back in a week, dog-eared. It might never come back — and we wouldn't know, because nothing told us to look for it.</p>
+    <p>So the station's job is to make handing it in the easiest possible thing to do. <b>One drop point.</b> One. Clearly labelled, in a consistent place, known to every TSP driver who comes through here. A folder, a mailbox, a marked tray — the format doesn't matter. A labelled mailbox outside the operations office works really well, because it's on the way out and impossible to miss.</p>
+    <p>What doesn't work is "give it to whoever's around," or "leave it on the supervisor's desk." Those aren't systems. Those are hopes.</p>
+    <p>And the third piece — when a hand-in is missed, <b>flag it the same day</b>. Send it to me, and I'll take it up with the TSP.</p>
+    <p>I want to be really clear on this one. I can only have that conversation if your team flags it while it's still fresh. A miss reported three weeks later is just history. A miss reported today is something I can actually fix.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 6 — STEP 2 · THE 9-POINT CHECK
+     =================================================================== -->
+<section class="slide split" data-theme="light">
+  <aside class="rail">
+    <div class="stepnum reveal-f" style="--d:.1s">0<b>2</b></div>
+    <div class="stepmark">
+      <span class="sm-lbl">Step 2 of 5</span>
+      <span class="sm-item done reveal-x" style="--d:.3s"><i></i>Hand In</span>
+      <span class="sm-item on reveal-x" style="--d:.36s"><i></i>Review</span>
+      <span class="sm-item reveal-x" style="--d:.42s"><i></i>Defects</span>
+      <span class="sm-item reveal-x" style="--d:.48s"><i></i>File</span>
+      <span class="sm-item reveal-x" style="--d:.54s"><i></i>Correct</span>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.7s">Owner<br>Ops Admin + backups</div>
+  </aside>
+
+  <div class="board">
+    <div class="kicker reveal-f" style="--d:.15s">Step 2 <span class="sep">/</span> Daily Review</div>
+    <h2 class="reveal" style="--d:.22s">The <mark>9-Point</mark> Check</h2>
+
+    <div class="checkgrid fill" style="margin-top:clamp(.25rem,.9vh,.6rem)">
+      <div class="chk reveal" style="--d:.35s"><span class="box"></span>
+        <div><span class="t">1 · Real Form</span><p class="d">Standard M-100CB booklet, completed by hand. <em>No electronic edits.</em></p></div></div>
+      <div class="chk reveal" style="--d:.41s"><span class="box"></span>
+        <div><span class="t">2 · City</span><p class="d">Full city, town or village. Ditto marks only if unchanged from the prior entry.</p></div></div>
+      <div class="chk reveal" style="--d:.47s"><span class="box"></span>
+        <div><span class="t">3 · Defect Box</span><p class="d">Yes or No for <em>every</em> unit listed. Blank or both ticked = non-compliant.</p></div></div>
+      <div class="chk reveal" style="--d:.53s"><span class="box"></span>
+        <div><span class="t">4 · Time</span><p class="d">Exact time, clearly am/pm or military.</p></div></div>
+      <div class="chk reveal" style="--d:.59s"><span class="box"></span>
+        <div><span class="t">5 · Date</span><p class="d">Full month, day and year.</p></div></div>
+      <div class="chk reveal" style="--d:.65s"><span class="box"></span>
+        <div><span class="t">6 · Printed Name</span><p class="d">Inspector's name printed in full.</p></div></div>
+      <div class="chk reveal" style="--d:.71s"><span class="box"></span>
+        <div><span class="t">7 · Signature</span><p class="d">Inspector's signature present.</p></div></div>
+      <div class="chk reveal" style="--d:.77s"><span class="box"></span>
+        <div><span class="t">8 · Driver Declaration</span><p class="d">Signed whenever someone other than the driver inspected. Blank is fine if the driver inspected.</p></div></div>
+      <div class="chk reveal" style="--d:.83s"><span class="box"></span>
+        <div><span class="t">9 · Co-Driver</span><p class="d">Signature required on team operations only.</p></div></div>
+    </div>
+
+    <div class="chips reveal-f" style="--d:.95s;margin-top:clamp(.25rem,.9vh,.6rem)">
+      <span class="chip">This is <b>exactly what the tester scores</b></span>
+      <span class="chip">Printable job aid lives <b>at the drop point</b></span>
+    </div>
+  </div>
+  <div class="slidenum">06 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 6 · 2:30 · Do NOT read all nine. Group them: the form (1), where/when (2,4,5), the defect declaration (3), the signatures (6–9).</p>
+    <p>Step two. The daily review.</p>
+    <p>I want to be upfront about where this list comes from. These nine points are lifted straight out of the FCSA test instructions. This is not a checklist we invented — this is literally what the tester scores each form against. So if we review to this standard every day, the test becomes a formality.</p>
+    <p>Let me group them so they're easier to hold in your head.</p>
+    <p><b>First — is it a real form?</b> Standard M-100CB booklet, completed by hand. No electronic edits, no substitutes.</p>
+    <p><b>Then the where and when.</b> City of inspection: full city, town or village name. Ditto marks are fine, but only where the location genuinely hasn't changed from the entry directly above. Time: exact, with am or pm clearly marked, or military. Date: full month, day and year — not just the day number.</p>
+    <p><b>Then the one that catches everybody</b> — point three, the defect box. Yes or No has to be checked for <b>every unit listed</b>. Not just the tractor: every trailer, the dolly, every line with equipment on it. A blank box fails. Both boxes checked fails. This is the most common finding by a wide margin.</p>
+    <p><b>Then the signatures.</b> The inspector prints their name in full — a signature by itself doesn't satisfy that point. The inspector signs. The driver's declaration gets signed whenever somebody other than the driver did the inspection; if the driver inspected their own equipment, that block can stay blank. And on team operations, the co-driver signs.</p>
+    <p>Now here's the payoff for doing this daily instead of weekly. If we catch an error today, the driver is back tomorrow — it's a thirty-second conversation and a corrected form. If we catch it six months from now during a test, that driver may not even be on the account anymore, and the form is simply wrong. Permanently.</p>
+    <p>There's a one-page version of this list you can print and pin at the drop point. Use it. Nobody should be doing this from memory.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 7 — STEP 3 · DEFECTS: MAJOR VS MINOR
+     =================================================================== -->
+<section class="slide split" data-theme="light">
+  <aside class="rail">
+    <div class="stepnum reveal-f" style="--d:.1s">0<b>3</b></div>
+    <div class="stepmark">
+      <span class="sm-lbl">Step 3 of 5</span>
+      <span class="sm-item done reveal-x" style="--d:.3s"><i></i>Hand In</span>
+      <span class="sm-item done reveal-x" style="--d:.36s"><i></i>Review</span>
+      <span class="sm-item on reveal-x" style="--d:.42s"><i></i>Defects</span>
+      <span class="sm-item reveal-x" style="--d:.48s"><i></i>File</span>
+      <span class="sm-item reveal-x" style="--d:.54s"><i></i>Correct</span>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.7s">Reference<br>Schedule 1 · List 1 (QC)</div>
+  </aside>
+
+  <div class="board">
+    <div class="kicker reveal-f" style="--d:.15s">Step 3 <span class="sep">/</span> Defects</div>
+    <h2 class="reveal" style="--d:.22s">Major vs. <mark>Minor</mark></h2>
+
+    <div class="trigger reveal" style="--d:.3s">
+      <span class="yes">Yes</span>
+      <span class="t">Every defect box marked "Yes" is reviewed by the station the <mark style="background:none;color:var(--orange)">same day</mark>.</span>
+    </div>
+
+    <!-- How the driver's own reference book distinguishes the two categories.
+         This is the single most useful thing on the slide: no judgement needed. -->
+    <div class="chips reveal-f" style="--d:.4s">
+      <span class="chip">How to tell &mdash; it's printed for you:</span>
+      <span class="chip"><b>Schedule 1</b> · major = bold on grey, number ends in <b>M</b> (1.3M)</span>
+      <span class="chip"><b>List 1 (QC)</b> · major = shaded, number ends in a <b>letter</b> (1.A)</span>
+      <span class="chip">Plain text on white = <b>minor</b></span>
+    </div>
+
+    <div class="branches">
+      <div class="branch major reveal" style="--d:.5s">
+        <span class="lv">Major defect</span>
+        <span class="hd">The Unit Does Not Roll</span>
+        <ul>
+          <li>Out of service until repaired — no exceptions, no judgement call.</li>
+          <li>Contact <b>FleetNet immediately</b>.</li>
+          <li>Trailer examples: <b>4.3M</b> coupling or locking mechanism damaged or fails to lock · <b>21.3M</b> flat tire · <b>22.3M</b> loose, missing or ineffective wheel fastener.</li>
+        </ul>
+      </div>
+      <div class="branch minor reveal" style="--d:.58s">
+        <span class="lv">Minor defect</span>
+        <span class="hd">Road-Legal, But Tracked</span>
+        <ul>
+          <li>Legal to stay on the road.</li>
+          <li>Flag the trailer and <b>prioritise its return to MNTR</b> for the local mechanic — the same prioritisation we already use for PM-due units.</li>
+          <li>Trailer examples: <b>18.1</b> required lamp does not function as intended · <b>22.1</b> hub oil below minimum level.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chips reveal-f" style="--d:.74s">
+      <span class="chip">Close the paper loop: <b>Defect No.</b></span>
+      <span class="chip"><b>Status</b> — Repaired / Not a defect</span>
+      <span class="chip"><b>Authorized Person's Signature</b></span>
+      <span class="chip" style="border-color:var(--purple);border-width:2px"><b>Scope:</b> tractor defects are the TSP's to action — <b>we action trailer &amp; dolly</b></span>
+    </div>
+  </div>
+  <div class="slidenum">07 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 7 · 3:15 · Trigger box → the "how to tell" rule → major branch → minor branch → paper loop. The M/letter rule is the takeaway.</p>
+    <p>Step three. What happens when that defect box says Yes.</p>
+    <p>First thing: <b>every Yes gets reviewed by the station the same day.</b> Not filed and looked at later — reviewed.</p>
+    <p>Now, the question I get most often is "how do I know if it's major or minor?" And the good news is you don't have to decide. It's already been decided for you, and it's printed in the same booklet the driver is carrying.</p>
+    <p>In <b>Schedule 1</b> — that's the standard used everywhere outside Quebec — major defects are printed in bold on a grey background, and the defect number ends in the letter <b>M</b>. One-point-three-M. Twenty-one-point-three-M. If you see an M, it's major.</p>
+    <p>In <b>List 1</b>, which is Quebec only, it works slightly differently: major defects are shaded, and the number ends in a <b>letter</b> rather than a digit. One-point-A is major. One-point-one is minor.</p>
+    <p>And in both documents, plain text on a white background means minor. That's the whole test.</p>
+    <p>So — <b>major defect. The unit does not roll.</b> It's out of service until it's repaired. There's no judgement call here, and no "it's probably fine to get it back." Contact FleetNet immediately. On our trailers that means things like a coupling or locking mechanism that's damaged or fails to lock, a flat tire, a loose or missing wheel fastener.</p>
+    <p><b>Minor defect. Legal to stay on the road</b> — but legal doesn't mean ignore it. Flag that trailer and prioritise getting it back to MNTR for the local mechanic, the same way we already prioritise a unit that's PM-due. That's things like a required lamp not working as intended, or hub oil below the minimum level on the sight glass.</p>
+    <p>One important piece of scope before we move on. Everything I've just described applies to <b>our trailers and dollies</b>. The tractor is TSP-maintained equipment — if there's a defect on the power unit, that's the TSP's to action, not ours. We don't chase it, we don't book it into MNTR. What we do care about is that it's declared correctly on the form, because that's still a test point.</p>
+    <p>So: read every unit, but action the trailer and dolly defects.</p>
+    <p>And whichever it is, <b>close the paper loop</b>. The defect number goes in the table, the status gets marked — repaired, or not a defect — and the authorized person signs it off. A defect that got fixed but never signed off is still an open defect on paper, and that's exactly how a tester will read it.</p>
+    <p>When in doubt: treat it as major, and call FleetNet.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 8 — STEP 4 · FILING & 6-MONTH RETENTION
+     Deliberately restful after the two dense slides before it.
+     =================================================================== -->
+<section class="slide split" data-theme="light">
+  <aside class="rail">
+    <div class="stepnum reveal-f" style="--d:.1s">0<b>4</b></div>
+    <div class="stepmark">
+      <span class="sm-lbl">Step 4 of 5</span>
+      <span class="sm-item done reveal-x" style="--d:.3s"><i></i>Hand In</span>
+      <span class="sm-item done reveal-x" style="--d:.36s"><i></i>Review</span>
+      <span class="sm-item done reveal-x" style="--d:.42s"><i></i>Defects</span>
+      <span class="sm-item on reveal-x" style="--d:.48s"><i></i>File</span>
+      <span class="sm-item reveal-x" style="--d:.54s"><i></i>Correct</span>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.7s">Standard<br>6 months at station</div>
+  </aside>
+
+  <div class="board">
+    <div class="kicker reveal-f" style="--d:.15s">Step 4 <span class="sep">/</span> File It</div>
+    <h2 class="reveal" style="--d:.22s">Filed, Not <mark>Filed Away</mark></h2>
+
+    <div class="retain fill" style="margin-top:clamp(.3rem,1.2vh,.9rem)">
+      <div class="bignum reveal" style="--d:.35s">6<span class="u">Months</span></div>
+      <div class="rlist">
+        <div class="ritem reveal-x" style="--d:.45s">
+          <span class="t">Same day</span>
+          <p class="d">Reviewed forms are filed the same day. Filing is part of the daily rhythm, not a someday task.</p>
+        </div>
+        <div class="ritem reveal-x" style="--d:.55s">
+          <span class="t">Retrievable on demand</span>
+          <p class="d">Filed so that any driver plus any date range can be pulled on request — that is exactly how FCSA will ask for them.</p>
+        </div>
+        <div class="ritem reveal-x" style="--d:.65s">
+          <span class="t">Scale the filing to your station</span>
+          <p class="d">Smaller stations, fewer drivers: a folder per driver, by month. Larger operations: split <b>by TSP, then by week</b> — far fewer folders, and six months still fits one drawer. Either way, you must be able to get from driver → TSP → week.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips reveal-f" style="--d:.8s;margin-top:clamp(.3rem,1.2vh,.9rem)">
+      <span class="chip">A form we <b>have</b> but can't <b>find</b> scores the same as one we never received</span>
+    </div>
+  </div>
+  <div class="slidenum">08 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 8 · 2:00 · Fast slide — and a deliberate breather after two dense ones. Don't over-explain it.</p>
+    <p>Step four, and this one's quick.</p>
+    <p>Reviewed forms get filed the <b>same day</b>. Filing is part of the daily rhythm — it isn't a someday task and it isn't a Friday task.</p>
+    <p>We keep them <b>six months</b> at the station.</p>
+    <p>And here's the part that actually matters: <b>file means retrievable.</b> The test question isn't "do you have these forms somewhere?" It's "how many of the required DVIRs are on file?" — and then they ask for a specific driver over a specific date range.</p>
+    <p>So a form we have but can't find scores exactly the same as a form we never received. Zero.</p>
+    <p>Now, how you file depends on the size of your operation, and I'd rather you picked the one that fits than copied ours.</p>
+    <p>If you're a smaller station with fewer drivers, a folder per driver, filed by month, works fine. You can hold six months without much bulk.</p>
+    <p>Here at MNTR we run a bigger operation, and a folder per driver got unmanageable fast — you end up with a drawer full of folders. So we split it <b>by TSP, then by week</b>. Far fewer folders, and six months of logs still fits in one drawer.</p>
+    <p>Whichever you pick, the test is the same: can you get from a driver's name, to their TSP, to the right week, and put your hand on the form? If yes, your convention works. And whatever you pick, every trained backup uses that same one — the filing can't change depending on who's covering that day.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 9 — STEP 5 · THE CORRECTION LOOP
+     =================================================================== -->
+<section class="slide split" data-theme="light">
+  <aside class="rail">
+    <div class="stepnum reveal-f" style="--d:.1s">0<b>5</b></div>
+    <div class="stepmark">
+      <span class="sm-lbl">Step 5 of 5</span>
+      <span class="sm-item done reveal-x" style="--d:.3s"><i></i>Hand In</span>
+      <span class="sm-item done reveal-x" style="--d:.36s"><i></i>Review</span>
+      <span class="sm-item done reveal-x" style="--d:.42s"><i></i>Defects</span>
+      <span class="sm-item done reveal-x" style="--d:.48s"><i></i>File</span>
+      <span class="sm-item on reveal-x" style="--d:.54s"><i></i>Correct</span>
+    </div>
+    <div class="rail-foot reveal-f" style="--d:.7s">Rule<br>Found ≠ Fixed</div>
+  </aside>
+
+  <div class="board spread">
+    <div>
+      <div class="kicker reveal-f" style="--d:.15s">Step 5 <span class="sep">/</span> Fixing Inaccuracies</div>
+      <h2 class="reveal" style="--d:.22s">The Correction <mark>Loop</mark></h2>
+    </div>
+
+    <div class="loopwrap" style="margin-top:clamp(.3rem,1.1vh,.8rem)">
+      <div class="loop">
+        <div class="track">
+          <div class="lnode reveal" style="--d:.35s"><span class="n">01</span>
+            <span class="t">Error Found</span><span class="d">Caught in the daily review.</span></div>
+          <div class="larrow reveal-f" style="--d:.41s">→</div>
+          <div class="lnode reveal" style="--d:.43s"><span class="n">02</span>
+            <span class="t">Contact TSP</span><span class="d">Same day — no waiting for a batch.</span></div>
+          <div class="larrow reveal-f" style="--d:.49s">→</div>
+          <div class="lnode reveal" style="--d:.51s"><span class="n">03</span>
+            <span class="t">Form Goes Back</span><span class="d">Returned to the TSP for correction.</span></div>
+          <div class="larrow reveal-f" style="--d:.57s">→</div>
+          <div class="lnode reveal" style="--d:.59s"><span class="n">04</span>
+            <span class="t">Corrected Form Filed</span><span class="d">Tracked until it is physically in the file.</span></div>
+        </div>
+        <div class="arc reveal-f" style="--d:.7s">
+          <span class="arclabel">Track until closed</span>
+        </div>
+      </div>
+
+      <div class="ladderwrap">
+        <div class="laddertitle reveal-f" style="--d:.6s">When it's a pattern, not a one-off</div>
+        <div class="ladder">
+          <div class="rung r1 reveal-x" style="--d:.68s"><span class="lv">1</span>
+            <span class="tx"><b>Same-day correction</b>Routine. Most fixes are a 30-second conversation the next morning.</span></div>
+          <div class="rung r2 reveal-x" style="--d:.76s"><span class="lv">2</span>
+            <span class="tx"><b>LH Manager ↔ TSP</b>Missing hand-ins entirely, or repeat errors from the same driver.</span></div>
+          <div class="rung r3 reveal-x" style="--d:.84s"><span class="lv">3</span>
+            <span class="tx"><b>Business Discussion</b>Persistent non-compliance. Recorded in TRACS.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips reveal-f" style="--d:.95s;margin-top:clamp(.3rem,1vh,.7rem)">
+      <span class="chip">Keep a simple <b>chase log</b>: date · driver · issue · resolution</span>
+      <span class="chip">The log is the station's <b>proof the process was worked</b></span>
+    </div>
+  </div>
+  <div class="slidenum">09 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 9 · 1:45 · Walk the loop left to right, land hard on "found is not fixed," then the ladder. Stress that rung 3 is for patterns.</p>
+    <p>Step five. What happens when the daily review finds a problem — because it will.</p>
+    <p>The loop is simple. You find an error. You contact the TSP the same day. The form goes back for correction. And then — this is the bit people miss — <b>you track it until the corrected form is physically in your file.</b></p>
+    <p>Found is not fixed. Spotting a blank signature and telling somebody about it doesn't close anything. The corrected paper in the folder closes it.</p>
+    <p>Most of these are genuinely small. Because we're reviewing daily, the driver is back tomorrow, and it's a thirty-second conversation at the drop point.</p>
+    <p>On the right is the escalation ladder, and I want to be clear about when to use it. Rung one is the routine fix — that's the vast majority of them. Rung two is me: missing hand-ins altogether, or the same driver making the same error repeatedly. Rung three is a Business Discussion, recorded in TRACS, and that's for persistent non-compliance. <b>A pattern, not a one-off.</b> Don't open a BD over a single missing signature.</p>
+    <p>Last thing — keep a simple chase log. Date, driver, issue, resolution. Four columns, that's it. That log is the station's protection: it shows the process was worked even when a TSP was slow to respond.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 10 — INSPECT WHAT YOU EXPECT (aimed at the room)
+     =================================================================== -->
+<section class="slide full-light" data-theme="light">
+  <div class="slide-content spread" style="gap:clamp(.55rem,1.8vh,1.4rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">10 <span class="sep">/</span> Leadership Cadence</div>
+      <h2 class="reveal" style="--d:.12s">Inspect What You <mark>Expect</mark></h2>
+    </div>
+
+    <table class="cadence">
+      <thead>
+        <tr class="reveal-f" style="--d:.25s"><th style="width:16%">When</th><th style="width:26%">Owner</th><th>What happens</th></tr>
+      </thead>
+      <tbody>
+        <tr class="reveal-x" style="--d:.35s">
+          <td class="when">Daily</td>
+          <td class="who">Trained admin<br><span style="font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.1em;color:var(--ink-faint)">+ named backups</span></td>
+          <td class="what">Collect from the drop point, review against the 9 points, action defects, file the same day.</td>
+        </tr>
+        <tr class="reveal-x" style="--d:.45s">
+          <td class="when">End of week</td>
+          <td class="who">A second set of eyes<br><span style="font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.1em;color:var(--ink-faint)">not the person who files</span></td>
+          <td class="what">Pull 5 at random and audit them against the same 9 points. Keep it weekly until the daily process is solid, then reassess.</td>
+        </tr>
+        <tr class="reveal-x" style="--d:.55s">
+          <td class="when">Ongoing</td>
+          <td class="who">Station Leadership</td>
+          <td class="what">Ask for the audit results. If it isn't checked, it isn't happening.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="band reveal" style="--d:.7s">
+      <span class="q">A plan that isn't <mark>verified</mark> is a plan that isn't happening.</span>
+      <span class="s">The process cannot live<br>in one person's head</span>
+    </div>
+  </div>
+  <div class="slidenum">10 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 10 · 2:00 · Aimed squarely at the room. Slow down, make eye contact, dwell on the "Ongoing" row.</p>
+    <p>Now we get to the part that's aimed squarely at the people in this room.</p>
+    <p>Daily, your trained admin and their named backups collect, review and file. At the end of each week, a second set of eyes pulls five at random and audits them against those same nine points. And ongoing, leadership asks to see the results.</p>
+    <p>Two things about that middle row. First — <b>a second set of eyes</b>. The person auditing shouldn't be the person who filed. That's not about trust; it's that nobody catches their own habits. Second — end of week, deliberately, while the week is still fresh enough to fix something.</p>
+    <p>And I'd run it weekly until your daily process is genuinely solid — then reassess. The audit is a stabiliser, not a permanent tax.</p>
+    <p>I want to dwell on the third row, because it's the one that gets dropped.</p>
+    <p>In my experience, when corrective plans stall, it's almost never because they were badly written. The plan is usually fine. They stall because <b>nobody verified they were being worked</b>. The plan gets written, everybody agrees, and then it quietly stops — and nobody notices for months.</p>
+    <p>So your role here isn't to file forms. Your role is to verify, on a rhythm, that the filing is happening. Ask for the audit. Look at it. That single habit is the difference between a plan on paper and a process in practice.</p>
+    <p>One more thing, and it's easy to overlook: <b>trained backups.</b> Not one trained person and a hope. Vacation happens, illness happens, shift changes happen — and the daily review still has to happen on those days. This process cannot live in one person's head.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 11 — HOW FCSA TESTS US
+     =================================================================== -->
+<section class="slide full-field" data-theme="dark">
+  <div class="slide-content" style="gap:clamp(.55rem,1.8vh,1.4rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">11 <span class="sep">/</span> Quick Touch</div>
+      <h2 class="reveal" style="--d:.12s">How <mark>FCSA</mark> Tests Us</h2>
+      <p class="lede reveal" style="--d:.2s">Four questions, answered for one driver over one date range. Nothing here is new.</p>
+    </div>
+
+    <div class="cards4">
+      <div class="qcard reveal" style="--d:.32s"><span class="n">1</span>
+        <span class="t">Valid Exemption?</span>
+        <p class="d">Driver didn't operate at all in the range, or the paperwork went to Legal at PGH. <em>Rentals are not exempt.</em></p></div>
+      <div class="qcard reveal" style="--d:.42s"><span class="n">2</span>
+        <span class="t">How Many Were Required?</span>
+        <p class="d">One per power unit, per day of operation — verified against TMS Driver Detail and the Driver Daily Log. Full off-duty days excluded.</p></div>
+      <div class="qcard reveal" style="--d:.52s"><span class="n">3</span>
+        <span class="t">How Many Are On File?</span>
+        <p class="d">This is the drop point and the filing convention, scored. <em>Retrievable, by driver and date.</em></p></div>
+      <div class="qcard reveal" style="--d:.62s"><span class="n">4</span>
+        <span class="t">How Many Pass?</span>
+        <p class="d">Each filed form is scored against the same 9 completion points we review every day. <em>This is slide 6, scored.</em></p></div>
+    </div>
+
+    <div class="support reveal-f" style="--d:.8s">
+      <span>Process support: <b>District Fleet Maintenance Specialist</b></span>
+      <span>Reference: <b>"Daily Vehicle Inspections, Canada" · KB000396060</b></span>
+    </div>
+  </div>
+  <div class="slidenum">11 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 11 · 1:30 · Keep it light — this slide defuses anxiety, it doesn't create it. Land on "nothing new here."</p>
+    <p>Quick touch on how the test actually works — mostly so it isn't a mystery.</p>
+    <p>For a given driver over a given date range, the tester answers four questions.</p>
+    <p><b>One — is there a valid exemption?</b> That's if the driver didn't operate at all in that range, or if the paperwork has gone to Legal at PGH. And note this one: <b>rentals are not exempt.</b> That catches people out.</p>
+    <p><b>Two — how many DVIRs were required?</b> One per power unit, per day of operation. That count is verified against TMS Driver Detail and the Driver Daily Log, and full off-duty days come out of it.</p>
+    <p><b>Three — how many are actually on file?</b></p>
+    <p><b>Four — of those, how many pass the completion criteria?</b></p>
+    <p>And here's the point of this slide. Look at questions three and four. Question three is our drop point and our filing convention. Question four is the nine-point review we just walked through. There is nothing new being tested here.</p>
+    <p>Run the daily process, and the test genuinely passes itself.</p>
+    <p>If you need help, the District Fleet Maintenance Specialist is the support contact for this process, and the knowledge article is "Daily Vehicle Inspections, Canada" — KB000396060.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 12 — THE ASK: SIX COMMITMENTS (end here for Q&A)
+     =================================================================== -->
+<section class="slide full-light" data-theme="light">
+  <div class="hazard wipe" style="--d:.1s"></div>
+  <div class="slide-content" style="gap:clamp(.5rem,1.6vh,1.2rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">12 <span class="sep">/</span> The Ask</div>
+      <h2 class="reveal" style="--d:.12s">Six <mark>Commitments</mark></h2>
+    </div>
+
+    <div class="cards6">
+      <div class="ccard reveal" style="--d:.28s"><span class="n">1</span>
+        <span class="t">A Labelled Drop Point</span>
+        <p class="d">One place, clearly marked, known to every TSP driver.</p></div>
+      <div class="ccard reveal" style="--d:.36s"><span class="n">2</span>
+        <span class="t">Daily Hand-In Enforced</span>
+        <p class="d">Misses flagged to the LH Manager the same day.</p></div>
+      <div class="ccard reveal" style="--d:.44s"><span class="n">3</span>
+        <span class="t">Daily 9-Point Review</span>
+        <p class="d">Errors caught within 24 hours, while the driver is back tomorrow.</p></div>
+      <div class="ccard reveal" style="--d:.52s"><span class="n">4</span>
+        <span class="t">Defects Actioned Same Day</span>
+        <p class="d">FleetNet for major. MNTR priority for minor. Paper loop closed.</p></div>
+      <div class="ccard reveal" style="--d:.6s"><span class="n">5</span>
+        <span class="t">Filed &amp; Retained 6 Months</span>
+        <p class="d">Retrievable by driver and by date, on demand.</p></div>
+      <div class="ccard reveal" style="--d:.68s"><span class="n">6</span>
+        <span class="t">End-of-Week Audit</span>
+        <p class="d">Five at random, checked by someone other than the filer. Results visible to leadership.</p></div>
+    </div>
+
+    <div class="band reveal" style="--d:.82s">
+      <span class="q">Six commitments. One daily rhythm. <mark>Zero surprises at test time.</mark></span>
+      <span class="s">Every log,<br>every day</span>
+    </div>
+  </div>
+  <div class="slidenum">12 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 12 · 1:00 · Read the six, don't elaborate — the detail is already behind you. Running long? Cut slide 11, never this one.</p>
+    <p>So let me land this with six commitments. This is what I'm asking each station to have in place.</p>
+    <p><b>One</b> — a labelled drop point exists. One place, known to every TSP driver.</p>
+    <p><b>Two</b> — daily hand-in is enforced, and misses get flagged to me the same day.</p>
+    <p><b>Three</b> — the daily nine-point review happens, so errors are caught within twenty-four hours.</p>
+    <p><b>Four</b> — defects get actioned the same day. FleetNet for major, MNTR priority for minor.</p>
+    <p><b>Five</b> — forms are filed and retained six months, in a convention that fits your station, retrievable by driver and by date.</p>
+    <p><b>Six</b> — an end-of-week audit of five at random, run by someone other than the person who files, with the results visible to leadership.</p>
+    <p>Six commitments. One daily rhythm. Zero surprises at test time.</p>
+    <p>Let's take your questions.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 13 — QUESTIONS
+     Lives on screen for the whole Q&A, so it carries the six asks in
+     compressed form plus the support contacts — the two things someone
+     staring at it for six minutes might actually want.
+     =================================================================== -->
+<section class="slide full-field" data-theme="dark">
+  <div class="slide-content" style="gap:clamp(.6rem,2vh,1.6rem)">
+    <div>
+      <div class="kicker reveal-f" style="--d:.05s">13 <span class="sep">/</span> Over To You</div>
+      <h1 class="reveal" style="--d:.15s">
+        <span class="mask" style="--d:.15s"><span>Questions<mark>?</mark></span></span>
+      </h1>
+      <p class="lede reveal" style="--d:.45s">The floor is yours — on the form, the process, or what this looks like at your station.</p>
+    </div>
+
+    <div>
+      <div class="kicker reveal-f" style="--d:.55s">The six commitments, for reference</div>
+      <div class="chips" style="margin-top:clamp(.4rem,1.2vh,.8rem)">
+        <span class="chip reveal-f" style="--d:.62s"><b>1</b> Labelled drop point</span>
+        <span class="chip reveal-f" style="--d:.68s"><b>2</b> Daily hand-in enforced</span>
+        <span class="chip reveal-f" style="--d:.74s"><b>3</b> Daily 9-point review</span>
+        <span class="chip reveal-f" style="--d:.8s"><b>4</b> Defects actioned same day</span>
+        <span class="chip reveal-f" style="--d:.86s"><b>5</b> Filed &amp; retained 6 months</span>
+        <span class="chip reveal-f" style="--d:.92s"><b>6</b> End-of-week audit</span>
+      </div>
+    </div>
+
+    <div class="support reveal-f" style="--d:1s">
+      <span>Process support: <b>District Fleet Maintenance Specialist</b></span>
+      <span>Reference: <b>"Daily Vehicle Inspections, Canada" · KB000396060</b></span>
+    </div>
+  </div>
+  <div class="slidenum">13 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 13 · ~6:00 · Sit here for the whole Q&amp;A. Don't advance until questions are done.</p>
+    <p>That's the ask. Let's take your questions — on the form itself, on the process, or on what this looks like day to day at your station.</p>
+    <p><b>If nobody starts:</b> prompt them. "Who here already has a labelled drop point?" or "What's the piece of this you think will be hardest at your station?" Either one usually opens it up.</p>
+    <p><b>Likely questions, and short answers:</b></p>
+    <p><b>"What if a driver hands in a week's worth at once?"</b> Take it, review it, file it — then flag it to me. The forms aren't the problem; the pattern is, and that's a TSP conversation.</p>
+    <p><b>"What if there are more than five defects?"</b> The table only holds five rows. I'll confirm the correct handling and come back to you — don't guess on the day.</p>
+    <p><b>"Who audits if we're short-staffed that week?"</b> Anyone trained who didn't do the filing. The constraint is a second set of eyes, not a specific title.</p>
+    <p><b>"Does the tractor defect come back on us?"</b> No — the TSP actions their own power unit. We action trailers and dollies. But it still has to be declared correctly on the form.</p>
+    <p><b>If you don't know:</b> say so and take it away. "I'll check with the DFMS and come back to you" is a better answer than a confident wrong one — especially in a compliance session.</p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 14 — THANK YOU
+     Bookends the title slide: same hazard band, same closing line.
+     =================================================================== -->
+<section class="slide full-field" data-theme="dark" id="slide-thanks">
+  <div class="hazard wipe" style="--d:.1s"></div>
+  <canvas class="particles" id="fxThanks" aria-hidden="true"></canvas>
+  <div class="slide-content thanks">
+    <h1>
+      <span class="mask" style="--d:.25s"><span>Thank</span></span>
+      <span class="mask" style="--d:.38s"><span><mark>You.</mark></span></span>
+    </h1>
+  </div>
+  <div class="slidenum">14 / 14</div>
+
+  <div class="notes">
+    <p class="cue">Slide 14 · 0:15 · Close warm and stop. Don't restart the content here.</p>
+    <p>Thank you all for your time.</p>
+    <p>Everything we covered comes down to one habit: every log, every day. Get the paper in the building, check it while it's fresh, action what needs actioning, and file it where you can find it again.</p>
+    <p>The one-page checklist is yours — print it, pin it at the drop point, and give a copy to whoever's covering when your usual person is off.</p>
+    <p>If anything comes up after today, come to me or your DFMS. Thanks again.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* ===========================================================================
+   SLIDE PRESENTATION CONTROLLER
+   Handles: scroll-triggered reveals, keyboard/touch/wheel navigation,
+   progress bar, nav dots, per-slide speaker notes, and dark/light chrome.
+   =========================================================================== */
+class SlidePresentation {
+  constructor(){
+    this.slides = Array.from(document.querySelectorAll('.slide'));
+    this.current = 0;
+    this.progressBar = document.getElementById('progressBar');
+    this.navDots     = document.getElementById('navDots');
+    this.kbHint      = document.getElementById('kbHint');
+
+    this.setupIntersectionObserver();
+    this.setupNavDots();
+    this.setupKeyboardNav();
+    this.setupTouchNav();
+    this.setupHintFade();
+    this.update(0);
+  }
+
+  /* Adds .visible when a slide is mostly on screen, which fires all the
+     CSS reveal transitions inside it. Removing it on exit means the
+     animations replay when you come back to a slide. */
+  setupIntersectionObserver(){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          const i = this.slides.indexOf(entry.target);
+          if(i > -1) this.update(i);
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    },{threshold:0.45});
+    this.slides.forEach(s=>io.observe(s));
+  }
+
+  /* Nav dots. Cleared first — if the DOM was captured while dots existed
+     (via the editor's export), re-opening the file would otherwise stack
+     a second set on top of the first. */
+  setupNavDots(){
+    this.navDots.innerHTML = '';
+    this.slides.forEach((_,i)=>{
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label','Go to slide '+(i+1));
+      b.addEventListener('click',()=>this.goTo(i));
+      this.navDots.appendChild(b);
+    });
+  }
+
+  setupKeyboardNav(){
+    document.addEventListener('keydown',(e)=>{
+      // Never hijack keys while the user is typing in edit mode
+      if(e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
+      switch(e.key){
+        case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+          e.preventDefault(); this.goTo(this.current+1); break;
+        case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+          e.preventDefault(); this.goTo(this.current-1); break;
+        case 'Home': e.preventDefault(); this.goTo(0); break;
+        case 'End':  e.preventDefault(); this.goTo(this.slides.length-1); break;
+      }
+    });
+  }
+
+  setupTouchNav(){
+    let startY = null;
+    document.addEventListener('touchstart',(e)=>{ startY = e.touches[0].clientY; },{passive:true});
+    document.addEventListener('touchend',(e)=>{
+      if(startY === null) return;
+      const dy = startY - e.changedTouches[0].clientY;
+      if(Math.abs(dy) > 60) this.goTo(this.current + (dy > 0 ? 1 : -1));
+      startY = null;
+    },{passive:true});
+  }
+
+  /* The keyboard hint is useful for ten seconds and clutter after that. */
+  setupHintFade(){
+    setTimeout(()=>this.kbHint.classList.add('dim'), 9000);
+  }
+
+  goTo(i){
+    const idx = Math.max(0, Math.min(i, this.slides.length-1));
+    this.slides[idx].scrollIntoView({behavior:'smooth'});
+    this.update(idx);
+  }
+
+  update(i){
+    this.current = i;
+    this.progressBar.style.width = ((i+1)/this.slides.length*100)+'%';
+    Array.from(this.navDots.children).forEach((d,n)=>d.classList.toggle('active', n===i));
+    // Nav dots need light outlines when they sit over a purple slide
+    this.navDots.classList.toggle('on-dark', this.slides[i].dataset.theme === 'dark');
+    notes.render(i);
+    presenter.render(i);   // keeps the second window in step with the deck
+    // Particles animate only while the closing slide is on screen
+    if(this.slides[i].id === 'slide-thanks') fxThanks.start(); else fxThanks.stop();
+  }
+}
+
+/* ===========================================================================
+   SPEAKER NOTES  (press N)
+   Notes are stored inside each slide in a display:none block, so they never
+   render on the slide but travel with the file and survive export.
+   =========================================================================== */
+class SpeakerNotes {
+  constructor(){
+    this.drawer = document.getElementById('notesDrawer');
+    this.body   = document.getElementById('notesBody');
+    this.title  = document.getElementById('notesTitle');
+    this.open   = false;
+
+    document.addEventListener('keydown',(e)=>{
+      if(e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
+      if(e.key === 'n' || e.key === 'N'){ this.toggle(); }
+      if(e.key === 'Escape' && this.open){ this.toggle(); }
+    });
+  }
+  toggle(){
+    this.open = !this.open;
+    this.drawer.classList.toggle('open', this.open);
+  }
+  render(i){
+    const slide = document.querySelectorAll('.slide')[i];
+    const n = slide ? slide.querySelector('.notes') : null;
+    this.body.innerHTML = n ? n.innerHTML : '<p>No notes for this slide.</p>';
+    this.title.textContent = 'Speaker notes — slide ' + String(i+1).padStart(2,'0');
+  }
+}
+
+/* ===========================================================================
+   PARTICLE FIELD — closing slide only
+   Drifting square embers on the purple field. Runs only while its slide is
+   on screen, so the rest of the deck costs nothing. Honours reduced-motion
+   by painting a single static frame instead of animating.
+   =========================================================================== */
+class ParticleField {
+  constructor(canvas){
+    this.c = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.parts = [];
+    this.raf = null;
+    this.running = false;
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onResize = () => { if(this.running || this.reduced) this.measure(); };
+    window.addEventListener('resize', this.onResize);
+  }
+
+  /* Size the backing store to the device pixel ratio so squares stay crisp */
+  measure(){
+    const r = this.c.getBoundingClientRect();
+    if(r.width < 2 || r.height < 2) return false;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.c.width  = Math.round(r.width  * dpr);
+    this.c.height = Math.round(r.height * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.w = r.width; this.h = r.height;
+    this.seed();
+    return true;
+  }
+
+  seed(){
+    const count = Math.round(Math.min(300, (this.w * this.h) / 3600));
+    this.parts = Array.from({length: count}, () => this.spawn(true));
+  }
+
+  spawn(anywhere){
+    return {
+      x: Math.random() * this.w,
+      y: anywhere ? Math.random() * this.h : this.h + Math.random() * 60,
+      size: 1.5 + Math.random() * 3.6,
+      vy: 0.10 + Math.random() * 0.42,          // upward drift
+      sway: 8 + Math.random() * 28,             // horizontal travel
+      freq: 0.0004 + Math.random() * 0.0011,    // sway speed
+      phase: Math.random() * Math.PI * 2,
+      base: 0.22 + Math.random() * 0.6,         // base opacity
+      tw: 0.0009 + Math.random() * 0.0022,      // twinkle rate
+      orange: Math.random() < 0.38
+    };
+  }
+
+  draw(t){
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, this.w, this.h);
+    for(const p of this.parts){
+      const x = p.x + Math.sin(t * p.freq + p.phase) * p.sway;
+      const a = p.base * (0.55 + 0.45 * Math.sin(t * p.tw + p.phase));
+      if(p.orange){
+        // cheap halo — a wider, faint square behind the ember. Costs far less
+        // than shadowBlur, which would be per-particle and tank the framerate.
+        ctx.fillStyle = 'rgba(255,110,20,' + (a * 0.16).toFixed(3) + ')';
+        ctx.fillRect(x - p.size, p.y - p.size, p.size * 3, p.size * 3);
+        ctx.fillStyle = 'rgba(255,150,70,' + a.toFixed(3) + ')';
+      } else {
+        ctx.fillStyle = 'rgba(255,255,255,' + (a * 0.78).toFixed(3) + ')';
+      }
+      ctx.fillRect(x, p.y, p.size, p.size);
+    }
+  }
+
+  advance(dt){
+    for(let i = 0; i < this.parts.length; i++){
+      const p = this.parts[i];
+      p.y -= p.vy * dt;
+      if(p.y < -8) this.parts[i] = this.spawn(false);   // recycle off the top
+    }
+  }
+
+  start(){
+    if(this.running) return;
+    if(!this.measure()) return;
+    if(this.reduced){ this.draw(0); return; }           // one static frame
+    this.running = true;
+    let last = null;
+    const loop = (now) => {
+      if(!this.running) return;
+      const dt = last === null ? 1 : Math.min((now - last) / 16.67, 3);
+      last = now;
+      this.advance(dt);
+      this.draw(now);
+      this.raf = requestAnimationFrame(loop);
+    };
+    this.raf = requestAnimationFrame(loop);
+  }
+
+  stop(){
+    this.running = false;
+    if(this.raf) cancelAnimationFrame(this.raf);
+    this.raf = null;
+  }
+}
+
+/* ===========================================================================
+   PRESENTER VIEW  (press P)
+   Opens a SECOND window holding the speaker notes, a running timer and the
+   next-slide lookahead. Share only the deck window and the audience never
+   sees any of this.
+
+   The popup is written into an about:blank window rather than being a
+   separate file, so the opener keeps direct DOM access to it. That matters
+   because the deck is opened over file://, where BroadcastChannel and
+   localStorage messaging between windows are unreliable — direct DOM
+   writes through the window handle work regardless of origin.
+   =========================================================================== */
+
+/* Per-slide targets, measured from the actual scripts at ~135 wpm and rounded.
+   Sums to 23:15 of content inside the booked 30 minutes, leaving ~6:45 for Q&A. */
+const TIMINGS = ['0:45','2:30','2:00','2:00','2:00','2:30','3:15','2:00','1:45','2:00','1:30','1:00','6:00','0:15'];
+const CONTENT_BUDGET = 1395;   // 23:15 — the clock turns orange past this
+const SESSION_TOTAL  = '30:00';
+
+const PRESENTER_HTML = `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Presenter View — LHDVIR Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Public+Sans:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--purple:#4D148C;--orange:#FF6600;--bg:#14111A;--panel:#1E1926;--line:#332B40;
+      --text:#EFECF4;--dim:#9E95AE}
+body{background:var(--bg);color:var(--text);font-family:'Public Sans',sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* --- timer bar --- */
+.bar{display:flex;align-items:center;gap:18px;padding:14px 20px;
+     background:var(--panel);border-bottom:2px solid var(--orange);flex:none;flex-wrap:wrap}
+.clock{font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:54px;
+       line-height:.85;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.clock.over{color:var(--orange)}
+.meta{display:flex;flex-direction:column;gap:2px;font-family:'Space Mono',monospace;
+      font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);line-height:1.6}
+.meta b{color:var(--orange);font-weight:700}
+.btns{margin-left:auto;display:flex;gap:8px}
+button{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;
+       text-transform:uppercase;padding:9px 14px;border:1.5px solid var(--line);
+       background:transparent;color:var(--text);cursor:pointer;transition:all .2s ease}
+button:hover{border-color:var(--orange);color:var(--orange)}
+button.pri{background:var(--purple);border-color:var(--purple)}
+button.pri:hover{background:var(--orange);border-color:var(--orange);color:#fff}
+
+/* --- notes --- */
+.main{flex:1;display:flex;flex-direction:column;padding:20px 24px;overflow:hidden;min-height:0}
+.head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+      padding-bottom:12px;border-bottom:1px solid var(--line);flex:none}
+.snum{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;color:var(--orange);font-weight:700}
+.stitle{font-family:'Big Shoulders Display',sans-serif;font-weight:900;text-transform:uppercase;
+        font-size:30px;line-height:1;letter-spacing:.01em}
+.notes{flex:1;overflow-y:auto;padding:16px 0;font-size:17px;line-height:1.62;
+       color:#D6D0E0;font-weight:300;min-height:0}
+.notes p+p{margin-top:12px}
+.notes b{color:#fff;font-weight:600}
+.notes .cf{font-family:'Space Mono',monospace;font-size:.85em;font-weight:700;
+           color:#FFB27A;background:rgba(255,102,0,.15);border:1px dashed var(--orange);
+           padding:1px 6px;white-space:nowrap}
+/* Delivery cue — timing and staging, visually separated from the spoken words */
+.notes .cue{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.13em;
+            text-transform:uppercase;color:var(--orange);border-left:3px solid var(--orange);
+            padding-left:12px;margin-bottom:18px;line-height:1.6}
+
+/* --- next up --- */
+.next{flex:none;border-top:1px solid var(--line);padding-top:12px;
+      display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.next .lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;
+           text-transform:uppercase;color:var(--dim)}
+.next .val{font-family:'Big Shoulders Display',sans-serif;font-weight:700;text-transform:uppercase;
+           font-size:20px;line-height:1;color:var(--dim)}
+.tip{padding:8px 24px 14px;font-family:'Space Mono',monospace;font-size:10px;
+     letter-spacing:.12em;text-transform:uppercase;color:#6D6480;line-height:1.7}
+</style></head><body>
+<div class="bar">
+  <div class="clock" id="clock">00:00</div>
+  <div class="meta">
+    <span>Elapsed / <b>30:00</b> booked · content <b>23:15</b></span>
+    <span>This slide target: <b id="target">0:45</b></span>
+  </div>
+  <div class="btns">
+    <button id="btnTimer" class="pri">Start</button>
+    <button id="btnReset">Reset</button>
+    <button id="btnPrev">&larr; Prev</button>
+    <button id="btnNext">Next &rarr;</button>
+  </div>
+</div>
+<div class="main">
+  <div class="head"><span class="snum" id="snum">01 / 12</span><span class="stitle" id="stitle"></span></div>
+  <div class="notes" id="notes"></div>
+  <div class="next"><span class="lbl">Next up</span><span class="val" id="next">&mdash;</span></div>
+</div>
+<div class="tip">Keep this window on your own screen &middot; share only the deck window &middot; arrow keys work here too</div>
+</body></html>`;
+
+class PresenterView {
+  constructor(){
+    this.win = null;
+    this.seconds = 0;
+    this.running = false;
+    this.tick = null;
+
+    document.addEventListener('keydown',(e)=>{
+      if(e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
+      if(e.key === 'p' || e.key === 'P') this.toggle();
+    });
+    // Don't leave an orphaned presenter window behind when the deck closes
+    window.addEventListener('beforeunload',()=>{ if(this.isOpen()) this.win.close(); });
+  }
+
+  isOpen(){ return this.win && !this.win.closed; }
+
+  toggle(){
+    if(this.isOpen()){ this.win.close(); this.win = null; return; }
+    this.open();
+  }
+
+  open(){
+    this.win = window.open('', 'lhdvir-presenter', 'width=980,height=760,menubar=no,toolbar=no');
+    if(!this.win){
+      alert('Presenter view was blocked by the browser popup blocker.\n\nAllow popups for this page, then press P again.');
+      return;
+    }
+    const d = this.win.document;
+    d.open(); d.write(PRESENTER_HTML); d.close();
+
+    // Wire the controls from this side — the popup has no script of its own
+    const $ = id => d.getElementById(id);
+    $('btnTimer').addEventListener('click',()=>this.toggleTimer());
+    $('btnReset').addEventListener('click',()=>this.resetTimer());
+    $('btnPrev').addEventListener('click',()=>window.__deck.goTo(window.__deck.current - 1));
+    $('btnNext').addEventListener('click',()=>window.__deck.goTo(window.__deck.current + 1));
+
+    // Arrow keys inside the presenter window drive the deck window
+    d.addEventListener('keydown',(e)=>{
+      if(e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' '){
+        e.preventDefault(); window.__deck.goTo(window.__deck.current + 1);
+      }
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+        e.preventDefault(); window.__deck.goTo(window.__deck.current - 1);
+      }
+    });
+
+    this.paintClock();
+    this.render(window.__deck ? window.__deck.current : 0);
+    this.win.focus();
+  }
+
+  toggleTimer(){
+    this.running = !this.running;
+    if(this.isOpen()) this.win.document.getElementById('btnTimer').textContent = this.running ? 'Pause' : 'Start';
+    clearInterval(this.tick);
+    if(this.running) this.tick = setInterval(()=>{ this.seconds++; this.paintClock(); }, 1000);
+  }
+
+  resetTimer(){
+    this.seconds = 0;
+    this.running = false;
+    clearInterval(this.tick);
+    if(this.isOpen()) this.win.document.getElementById('btnTimer').textContent = 'Start';
+    this.paintClock();
+  }
+
+  paintClock(){
+    if(!this.isOpen()) return;
+    const m = String(Math.floor(this.seconds/60)).padStart(2,'0');
+    const s = String(this.seconds%60).padStart(2,'0');
+    const el = this.win.document.getElementById('clock');
+    el.textContent = m+':'+s;
+    /* Orange once the content budget is spent — that's the moment to start
+       wrapping into Q&A, which is more actionable than warning at the hard stop. */
+    el.classList.toggle('over', this.seconds > CONTENT_BUDGET);
+  }
+
+  /* Called by the deck every time the slide changes. */
+  render(i){
+    if(!this.isOpen()) return;
+    const slides = document.querySelectorAll('.slide');
+    const slide  = slides[i];
+    if(!slide) return;
+    const d = this.win.document;
+
+    // Titles carry <br> line breaks; swap them for spaces first or the
+    // words either side run together ("can't produceis an inspection").
+    const titleOf = s => {
+      const h = s.querySelector('h1, h2');
+      if(!h) return '—';
+      const tmp = d.createElement('div');
+      tmp.innerHTML = h.innerHTML.replace(/<br\s*\/?>/gi, ' ');
+      return tmp.textContent.replace(/\s+/g,' ').trim();
+    };
+    const notes = slide.querySelector('.notes');
+
+    d.getElementById('snum').textContent   = String(i+1).padStart(2,'0') + ' / ' + slides.length;
+    d.getElementById('stitle').textContent = titleOf(slide);
+    d.getElementById('notes').innerHTML    = notes ? notes.innerHTML : '<p>No notes for this slide.</p>';
+    d.getElementById('target').textContent = TIMINGS[i] || '—';
+    d.getElementById('next').innerHTML     = slides[i+1]
+      ? titleOf(slides[i+1]) + ' <span style="color:#6D6480">· ' + (TIMINGS[i+1]||'') + '</span>'
+      : 'End of deck — hold here for Q&amp;A';
+    d.getElementById('notes').scrollTop = 0;
+  }
+}
+
+/* ===========================================================================
+   INLINE EDITOR  (press E, or hover the top-left corner)
+   Click any text to edit. Changes auto-save to localStorage on this machine.
+   Ctrl+S downloads a clean copy of the file with the edits baked in.
+   =========================================================================== */
+class InlineEditor {
+  constructor(){
+    // Every text-bearing element that should be directly editable
+    this.selector = '#deck h1 span span, #deck h2, #deck p, #deck li, #deck td, #deck th,' +
+                    '#deck .kicker, #deck .v, #deck .k, #deck .t, #deck .d, #deck .h,' +
+                    '#deck .p, #deck .tag, #deck .chip, #deck .cf, #deck .q, #deck .s,' +
+                    '#deck .r, #deck .j, #deck .n, #deck .lv, #deck .hd, #deck .cap,' +
+                    '#deck .det, #deck .big, #deck .node, #deck .statement, #deck .lede,' +
+                    '#deck .rail-top, #deck .rail-foot, #deck .sm-lbl, #deck .ph-note,' +
+                    '#deck .arclabel, #deck .laddertitle, #deck .when, #deck .who, #deck .what';
+    this.isActive  = false;
+    /* Saved edits are keyed by element index, so ANY change to the slide
+       markup shifts them onto the wrong elements. Bump this version string
+       whenever the DOM structure changes — it discards the stale snapshot
+       instead of scrambling the deck. */
+    this.storeKey  = 'lhdvir-deck-v3';
+    this.toggleBtn = document.getElementById('editToggle');
+    this.banner    = document.getElementById('editBanner');
+
+    this.restore();
+    this.bind();
+  }
+
+  els(){ return Array.from(document.querySelectorAll(this.selector)); }
+
+  bind(){
+    const hotzone = document.querySelector('.edit-hotzone');
+    let hideTimeout = null;
+
+    // Hover reveal needs a JS grace period — a CSS sibling selector breaks
+    // the hover chain the moment the pointer leaves the hotzone.
+    hotzone.addEventListener('mouseenter',()=>{
+      clearTimeout(hideTimeout); this.toggleBtn.classList.add('show');
+    });
+    hotzone.addEventListener('mouseleave',()=>{
+      hideTimeout = setTimeout(()=>{ if(!this.isActive) this.toggleBtn.classList.remove('show'); },400);
+    });
+    this.toggleBtn.addEventListener('mouseenter',()=>clearTimeout(hideTimeout));
+    this.toggleBtn.addEventListener('mouseleave',()=>{
+      hideTimeout = setTimeout(()=>{ if(!this.isActive) this.toggleBtn.classList.remove('show'); },400);
+    });
+
+    hotzone.addEventListener('click',()=>this.toggleEditMode());
+    this.toggleBtn.addEventListener('click',()=>this.toggleEditMode());
+
+    document.addEventListener('keydown',(e)=>{
+      const editingText = e.target.getAttribute && e.target.getAttribute('contenteditable');
+      if((e.key === 'e' || e.key === 'E') && !editingText){ this.toggleEditMode(); }
+      if(e.key === 'Escape' && this.isActive && !editingText){ this.toggleEditMode(); }
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && this.isActive){
+        e.preventDefault(); this.exportFile();
+      }
+    });
+
+    document.addEventListener('input',(e)=>{
+      if(this.isActive && e.target.getAttribute('contenteditable')) this.save();
+    });
+  }
+
+  toggleEditMode(){
+    this.isActive = !this.isActive;
+    document.body.classList.toggle('edit-active', this.isActive);
+    this.toggleBtn.classList.toggle('active', this.isActive);
+    this.toggleBtn.classList.toggle('show', this.isActive);
+    this.banner.classList.toggle('active', this.isActive);
+    this.toggleBtn.textContent = this.isActive ? '✓' : '✎';
+    this.els().forEach(el=>{
+      if(this.isActive) el.setAttribute('contenteditable','true');
+      else el.removeAttribute('contenteditable');
+    });
+  }
+
+  save(){
+    const data = {};
+    this.els().forEach((el,i)=>{ data[i] = el.innerHTML; });
+    try{ localStorage.setItem(this.storeKey, JSON.stringify(data)); }catch(err){}
+  }
+
+  restore(){
+    let data;
+    try{ data = JSON.parse(localStorage.getItem(this.storeKey) || 'null'); }catch(err){ return; }
+    if(!data) return;
+    this.els().forEach((el,i)=>{ if(data[i] !== undefined) el.innerHTML = data[i]; });
+  }
+
+  /* Strip all edit state before capturing the DOM, or the exported file
+     opens permanently stuck in edit mode. Restore it straight afterwards
+     so the user can keep working. */
+  exportFile(){
+    const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
+    editableEls.forEach(el=>el.removeAttribute('contenteditable'));
+    document.body.classList.remove('edit-active');
+    this.toggleBtn.classList.remove('active','show');
+    this.banner.classList.remove('active','show');
+
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    document.body.classList.add('edit-active');
+    editableEls.forEach(el=>el.setAttribute('contenteditable','true'));
+    this.toggleBtn.classList.add('active','show');
+    this.banner.classList.add('active');
+
+    const blob = new Blob([html],{type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'LHDVIR-Training.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+}
+
+/* --- Boot. Editor restores saved text first so the notes, presenter view
+       and reveal system all operate on the final content. --- */
+const editor    = new InlineEditor();
+const notes     = new SpeakerNotes();
+const presenter = new PresenterView();
+const fxThanks  = new ParticleField(document.getElementById('fxThanks'));
+
+/* Exposed so the presenter window's buttons and arrow keys can drive the deck. */
+window.__deck = new SlidePresentation();
+</script>
+</body>
+</html>
