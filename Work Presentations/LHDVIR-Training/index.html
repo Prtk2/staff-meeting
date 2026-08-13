@@ -495,38 +495,7 @@ h2 mark{background:none;color:var(--orange)}
 .chk .d em{font-style:normal;color:var(--orange-dk);font-weight:600}
 
 /* ===========================================================================
-   SLIDE 7 — DEFECTS: MAJOR VS MINOR (decision tree)
-   =========================================================================== */
-.trigger{display:flex;align-items:center;gap:clamp(.5rem,1.3vw,1rem);
-  border:2px solid var(--purple);padding:clamp(.45rem,1.1vw,.85rem) clamp(.6rem,1.5vw,1.1rem);
-  background:var(--off)}
-.trigger .yes{font-family:var(--font-display);font-weight:900;color:#fff;background:var(--orange);
-  padding:.1em .55em;font-size:clamp(.9rem,2vw,1.5rem);line-height:1.15;text-transform:uppercase;flex:none}
-.trigger .t{font-family:var(--font-display);font-weight:800;text-transform:uppercase;
-  font-size:clamp(.8rem,1.7vw,1.3rem);line-height:1.05;color:var(--purple)}
-
-.branches{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.5rem,1.4vw,1.1rem)}
-.branch{padding:clamp(.55rem,1.4vw,1.1rem);display:flex;flex-direction:column;
-  gap:clamp(.2rem,.6vh,.45rem);min-width:0}
-.branch.major{background:var(--purple);color:#fff}
-.branch.minor{background:var(--off);border:1.5px solid var(--line)}
-.branch .lv{font-family:var(--font-mono);font-size:var(--mono-size);letter-spacing:.22em;
-  text-transform:uppercase;font-weight:700}
-.branch.major .lv{color:var(--orange)}
-.branch.minor .lv{color:var(--ink-faint)}
-.branch .hd{font-family:var(--font-display);font-weight:900;text-transform:uppercase;
-  font-size:clamp(1rem,2.3vw,1.8rem);line-height:.95}
-.branch.minor .hd{color:var(--purple)}
-.branch ul{list-style:none;display:flex;flex-direction:column;gap:.25em;margin-top:.15em}
-.branch li{font-size:clamp(.63rem,1.1vw,.86rem);line-height:1.4;font-weight:300;
-  padding-left:.95em;position:relative}
-.branch.major li{color:rgba(255,255,255,.85)}
-.branch.minor li{color:var(--ink-soft)}
-.branch li::before{content:"";position:absolute;left:0;top:.55em;
-  width:.35em;height:.35em;background:var(--orange)}
-
-/* ===========================================================================
-   SLIDE 8 — FILING & RETENTION
+   SLIDE 7 — FILING & RETENTION
    =========================================================================== */
 .retain{display:grid;grid-template-columns:minmax(0,38fr) minmax(0,62fr);
   gap:clamp(.8rem,2.4vw,2.4rem);align-items:center}
@@ -760,13 +729,14 @@ body.edit-active html{scroll-snap-type:none}
       <span><b class="n">05</b> File</span>
     </div>
   </div>
-  <div class="slidenum">01 / 13</div>
+  <div class="slidenum">01 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 1 · 0:45 · Warm open, then move briskly — the stakes land on slide 2, not here.</p>
-    <p>Good morning, everyone — thanks for making the time.</p>
-    <p>The next half hour is about one piece of paper. It's called the <b>M-100CB</b>. You'll also hear it called the LHDVIR — the Linehaul Daily Vehicle Inspection Report. Same document, two names.</p>
-    <p>Before we start, one thing I want to say plainly: this is proactive training. Every station is getting this same session, so we all walk out running the process the same way. Nothing in here is aimed at anybody.</p>
+    <p class="cue">Slide 1 · 0:45 · Land “in about a minute — or it won't”, then pause. Don't rush into slide 2.</p>
+    <p>Good afternoon — thanks for making the time.</p>
+    <p>At some point this year, a tester is going to ask one of our stations for a single driver's inspection reports across a two-week stretch. That station will either put its hand on them in about a minute — or it won't. There isn't much in between.</p>
+    <p>The next half hour is about being the first kind of station.</p>
+    <p>Every station is getting this same session, so we all leave running the process the same way.</p>
     <p>Let's talk about why it matters.</p>
     <p><b>Acronyms, if anyone needs them:</b> TSP = Transportation Service Provider · LHDVIR = Linehaul Daily Vehicle Inspection Report · FCSA = Fleet Compliance Self Assessment · DFMS = District Fleet Maintenance Specialist · TRACS = the record system for documented discussions · BD = Business Discussion · SOM = Senior Operations Manager.</p>
   </div>
@@ -810,21 +780,15 @@ body.edit-active html{scroll-snap-type:none}
       </div>
     </div>
   </div>
-  <div class="slidenum">02 / 13</div>
+  <div class="slidenum">02 / 12</div>
 
   <div class="notes">
     <p class="cue">Slide 2 · 2:30 · Land the big line and pause. Walk the chain left to right, then hold on the two panels.</p>
-    <p>Let me start with the one sentence everything else hangs off.</p>
-    <p>In compliance terms, <b>an inspection you can't produce is an inspection that didn't happen.</b> It doesn't matter that the driver walked the trailer. It doesn't matter that the inspection was thorough. If we can't put the paper in a tester's hand, then on paper it never happened. That's the standard we're held to.</p>
-    <p>So how does a station actually get into trouble here? It's never dramatic. It goes like this.</p>
+    <p>In compliance terms, <b>an inspection you can't produce is an inspection that didn't happen.</b> It doesn't matter that the inspection was thorough. If we don't have that DVIR, then it never happened. That's the standard we're held to.</p>
+    <p>So how does a station actually get impacted here...</p>
     <p>Step one — drivers hand their forms in. Good. The paper is in the building.</p>
     <p>Step two — nobody verifies them daily. They go into a folder, or a tray, or a drawer, and they sit.</p>
-    <p>Step three — because nobody's looking, nobody follows up. A missing form is never noticed. An unsigned form is never sent back.</p>
-    <p>Step four — months later, a tester asks for one driver's DVIRs across a date range, and we can't produce them. Not because anybody was careless. Because there was no daily check.</p>
-    <p>That's the whole pattern. Four quiet steps — and every one of them is preventable at step two.</p>
-    <p>Now look at the trade along the bottom. The daily rhythm costs <b>minutes</b>. Collect from the drop point, review against the nine points, action any defects, file. On a normal day that's a few minutes of one person's time.</p>
-    <p>The recovery costs <b>months</b>. Once a corrective action plan opens, you're looking at refresher training, weekly audits, and a minimum of six weeks of clean validated logs plus a passing retest before it closes. And during those six weeks the daily work still has to happen — you just do it under scrutiny.</p>
-    <p>So the real choice isn't "do the process" or "skip the process." It's minutes a day — or months of recovery, and the minutes a day anyway.</p>
+    <p>Step three — months later, when we need to take the test for one driver's DVIRs across a date range, and we can't find the DVIR. Because there was no daily check.</p>
   </div>
 </section>
 
@@ -931,18 +895,17 @@ body.edit-active html{scroll-snap-type:none}
       </div>
     </div>
   </div>
-  <div class="slidenum">03 / 13</div>
+  <div class="slidenum">03 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 3 · 2:00 · Orientation only. Point at zones, don't read fields aloud. Resist teaching the 9-point check — that's slide 6.</p>
-    <p>Before we talk process, everybody in this room should be able to read this form fluently. Not fill it out — <b>read</b> it. Because your job is to verify it, and you can't verify what you can't read.</p>
+    <p class="cue">Slide 3 · 2:00 · Orientation only. Point at zones, don't read fields aloud.</p>
+    <p>Before we talk process, it's important that everyone here understands this form.</p>
     <p>Five zones.</p>
     <p><b>Zone one, the header.</b> Company, and the printed name of the person conducting the inspection. These two get skipped more than anything else on the page — they sit above the table, and people's eyes go straight to the grid.</p>
-    <p><b>Zone two is the main event</b> — ten equipment rows. Truck, Trailers one through eight, and the Dolly. Watch the order: the dolly sits fourth, between Trailer 2 and Trailer 3, not at the bottom where you'd expect it. For each unit there's a unit number, province, licence plate, odometer, the defect No/Yes boxes, the time with am or pm, and the city of inspection.</p>
-    <p><b>Zone three, the defect detail table</b> — five rows. If a defect was found, this is where it gets described: which vehicle, the defect number from Schedule 1 or List 1, whether it was repaired or found not to be a defect, and the authorized person's signature.</p>
-    <p><b>Zone four is the "no defects identified" checkbox.</b> Important — that box does not replace the per-unit No/Yes boxes up in zone two. Both get completed.</p>
+    <p><b>Zone two is the main event</b> — ten equipment rows. Truck, Trailers one through eight, and the Dolly. For each unit there's a unit number, province, licence plate, odometer, the defect No/Yes boxes, the time with am or pm, and the city of inspection.</p>
+    <p><b>Zone three, the defect detail table</b> — five rows. If a defect was found, this is where it gets described.</p>
+    <p><b>Zone four is the "no defects identified" checkbox.</b></p>
     <p><b>Zone five, the declarations.</b> The inspector prints their name, signs, and dates. Then there's a second block — the driver's declaration — signed by the current driver whenever somebody other than them conducted the inspection.</p>
-    <p>Every field on this form is a test point. Every one.</p>
   </div>
 </section>
 
@@ -984,19 +947,15 @@ body.edit-active html{scroll-snap-type:none}
       <div class="owner"><span class="r">LH Manager</span><span class="j">TSP accountability<br>&amp; escalation</span></div>
     </div>
   </div>
-  <div class="slidenum">04 / 13</div>
+  <div class="slidenum">04 / 12</div>
 
   <div class="notes">
     <p class="cue">Slide 4 · 2:00 · This is the map, not the detail. Spend your time on the ownership strip along the bottom.</p>
-    <p>Here's the whole process on one slide. Five steps — we'll spend a couple of minutes on each of them after this.</p>
-    <p>The driver inspects and completes the form. They hand it in daily at our drop point. We review it daily. We action any defects. We file it and keep it six months.</p>
-    <p>Now — the important part of this slide is the strip along the bottom, because that's where ownership lives.</p>
-    <p>Think of it as two halves. <b>Getting the paper into the building is the TSP's obligation.</b> That's their contractual responsibility, and holding them to it is my job as Linehaul Manager. If a TSP driver isn't handing forms in, that conversation is mine to have.</p>
-    <p><b>Everything after the drop point is ours.</b> Collect, review, action, file, audit — that's the station's side of the line.</p>
-    <p>Now, I'm deliberately not telling you who does what inside your building. You know your operation better than I do — who has the desk, who has the capacity, who your backups should be. That's station management's call, and it should be, because a structure I impose from outside won't survive a vacation week.</p>
-    <p>What I am telling you is that every one of those five things has to have a name against it, and a trained backup behind that name. Not a role in the abstract — a person, and a second person.</p>
-    <p>Notice that nobody in this room is on the hook for filling out forms. You're on the hook for verifying that the process runs.</p>
-    <p>The next five slides zoom into one step each. The purple rail on the left will tell you where we are.</p>
+    <p>Let's walk through the process, we'll spend a couple of minutes on each of them after this.</p>
+    <p>The driver inspects and completes the form. They hand it in daily at a drop point. It needs to be reviewed daily. We action any defects. We file it and then it needs to be kept for six months.</p>
+    <p><b>Getting the paper into the building is the TSP's obligation.</b> That's their contractual responsibility.</p>
+    <p><b>Everything after the drop point is ours.</b> Collect, review, action, file, audit.</p>
+    <p>The next few slides zoom into one step each.</p>
   </div>
 </section>
 
@@ -1045,17 +1004,14 @@ body.edit-active html{scroll-snap-type:none}
       <span class="chip">Same place, <b>every day</b> — no rotating locations</span>
     </div>
   </div>
-  <div class="slidenum">05 / 13</div>
+  <div class="slidenum">05 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 5 · 2:00 · The single most important slide in the deck. Slow down. Make eye contact on the "same day" ask.</p>
-    <p>Step one — and honestly, this is the most important slide in the deck.</p>
-    <p>The M-100CB gets handed in <b>every single day the driver operates</b>. Daily means daily. Not a stack on Friday. Not whenever they remember. Every operating day.</p>
-    <p>Here's why that matters so much. If a driver walks out of this building with yesterday's DVIR still sitting in the truck, that is the exact moment the process starts to break. That form is now outside our control. It might come back tomorrow. It might come back in a week, dog-eared. It might never come back — and we wouldn't know, because nothing told us to look for it.</p>
-    <p>So the station's job is to make handing it in the easiest possible thing to do. <b>One drop point.</b> One. Clearly labelled, in a consistent place, known to every TSP driver who comes through here. A folder, a mailbox, a marked tray — the format doesn't matter. A labelled mailbox outside the operations office works really well, because it's on the way out and impossible to miss.</p>
-    <p>What doesn't work is "give it to whoever's around," or "leave it on the supervisor's desk." Those aren't systems. Those are hopes.</p>
-    <p>And the third piece — when a hand-in is missed, <b>flag it the same day</b>. Send it to me, and I'll take it up with the TSP.</p>
-    <p>I want to be really clear on this one. I can only have that conversation if your team flags it while it's still fresh. A miss reported three weeks later is just history. A miss reported today is something I can actually fix.</p>
+    <p class="cue">Slide 5 · 2:00 · The most important slide in the deck. Slow down. Make eye contact on the same-day ask.</p>
+    <p>The M-100CB gets handed in <b>every single day the driver operates</b>. Not a stack on Friday. Not whenever they remember. Every operating day.</p>
+    <p>The process starts to break. That form is now outside our control. It might come back tomorrow. It might come back in a week, or it might never come back.</p>
+    <p>The easiest possible thing to do. <b>One drop point.</b> It needs to be known to every TSP driver who is domiciled at that station.</p>
+    <p>When a hand-in is missed, <b>flag it the same day</b>.</p>
   </div>
 </section>
 
@@ -1106,101 +1062,17 @@ body.edit-active html{scroll-snap-type:none}
       <span class="chip">Printable job aid lives <b>at the drop point</b></span>
     </div>
   </div>
-  <div class="slidenum">06 / 13</div>
+  <div class="slidenum">06 / 12</div>
 
   <div class="notes">
     <p class="cue">Slide 6 · 2:30 · Do NOT read all nine. Group them: the form (1), where/when (2,4,5), the defect declaration (3), the signatures (6–9).</p>
-    <p>Step two. The daily review.</p>
-    <p>I want to be upfront about where this list comes from. These nine points are lifted straight out of the FCSA test instructions. This is not a checklist we invented — this is literally what the tester scores each form against. So if we review to this standard every day, the test becomes a formality.</p>
-    <p>Let me group them so they're easier to hold in your head.</p>
+    <p>These nine points are straight out of the FCSA test. This is not a checklist we invented — this is how this form is audited when it's being tested.</p>
     <p><b>First — is it a real form?</b> Standard M-100CB booklet, completed by hand. No electronic edits, no substitutes.</p>
     <p><b>Then the where and when.</b> City of inspection: full city, town or village name. Ditto marks are fine, but only where the location genuinely hasn't changed from the entry directly above. Time: exact, with am or pm clearly marked, or military. Date: full month, day and year — not just the day number.</p>
-    <p><b>Then the one that catches everybody</b> — point three, the defect box. Yes or No has to be checked for <b>every unit listed</b>. Not just the tractor: every trailer, the dolly, every line with equipment on it. A blank box fails. Both boxes checked fails. This is the most common finding by a wide margin.</p>
-    <p><b>Then the signatures.</b> The inspector prints their name in full — a signature by itself doesn't satisfy that point. The inspector signs. The driver's declaration gets signed whenever somebody other than the driver did the inspection; if the driver inspected their own equipment, that block can stay blank. And on team operations, the co-driver signs.</p>
+    <p><b>Then the one that catches everybody</b> — point three, the defect box. Yes or No has to be checked for <b>every unit listed</b>.</p>
+    <p><b>Then the signatures.</b> The inspector prints their name in full and signature.</p>
     <p>Now here's the payoff for doing this daily instead of weekly. If we catch an error today, the driver is back tomorrow — it's a thirty-second conversation and a corrected form. If we catch it six months from now during a test, that driver may not even be on the account anymore, and the form is simply wrong. Permanently.</p>
-    <p>There's a one-page version of this list you can print and pin at the drop point. Use it. Nobody should be doing this from memory.</p>
-  </div>
-</section>
-
-<!-- ===================================================================
-     SLIDE 7 — STEP 3 · DEFECTS: MAJOR VS MINOR
-     =================================================================== -->
-<section class="slide split" data-theme="light">
-  <aside class="rail">
-    <div class="stepnum reveal-f" style="--d:.1s">0<b>3</b></div>
-    <div class="stepmark">
-      <span class="sm-lbl">Step 3 of 5</span>
-      <span class="sm-item done reveal-x" style="--d:.3s"><i></i>Hand In</span>
-      <span class="sm-item done reveal-x" style="--d:.36s"><i></i>Review</span>
-      <span class="sm-item on reveal-x" style="--d:.42s"><i></i>Defects</span>
-      <span class="sm-item reveal-x" style="--d:.48s"><i></i>File</span>
-      <span class="sm-item reveal-x" style="--d:.54s"><i></i>Correct</span>
-    </div>
-    <div class="rail-foot reveal-f" style="--d:.7s">Reference<br>Schedule 1 · List 1 (QC)</div>
-  </aside>
-
-  <div class="board">
-    <div class="kicker reveal-f" style="--d:.15s">Step 3 <span class="sep">/</span> Defects</div>
-    <h2 class="reveal" style="--d:.22s">Major vs. <mark>Minor</mark></h2>
-
-    <div class="trigger reveal" style="--d:.3s">
-      <span class="yes">Yes</span>
-      <span class="t">Every defect box marked "Yes" is reviewed by the station the <mark style="background:none;color:var(--orange)">same day</mark>.</span>
-    </div>
-
-    <!-- How the driver's own reference book distinguishes the two categories.
-         This is the single most useful thing on the slide: no judgement needed. -->
-    <div class="chips reveal-f" style="--d:.4s">
-      <span class="chip">How to tell &mdash; it's printed for you:</span>
-      <span class="chip"><b>Schedule 1</b> · major = bold on grey, number ends in <b>M</b> (1.3M)</span>
-      <span class="chip"><b>List 1 (QC)</b> · major = shaded, number ends in a <b>letter</b> (1.A)</span>
-      <span class="chip">Plain text on white = <b>minor</b></span>
-    </div>
-
-    <div class="branches">
-      <div class="branch major reveal" style="--d:.5s">
-        <span class="lv">Major defect</span>
-        <span class="hd">The Unit Does Not Roll</span>
-        <ul>
-          <li>Out of service until repaired — no exceptions, no judgement call.</li>
-          <li>Contact <b>FleetNet immediately</b>.</li>
-          <li>Trailer examples: <b>4.3M</b> coupling or locking mechanism damaged or fails to lock · <b>21.3M</b> flat tire · <b>22.3M</b> loose, missing or ineffective wheel fastener.</li>
-        </ul>
-      </div>
-      <div class="branch minor reveal" style="--d:.58s">
-        <span class="lv">Minor defect</span>
-        <span class="hd">Road-Legal, But Tracked</span>
-        <ul>
-          <li>Legal to stay on the road.</li>
-          <li>Flag the trailer and <b>prioritise its return to MNTR</b> for the local mechanic — the same prioritisation we already use for PM-due units.</li>
-          <li>Trailer examples: <b>18.1</b> required lamp does not function as intended · <b>22.1</b> hub oil below minimum level.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="chips reveal-f" style="--d:.74s">
-      <span class="chip">Close the paper loop: <b>Defect No.</b></span>
-      <span class="chip"><b>Status</b> — Repaired / Not a defect</span>
-      <span class="chip"><b>Authorized Person's Signature</b></span>
-      <span class="chip" style="border-color:var(--purple);border-width:2px"><b>Scope:</b> tractor defects are the TSP's to action — <b>we action trailer &amp; dolly</b></span>
-    </div>
-  </div>
-  <div class="slidenum">07 / 13</div>
-
-  <div class="notes">
-    <p class="cue">Slide 7 · 3:15 · Trigger box → the "how to tell" rule → major branch → minor branch → paper loop. The M/letter rule is the takeaway.</p>
-    <p>Step three. What happens when that defect box says Yes.</p>
-    <p>First thing: <b>every Yes gets reviewed by the station the same day.</b> Not filed and looked at later — reviewed.</p>
-    <p>Now, the question I get most often is "how do I know if it's major or minor?" And the good news is you don't have to decide. It's already been decided for you, and it's printed in the same booklet the driver is carrying.</p>
-    <p>In <b>Schedule 1</b> — that's the standard used everywhere outside Quebec — major defects are printed in bold on a grey background, and the defect number ends in the letter <b>M</b>. One-point-three-M. Twenty-one-point-three-M. If you see an M, it's major.</p>
-    <p>In <b>List 1</b>, which is Quebec only, it works slightly differently: major defects are shaded, and the number ends in a <b>letter</b> rather than a digit. One-point-A is major. One-point-one is minor.</p>
-    <p>And in both documents, plain text on a white background means minor. That's the whole test.</p>
-    <p>So — <b>major defect. The unit does not roll.</b> It's out of service until it's repaired. There's no judgement call here, and no "it's probably fine to get it back." Contact FleetNet immediately. On our trailers that means things like a coupling or locking mechanism that's damaged or fails to lock, a flat tire, a loose or missing wheel fastener.</p>
-    <p><b>Minor defect. Legal to stay on the road</b> — but legal doesn't mean ignore it. Flag that trailer and prioritise getting it back to MNTR for the local mechanic, the same way we already prioritise a unit that's PM-due. That's things like a required lamp not working as intended, or hub oil below the minimum level on the sight glass.</p>
-    <p>One important piece of scope before we move on. Everything I've just described applies to <b>our trailers and dollies</b>. The tractor is TSP-maintained equipment — if there's a defect on the power unit, that's the TSP's to action, not ours. We don't chase it, we don't book it into MNTR. What we do care about is that it's declared correctly on the form, because that's still a test point.</p>
-    <p>So: read every unit, but action the trailer and dolly defects.</p>
-    <p>And whichever it is, <b>close the paper loop</b>. The defect number goes in the table, the status gets marked — repaired, or not a defect — and the authorized person signs it off. A defect that got fixed but never signed off is still an open defect on paper, and that's exactly how a tester will read it.</p>
-    <p>When in doubt: treat it as major, and call FleetNet.</p>
+    <p>I have a one-page version of this list you can print and pin at the drop point. It would be easier to review this list — rather than doing it from memory.</p>
   </div>
 </section>
 
@@ -1248,10 +1120,10 @@ body.edit-active html{scroll-snap-type:none}
       <span class="chip">A form we <b>have</b> but can't <b>find</b> scores the same as one we never received</span>
     </div>
   </div>
-  <div class="slidenum">08 / 13</div>
+  <div class="slidenum">07 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 8 · 2:00 · Fast slide — and a deliberate breather after two dense ones. Don't over-explain it.</p>
+    <p class="cue">Slide 7 · 2:00 · Fast slide — and a deliberate breather after two dense ones. Don't over-explain it.</p>
     <p>Step four, and this one's quick.</p>
     <p>Reviewed forms get filed the <b>same day</b>. Filing is part of the daily rhythm — it isn't a someday task and it isn't a Friday task.</p>
     <p>We keep them <b>six months</b> at the station.</p>
@@ -1325,10 +1197,10 @@ body.edit-active html{scroll-snap-type:none}
       <span class="chip">The log is the station's <b>proof the process was worked</b></span>
     </div>
   </div>
-  <div class="slidenum">09 / 13</div>
+  <div class="slidenum">08 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 9 · 1:45 · Walk the loop left to right, land hard on "found is not fixed," then the ladder. Stress that rung 3 is for patterns.</p>
+    <p class="cue">Slide 8 · 1:45 · Walk the loop left to right, land hard on "found is not fixed," then the ladder. Stress that rung 3 is for patterns.</p>
     <p>Step five. What happens when the daily review finds a problem — because it will.</p>
     <p>The loop is simple. You find an error. You contact the TSP the same day. The form goes back for correction. And then — this is the bit people miss — <b>you track it until the corrected form is physically in your file.</b></p>
     <p>Found is not fixed. Spotting a blank signature and telling somebody about it doesn't close anything. The corrected paper in the folder closes it.</p>
@@ -1344,7 +1216,7 @@ body.edit-active html{scroll-snap-type:none}
 <section class="slide full-field" data-theme="dark">
   <div class="slide-content" style="gap:clamp(.55rem,1.8vh,1.4rem)">
     <div>
-      <div class="kicker reveal-f" style="--d:.05s">10 <span class="sep">/</span> Quick Touch</div>
+      <div class="kicker reveal-f" style="--d:.05s">9 <span class="sep">/</span> Quick Touch</div>
       <h2 class="reveal" style="--d:.12s">How <mark>FCSA</mark> Tests Us</h2>
       <p class="lede reveal" style="--d:.2s">Four questions, answered for one driver over one date range. Nothing here is new.</p>
     </div>
@@ -1369,10 +1241,10 @@ body.edit-active html{scroll-snap-type:none}
       <span>Reference: <b>"Daily Vehicle Inspections, Canada" · KB000396060</b></span>
     </div>
   </div>
-  <div class="slidenum">10 / 13</div>
+  <div class="slidenum">09 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 10 · 1:30 · Keep it light — this slide defuses anxiety, it doesn't create it. Land on "nothing new here."</p>
+    <p class="cue">Slide 9 · 1:30 · Keep it light — this slide defuses anxiety, it doesn't create it. Land on "nothing new here."</p>
     <p>Quick touch on how the test actually works — mostly so it isn't a mystery.</p>
     <p>For a given driver over a given date range, the tester answers four questions.</p>
     <p><b>One — is there a valid exemption?</b> That's if the driver didn't operate at all in that range, or if the paperwork has gone to Legal at PGH. And note this one: <b>rentals are not exempt.</b> That catches people out.</p>
@@ -1392,7 +1264,7 @@ body.edit-active html{scroll-snap-type:none}
   <div class="hazard wipe" style="--d:.1s"></div>
   <div class="slide-content" style="gap:clamp(.5rem,1.6vh,1.2rem)">
     <div>
-      <div class="kicker reveal-f" style="--d:.05s">11 <span class="sep">/</span> The Ask</div>
+      <div class="kicker reveal-f" style="--d:.05s">10 <span class="sep">/</span> The Ask</div>
       <h2 class="reveal" style="--d:.12s">Six <mark>Commitments</mark></h2>
     </div>
 
@@ -1422,10 +1294,10 @@ body.edit-active html{scroll-snap-type:none}
       <span class="s">Every log,<br>every day</span>
     </div>
   </div>
-  <div class="slidenum">11 / 13</div>
+  <div class="slidenum">10 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 11 · 1:00 · Read the six, don't elaborate — the detail is already behind you. Running long? Cut slide 11, never this one.</p>
+    <p class="cue">Slide 10 · 1:00 · Read the six, don't elaborate — the detail is already behind you. Running long? Cut slide 11, never this one.</p>
     <p>So let me land this with six commitments. This is what I'm asking each station to have in place.</p>
     <p><b>One</b> — a labelled drop point exists. One place, known to every TSP driver.</p>
     <p><b>Two</b> — daily hand-in is enforced, and misses get flagged to me the same day.</p>
@@ -1451,10 +1323,10 @@ body.edit-active html{scroll-snap-type:none}
       <span class="mask" style="--d:.2s"><span>Questions<mark>?</mark></span></span>
     </h1>
   </div>
-  <div class="slidenum">12 / 13</div>
+  <div class="slidenum">11 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 12 · ~6:00 · Sit here for the whole Q&amp;A. Don't advance until questions are done.</p>
+    <p class="cue">Slide 11 · ~6:00 · Sit here for the whole Q&amp;A. Don't advance until questions are done.</p>
     <p>That's the ask. Let's take your questions — on the form itself, on the process, or on what this looks like day to day at your station.</p>
     <p><b>If nobody starts:</b> prompt them. "Who here already has a labelled drop point?" or "What's the piece of this you think will be hardest at your station?" Either one usually opens it up.</p>
     <p><b>Likely questions, and short answers:</b></p>
@@ -1479,10 +1351,10 @@ body.edit-active html{scroll-snap-type:none}
       <span class="mask" style="--d:.38s"><span><mark>You.</mark></span></span>
     </h1>
   </div>
-  <div class="slidenum">13 / 13</div>
+  <div class="slidenum">12 / 12</div>
 
   <div class="notes">
-    <p class="cue">Slide 13 · 0:40 · Close warm and stop. Don't restart the content here.</p>
+    <p class="cue">Slide 12 · 0:40 · Close warm and stop. Don't restart the content here.</p>
     <p>Thank you all for your time.</p>
     <p>Everything we covered comes down to one habit: every log, every day. Get the paper in the building, check it while it's fresh, action what needs actioning, and file it where you can find it again.</p>
     <p>The one-page checklist is yours — print it, pin it at the drop point, and give a copy to whoever's covering when your usual person is off.</p>
@@ -2062,7 +1934,7 @@ class FlowField {
    deployment for anyone else. "Save file" in the presenter window bakes the
    edits into a real HTML file.
    =========================================================================== */
-const NOTES_KEY = 'lhdvir-notes-v1';
+const NOTES_KEY = 'lhdvir-notes-v2';
 const NotesStore = {
   all(){
     try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
@@ -2088,9 +1960,9 @@ const NotesStore = {
 };
 
 /* Per-slide targets, measured from the actual scripts at ~135 wpm and rounded.
-   Sums to 21:15 of content inside the booked 30 minutes, leaving ~8:45 for Q&A. */
-const TIMINGS = ['0:45','2:30','2:00','2:00','2:00','2:30','3:15','2:00','1:45','1:30','1:00','6:00','0:40'];
-const CONTENT_BUDGET = 1275;   // 21:15 — the clock turns orange past this
+   Sums to 18:00 of content inside the booked 30 minutes, leaving ~12:00 for Q&A. */
+const TIMINGS = ['0:45','2:30','2:00','2:00','2:00','2:30','2:00','1:45','1:30','1:00','6:00','0:40'];
+const CONTENT_BUDGET = 1080;   // 18:00 — the clock turns orange past this
 const SESSION_TOTAL  = '30:00';
 
 const PRESENTER_HTML = `<!DOCTYPE html><html><head><meta charset="utf-8">
@@ -2162,7 +2034,7 @@ button.on{background:var(--orange);border-color:var(--orange);color:#fff}
 <div class="bar">
   <div class="clock" id="clock">00:00</div>
   <div class="meta">
-    <span>Elapsed / <b>30:00</b> booked · content <b>21:15</b></span>
+    <span>Elapsed / <b>30:00</b> booked · content <b>18:00</b></span>
     <span>This slide target: <b id="target">0:45</b></span>
   </div>
   <div class="btns">
@@ -2368,7 +2240,7 @@ class InlineEditor {
        markup shifts them onto the wrong elements. Bump this version string
        whenever the DOM structure changes — it discards the stale snapshot
        instead of scrambling the deck. */
-    this.storeKey  = 'lhdvir-deck-v5';
+    this.storeKey  = 'lhdvir-deck-v6';
     this.toggleBtn = document.getElementById('editToggle');
     this.banner    = document.getElementById('editBanner');
 
