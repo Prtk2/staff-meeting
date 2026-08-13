@@ -227,6 +227,7 @@ img,.image-container{max-width:100%;max-height:min(50vh,400px);object-fit:contai
   z-index:1;pointer-events:none;display:block}
 /* Lift the wordmark into the upper half so the assembled truck, which sits
    in the lower third of the canvas, has clear air beneath it. */
+.slide-content.qa{align-items:center;justify-content:center;text-align:center}
 .slide-content.thanks{align-items:center;justify-content:center;text-align:center;
   padding-bottom:43vh}
 .slide-content.thanks h1{line-height:.86}
@@ -1406,36 +1407,16 @@ body.edit-active html{scroll-snap-type:none}
 
 <!-- ===================================================================
      SLIDE 13 — QUESTIONS
-     Lives on screen for the whole Q&A, so it carries the six asks in
-     compressed form plus the support contacts — the two things someone
-     staring at it for six minutes might actually want.
+     Nothing but the word and a curl-noise flow field. This slide is on
+     screen for the whole Q&A, so the motion is slow, non-repeating and
+     parts around the type rather than crossing it.
      =================================================================== -->
-<section class="slide full-field" data-theme="dark">
-  <div class="slide-content" style="gap:clamp(.6rem,2vh,1.6rem)">
-    <div>
-      <div class="kicker reveal-f" style="--d:.05s">12 <span class="sep">/</span> Over To You</div>
-      <h1 class="reveal" style="--d:.15s">
-        <span class="mask" style="--d:.15s"><span>Questions<mark>?</mark></span></span>
-      </h1>
-      <p class="lede reveal" style="--d:.45s">The floor is yours — on the form, the process, or what this looks like at your station.</p>
-    </div>
-
-    <div>
-      <div class="kicker reveal-f" style="--d:.55s">The six commitments, for reference</div>
-      <div class="chips" style="margin-top:clamp(.4rem,1.2vh,.8rem)">
-        <span class="chip reveal-f" style="--d:.62s"><b>1</b> Labelled drop point</span>
-        <span class="chip reveal-f" style="--d:.68s"><b>2</b> Daily hand-in enforced</span>
-        <span class="chip reveal-f" style="--d:.74s"><b>3</b> Daily 9-point review</span>
-        <span class="chip reveal-f" style="--d:.8s"><b>4</b> Defects actioned same day</span>
-        <span class="chip reveal-f" style="--d:.86s"><b>5</b> Filed &amp; retained 6 months</span>
-        <span class="chip reveal-f" style="--d:.92s"><b>6</b> End-of-week audit</span>
-      </div>
-    </div>
-
-    <div class="support reveal-f" style="--d:1s">
-      <span>Process support: <b>District Fleet Maintenance Specialist</b></span>
-      <span>Reference: <b>"Daily Vehicle Inspections, Canada" · KB000396060</b></span>
-    </div>
+<section class="slide full-field" data-theme="dark" id="slide-questions">
+  <canvas class="particles" id="fxQuestions" aria-hidden="true"></canvas>
+  <div class="slide-content qa">
+    <h1>
+      <span class="mask" style="--d:.2s"><span>Questions<mark>?</mark></span></span>
+    </h1>
   </div>
   <div class="slidenum">12 / 13</div>
 
@@ -1578,7 +1559,9 @@ class SlidePresentation {
     notes.render(i);
     presenter.render(i);   // keeps the second window in step with the deck
     // Particles animate only while the closing slide is on screen
-    if(this.slides[i].id === 'slide-thanks') fxThanks.start(); else fxThanks.stop();
+    const sid = this.slides[i].id;
+    if(sid === 'slide-thanks')    fxThanks.start();    else fxThanks.stop();
+    if(sid === 'slide-questions') fxQuestions.start(); else fxQuestions.stop();
   }
 }
 
@@ -1840,6 +1823,188 @@ class ParticleField {
 }
 
 /* ===========================================================================
+   FLOW FIELD — questions slide
+   Particles are advected through a curl-like noise field and leave fading
+   ribbons. Three decisions matter here:
+
+   1. Trails are erased with a destination-out wash rather than clearRect,
+      so the canvas stays transparent and the slide's own gradient shows
+      through. Painting a solid backdrop would flatten it.
+   2. The field is a sum of four sines on incommensurate frequencies, so it
+      never visibly loops — this slide is on screen for the whole Q&A.
+   3. The headline is read as a live rectangle and particles are pushed out
+      of it and faded, so the motion parts around the word instead of
+      crossing it and making it hard to read.
+   =========================================================================== */
+class FlowField {
+  constructor(canvas, avoidSelector){
+    this.c = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.avoid = avoidSelector;
+    this.ps = [];
+    this.raf = null;
+    this.running = false;
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onResize = () => { if(this.running) this.measure(); };
+    window.addEventListener('resize', this.onResize);
+  }
+
+  measure(){
+    const r = this.c.getBoundingClientRect();
+    if(r.width < 2 || r.height < 2) return false;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.c.width  = Math.round(r.width  * dpr);
+    this.c.height = Math.round(r.height * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.ctx.lineCap = 'round';
+    this.w = r.width; this.h = r.height;
+    this.ctx.clearRect(0, 0, this.w, this.h);
+    this.readBox();
+    this.seed();
+    return true;
+  }
+
+  /* The headline's live position — read from the DOM so it stays correct
+     when the type rescales at different viewport sizes. */
+  readBox(){
+    const el = document.querySelector(this.avoid);
+    if(!el){ this.box = null; return; }
+    const b = el.getBoundingClientRect();
+    const c = this.c.getBoundingClientRect();
+    this.box = {
+      cx: b.left - c.left + b.width / 2,
+      cy: b.top  - c.top  + b.height / 2,
+      hw: b.width / 2,
+      hh: b.height / 2,
+      pad: Math.max(50, Math.min(b.height * 0.6, 130))
+    };
+  }
+
+  seed(){
+    const n = Math.round(Math.min(620, (this.w * this.h) / 2100));
+    this.ps = Array.from({length: n}, () => this.spawn());
+  }
+
+  spawn(){
+    const x = Math.random() * this.w, y = Math.random() * this.h;
+    return {
+      x, y,
+      hist: [x, y],                          // flat [x0,y0,x1,y1,…] ring
+      sp: 0.5 + Math.random() * 1.6,         // travel speed
+      life: 260 + Math.random() * 620,       // frames before recycling
+      mix: Math.random()                     // orange → pale violet
+    };
+  }
+
+  angle(x, y, t){
+    const s = 0.0021;
+    return (Math.sin(x * s        + t * 0.00016)
+          + Math.sin(y * s * 1.27 - t * 0.00021)
+          + Math.sin((x + y) * s * 0.63 + t * 0.00013)
+          + Math.sin((x - y) * s * 0.41 - t * 0.00009)) * 1.35;
+  }
+
+  /* Push out of the headline and fade on approach. Returns an alpha factor. */
+  repel(p){
+    const b = this.box;
+    const dx = Math.max(Math.abs(p.x - b.cx) - b.hw, 0);
+    const dy = Math.max(Math.abs(p.y - b.cy) - b.hh, 0);
+    const d  = Math.hypot(dx, dy);
+    if(d >= b.pad) return 1;
+    const f  = 1 - d / b.pad;
+    const nx = p.x - b.cx, ny = p.y - b.cy;
+    const L  = Math.hypot(nx, ny) || 1;
+    p.x += (nx / L) * f * 2.6;
+    p.y += (ny / L) * f * 2.6;
+    return Math.max(0, 1 - f * 1.4);
+  }
+
+  step(t){
+    const ctx = this.ctx;
+    const TRAIL = 84;                       // points retained per ribbon
+
+    /* Full clear every frame. An alpha-decay wash looks silkier for a few
+       seconds but never reaches zero — 8-bit alpha means dst*(1-0.05)
+       rounds back to dst below ~10, so faint pixels accumulate into haze.
+       Over a six-minute Q&A that washes the whole slide flat. Redrawing
+       from stored history costs more per frame but cannot drift. */
+    ctx.clearRect(0, 0, this.w, this.h);
+
+    for(let i = 0; i < this.ps.length; i++){
+      const p = this.ps[i];
+      const px = p.x, py = p.y;
+      const a = this.angle(p.x, p.y, t);
+      p.x += Math.cos(a) * p.sp;
+      p.y += Math.sin(a) * p.sp;
+
+      const vis = this.box ? this.repel(p) : 1;
+      p.life--;
+
+      if(p.life <= 0 || p.x < -30 || p.x > this.w + 30 || p.y < -30 || p.y > this.h + 30){
+        this.ps[i] = this.spawn();
+        continue;
+      }
+
+      // a hard shove past the headline would otherwise draw a long streak
+      const dx = p.x - px, dy = p.y - py;
+      if(dx * dx + dy * dy > 400){ p.hist.length = 0; }
+
+      p.hist.push(p.x, p.y);
+      if(p.hist.length > TRAIL * 2) p.hist.splice(0, p.hist.length - TRAIL * 2);
+      if(vis <= 0.03) continue;
+
+      const n = p.hist.length / 2;
+      if(n < 3) continue;
+
+      const r  = 255 - Math.round(35 * p.mix);
+      const g  = 102 + Math.round(98 * p.mix);
+      const bl = Math.round(255 * p.mix);
+      const lw = 0.7 + p.sp * 0.5;
+      const mid = Math.floor(n / 2);
+
+      // tail — older half, thinner and fainter
+      ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (0.20 * vis).toFixed(3) + ')';
+      ctx.lineWidth = lw * 0.65;
+      ctx.beginPath();
+      ctx.moveTo(p.hist[0], p.hist[1]);
+      for(let k = 1; k <= mid; k++) ctx.lineTo(p.hist[k * 2], p.hist[k * 2 + 1]);
+      ctx.stroke();
+
+      // head — newer half, brighter
+      ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (0.58 * vis).toFixed(3) + ')';
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      ctx.moveTo(p.hist[mid * 2], p.hist[mid * 2 + 1]);
+      for(let k = mid + 1; k < n; k++) ctx.lineTo(p.hist[k * 2], p.hist[k * 2 + 1]);
+      ctx.stroke();
+    }
+  }
+
+  start(){
+    if(this.running) return;
+    if(!this.measure()) return;
+    if(this.reduced){
+      // lay down a still frame of ribbons instead of animating
+      for(let i = 0; i < 260; i++) this.step(i * 16.7);
+      return;
+    }
+    this.running = true;
+    const loop = (now) => {
+      if(!this.running) return;
+      this.step(now);
+      this.raf = requestAnimationFrame(loop);
+    };
+    this.raf = requestAnimationFrame(loop);
+  }
+
+  stop(){
+    this.running = false;
+    if(this.raf) cancelAnimationFrame(this.raf);
+    this.raf = null;
+  }
+}
+
+/* ===========================================================================
    PRESENTER VIEW  (press P)
    Opens a SECOND window holding the speaker notes, a running timer and the
    next-slide lookahead. Share only the deck window and the audience never
@@ -2065,7 +2230,7 @@ class InlineEditor {
        markup shifts them onto the wrong elements. Bump this version string
        whenever the DOM structure changes — it discards the stale snapshot
        instead of scrambling the deck. */
-    this.storeKey  = 'lhdvir-deck-v4';
+    this.storeKey  = 'lhdvir-deck-v5';
     this.toggleBtn = document.getElementById('editToggle');
     this.banner    = document.getElementById('editBanner');
 
@@ -2166,7 +2331,8 @@ class InlineEditor {
 const editor    = new InlineEditor();
 const notes     = new SpeakerNotes();
 const presenter = new PresenterView();
-const fxThanks  = new ParticleField(document.getElementById('fxThanks'));
+const fxThanks    = new ParticleField(document.getElementById('fxThanks'));
+const fxQuestions = new FlowField(document.getElementById('fxQuestions'), '#slide-questions h1');
 
 /* Exposed so the presenter window's buttons and arrow keys can drive the deck. */
 window.__deck = new SlidePresentation();
