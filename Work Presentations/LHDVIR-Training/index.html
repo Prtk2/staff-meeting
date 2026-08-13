@@ -2050,6 +2050,43 @@ class FlowField {
    writes through the window handle work regardless of origin.
    =========================================================================== */
 
+/* ===========================================================================
+   NOTES STORE
+   Speaker notes live in each slide's hidden .notes div — that single copy
+   feeds the presenter window, the on-slide drawer (N) and the file export.
+   Presenter-window edits are written straight back into it, so all three
+   stay in step, and mirrored to localStorage so they survive a reload.
+
+   Scope worth knowing: localStorage is per-browser and per-device. Editing
+   on the deployed site changes that browser only — it does not update the
+   deployment for anyone else. "Save file" in the presenter window bakes the
+   edits into a real HTML file.
+   =========================================================================== */
+const NOTES_KEY = 'lhdvir-notes-v1';
+const NotesStore = {
+  all(){
+    try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); }
+    catch(e){ return {}; }
+  },
+  set(i, html){
+    const a = this.all(); a[i] = html;
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(a)); } catch(e){}
+  },
+  count(){ return Object.keys(this.all()).length; },
+  apply(){
+    const a = this.all();
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      if(a[i] === undefined) return;
+      const n = s.querySelector('.notes');
+      if(n) n.innerHTML = a[i];
+    });
+  },
+  reset(){
+    try { localStorage.removeItem(NOTES_KEY); } catch(e){}
+    location.reload();
+  }
+};
+
 /* Per-slide targets, measured from the actual scripts at ~135 wpm and rounded.
    Sums to 21:15 of content inside the booked 30 minutes, leaving ~8:45 for Q&A. */
 const TIMINGS = ['0:45','2:30','2:00','2:00','2:00','2:30','3:15','2:00','1:45','1:30','1:00','6:00','0:40'];
@@ -2111,6 +2148,16 @@ button.pri:hover{background:var(--orange);border-color:var(--orange);color:#fff}
            font-size:20px;line-height:1;color:var(--dim)}
 .tip{padding:8px 24px 14px;font-family:'Space Mono',monospace;font-size:10px;
      letter-spacing:.12em;text-transform:uppercase;color:#6D6480;line-height:1.7}
+
+/* --- notes editing --- */
+button.on{background:var(--orange);border-color:var(--orange);color:#fff}
+.notes[contenteditable="true"]{outline:1px dashed rgba(255,102,0,.7);outline-offset:8px;
+  background:rgba(255,102,0,.05);border-radius:3px}
+.notes[contenteditable="true"]:focus{outline:2px solid var(--orange)}
+.saveState{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#6D6480;padding:0 24px 10px;line-height:1.7}
+.saveState b{color:var(--orange)}
+.saveState.warn b{color:#FFB27A}
 </style></head><body>
 <div class="bar">
   <div class="clock" id="clock">00:00</div>
@@ -2121,6 +2168,8 @@ button.pri:hover{background:var(--orange);border-color:var(--orange);color:#fff}
   <div class="btns">
     <button id="btnTimer" class="pri">Start</button>
     <button id="btnReset">Reset</button>
+    <button id="btnEdit">&#9998; Edit notes</button>
+    <button id="btnSave">&#8595; Save file</button>
     <button id="btnPrev">&larr; Prev</button>
     <button id="btnNext">Next &rarr;</button>
   </div>
@@ -2130,6 +2179,7 @@ button.pri:hover{background:var(--orange);border-color:var(--orange);color:#fff}
   <div class="notes" id="notes"></div>
   <div class="next"><span class="lbl">Next up</span><span class="val" id="next">&mdash;</span></div>
 </div>
+<div class="saveState" id="saveState">Notes: <b>original</b></div>
 <div class="tip">Keep this window on your own screen &middot; share only the deck window &middot; arrow keys work here too</div>
 </body></html>`;
 
@@ -2139,6 +2189,8 @@ class PresenterView {
     this.seconds = 0;
     this.running = false;
     this.tick = null;
+    this.editing = false;
+    this.shownIndex = null;   // which slide's notes are in the panel right now
 
     document.addEventListener('keydown',(e)=>{
       if(e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
@@ -2151,7 +2203,8 @@ class PresenterView {
   isOpen(){ return this.win && !this.win.closed; }
 
   toggle(){
-    if(this.isOpen()){ this.win.close(); this.win = null; return; }
+    if(this.isOpen()){ this.saveNotes(); this.win.close(); this.win = null;
+                       this.shownIndex = null; this.editing = false; return; }
     this.open();
   }
 
@@ -2173,9 +2226,17 @@ class PresenterView {
     $('btnReset').addEventListener('click',()=>this.resetTimer());
     $('btnPrev').addEventListener('click',()=>window.__deck.goTo(window.__deck.current - 1));
     $('btnNext').addEventListener('click',()=>window.__deck.goTo(window.__deck.current + 1));
+    $('btnEdit').addEventListener('click',()=>this.toggleNotesEdit());
+    $('btnSave').addEventListener('click',()=>{ this.saveNotes(); editor.exportFile(); });
 
-    // Arrow keys inside the presenter window drive the deck window
+    // write straight through to the slide's own .notes as you type
+    $('notes').addEventListener('input',()=>this.saveNotes());
+    $('notes').addEventListener('blur',()=>this.saveNotes());
+
+    // Arrow keys inside the presenter window drive the deck window —
+    // unless you're typing in the notes, where they must move the caret.
     d.addEventListener('keydown',(e)=>{
+      if(this.editing) return;
       if(e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' '){
         e.preventDefault(); window.__deck.goTo(window.__deck.current + 1);
       }
@@ -2187,6 +2248,44 @@ class PresenterView {
     this.paintClock();
     this.render(window.__deck ? window.__deck.current : 0);
     this.win.focus();
+  }
+
+  /* Notes editing. The slide's hidden .notes div stays the single source of
+     truth — the popup writes into it, so the N drawer and the file export
+     both pick the change up with no extra plumbing. */
+  toggleNotesEdit(){
+    if(!this.isOpen()) return;
+    this.editing = !this.editing;
+    const d = this.win.document;
+    const n = d.getElementById('notes');
+    n.setAttribute('contenteditable', this.editing ? 'true' : 'false');
+    d.getElementById('btnEdit').classList.toggle('on', this.editing);
+    d.getElementById('btnEdit').innerHTML = this.editing ? '&#10003; Done' : '&#9998; Edit notes';
+    if(this.editing) n.focus(); else this.saveNotes();
+  }
+
+  saveNotes(idx){
+    if(!this.isOpen()) return;
+    // Must save against the slide the panel is *showing*. Using the deck's
+    // current index would misfile edits onto the next slide when navigating.
+    const i = (idx === undefined) ? this.shownIndex : idx;
+    if(i === null || i === undefined) return;
+    const html = this.win.document.getElementById('notes').innerHTML;
+    const holder = document.querySelectorAll('.slide')[i].querySelector('.notes');
+    if(!holder || holder.innerHTML === html) return;
+    holder.innerHTML = html;
+    NotesStore.set(i, html);
+    this.paintSaveState();
+  }
+
+  paintSaveState(){
+    if(!this.isOpen()) return;
+    const el = this.win.document.getElementById('saveState');
+    const n = NotesStore.count();
+    if(!n){ el.innerHTML = 'Notes: <b>original</b>'; el.classList.remove('warn'); return; }
+    el.classList.add('warn');
+    el.innerHTML = 'Notes: <b>' + n + ' slide' + (n === 1 ? '' : 's') +
+      ' edited</b> — saved in this browser only. Use “Save file” to keep them for good.';
   }
 
   toggleTimer(){
@@ -2218,6 +2317,8 @@ class PresenterView {
   /* Called by the deck every time the slide changes. */
   render(i){
     if(!this.isOpen()) return;
+    if(this.shownIndex !== null && this.shownIndex !== i) this.saveNotes(this.shownIndex);
+    this.shownIndex = i;
     const slides = document.querySelectorAll('.slide');
     const slide  = slides[i];
     if(!slide) return;
@@ -2242,6 +2343,8 @@ class PresenterView {
       ? titleOf(slides[i+1]) + ' <span style="color:#6D6480">· ' + (TIMINGS[i+1]||'') + '</span>'
       : 'End of deck — hold here for Q&amp;A';
     d.getElementById('notes').scrollTop = 0;
+    d.getElementById('notes').setAttribute('contenteditable', this.editing ? 'true' : 'false');
+    this.paintSaveState();
   }
 }
 
@@ -2339,6 +2442,9 @@ class InlineEditor {
      opens permanently stuck in edit mode. Restore it straight afterwards
      so the user can keep working. */
   exportFile(){
+    // Remember whether edit mode was on — this is also called from the
+    // presenter window's "Save file", where it is not.
+    const wasActive = this.isActive;
     const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
     editableEls.forEach(el=>el.removeAttribute('contenteditable'));
     document.body.classList.remove('edit-active');
@@ -2347,10 +2453,12 @@ class InlineEditor {
 
     const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-    document.body.classList.add('edit-active');
-    editableEls.forEach(el=>el.setAttribute('contenteditable','true'));
-    this.toggleBtn.classList.add('active','show');
-    this.banner.classList.add('active');
+    if(wasActive){
+      document.body.classList.add('edit-active');
+      editableEls.forEach(el=>el.setAttribute('contenteditable','true'));
+      this.toggleBtn.classList.add('active','show');
+      this.banner.classList.add('active');
+    }
 
     const blob = new Blob([html],{type:'text/html'});
     const a = document.createElement('a');
@@ -2368,6 +2476,11 @@ const notes     = new SpeakerNotes();
 const presenter = new PresenterView();
 const fxThanks    = new ParticleField(document.getElementById('fxThanks'));
 const fxQuestions = new FlowField(document.getElementById('fxQuestions'), '#slide-questions h1');
+
+/* Any notes edited earlier in this browser are restored into the slides
+   before the deck reads them, so the drawer, presenter view and export all
+   see the same text. */
+NotesStore.apply();
 
 /* Exposed so the presenter window's buttons and arrow keys can drive the deck. */
 window.__deck = new SlidePresentation();
